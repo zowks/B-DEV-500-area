@@ -19,7 +19,7 @@ export class AppService {
             return {
                 code: 400,
                 message: 'Invalid credentials',
-                errors: credentials.error.format(),
+                error: credentials.error.format(),
             };
         }
         return {
