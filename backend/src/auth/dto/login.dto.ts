@@ -28,3 +28,11 @@ export class LoginDto {
   })
   readonly password: string;
 }
+
+export class LoginResponseDto {
+  @ApiProperty({
+    description: 'An encrypted signed JWT containing the ID of the user.',
+    type: String,
+  })
+  readonly access_token: string;
+}

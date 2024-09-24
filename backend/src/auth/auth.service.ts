@@ -9,16 +9,17 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Argon2Service } from 'src/argon2/argon2.service';
-import { User } from 'src/users/interfaces/user.interface';
+import { JwtService } from 'src/jwt/jwt.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly argon2Service: Argon2Service,
+    private readonly jwtService: JwtService,
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<Pick<User, 'id'>> {
+  async register(registerDto: RegisterDto): Promise<string> {
     if (!registerDto.has_accepted_terms_and_conditions)
       throw new UnprocessableEntityException();
 
@@ -27,7 +28,7 @@ export class AuthService {
     );
 
     try {
-      return await this.prismaService.users.create({
+      const createdUser = await this.prismaService.users.create({
         data: {
           email: registerDto.email,
           firstname: registerDto.firstname,
@@ -38,6 +39,7 @@ export class AuthService {
           id: true,
         },
       });
+      return await this.jwtService.forgeJwe({ id: createdUser.id });
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && 'P2002' === e.code)
         throw new ConflictException();
@@ -46,7 +48,7 @@ export class AuthService {
     }
   }
 
-  async login(loginDto: LoginDto): Promise<Pick<User, 'id'>> {
+  async login(loginDto: LoginDto): Promise<string> {
     const user = await this.prismaService.users.findUnique({
       where: {
         email: loginDto.email,
@@ -66,6 +68,6 @@ export class AuthService {
     );
     if (!isPasswordValid) throw new ForbiddenException();
 
-    return { id: user.id };
+    return await this.jwtService.forgeJwe({ id: user.id });
   }
 }

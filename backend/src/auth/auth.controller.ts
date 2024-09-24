@@ -3,13 +3,15 @@ import {
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiExtraModels,
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiTags,
   ApiUnprocessableEntityResponse,
+  getSchemaPath,
 } from '@nestjs/swagger';
 import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto, LoginResponseDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 
 @ApiTags('authentication')
@@ -19,8 +21,13 @@ export class AuthController {
 
   @Post('/register')
   @HttpCode(HttpStatus.CREATED)
+  @ApiExtraModels(LoginResponseDto)
   @ApiCreatedResponse({
-    description: 'Creates a new user account.',
+    description:
+      'Creates a new user account. An access token is returned. It must be present as a Bearer token to talk to the API.',
+    schema: {
+      $ref: getSchemaPath(LoginResponseDto),
+    },
   })
   @ApiConflictResponse({
     description: 'The email is already taken.',
@@ -33,14 +40,20 @@ export class AuthController {
     description:
       'Some of the fields are incorrect. Make sure it fits the Register DTO.',
   })
-  register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  async register(@Body() registerDto: RegisterDto): Promise<LoginResponseDto> {
+    const accessToken = await this.authService.register(registerDto);
+    return { access_token: accessToken };
   }
 
   @Post('/login')
   @HttpCode(HttpStatus.OK)
+  @ApiExtraModels(LoginResponseDto)
   @ApiOkResponse({
-    description: 'The credentials are OK.',
+    description:
+      'The credentials are OK. An access token is returned. It must be present as a Bearer token to talk to the API.',
+    schema: {
+      $ref: getSchemaPath(LoginResponseDto),
+    },
   })
   @ApiForbiddenResponse({
     description: 'Either the email or password or both are invalid.',
@@ -49,7 +62,8 @@ export class AuthController {
     description:
       'Some of the fields are incorrect. Make sure it fits the Login DTO.',
   })
-  login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+  async login(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
+    const accessToken = await this.authService.login(loginDto);
+    return { access_token: accessToken };
   }
 }
