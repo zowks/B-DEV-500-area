@@ -21,7 +21,7 @@ jobs:
 
       - name: "Install NPM package"
         # We need the development packages for unit tests and linter checker.
-        run: "npm i -D"
+        run: "cd backend && npm i -D"
 
       - name: "ESLint checker"
         run: "cd backend && npm run lint"
