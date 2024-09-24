@@ -49,7 +49,7 @@ jobs:
         uses: "docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a"
         with:
           registry: ghcr.io
-          username: "${{ secrets.GHCR_USER }}"
+          username: "${{ vars.GHCR_USER }}"
           password: "${{ secrets.GHCR_PAT }}"
 
       - name: "Build the image"
