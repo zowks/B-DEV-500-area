@@ -60,13 +60,11 @@ export class AuthService {
 
     if (null === user) throw new ForbiddenException();
 
-    if (
-      !this.argon2Service.verifyPassword(
-        user.hashed_password,
-        loginDto.password,
-      )
-    )
-      throw new ForbiddenException();
+    const isPasswordValid = await this.argon2Service.verifyPassword(
+      user.hashed_password,
+      loginDto.password,
+    );
+    if (!isPasswordValid) throw new ForbiddenException();
 
     return { id: user.id };
   }

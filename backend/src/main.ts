@@ -31,6 +31,8 @@ function getSwaggerDocumentConfig(): Omit<OpenAPIObject, 'paths'> {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.getHttpAdapter().getInstance().disable("x-powered-by");
+
   app.useGlobalPipes(new ValidationPipe());
 
   const configService = app.get(ConfigService);

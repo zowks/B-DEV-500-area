@@ -1,5 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -26,6 +27,10 @@ export class AuthController {
   })
   @ApiUnprocessableEntityResponse({
     description:
+      'All fields match their criteria, but the user did not accept the terms and conditions.',
+  })
+  @ApiBadRequestResponse({
+    description:
       'Some of the fields are incorrect. Make sure it fits the Register DTO.',
   })
   register(@Body() registerDto: RegisterDto) {
@@ -40,7 +45,7 @@ export class AuthController {
   @ApiForbiddenResponse({
     description: 'Either the email or password or both are invalid.',
   })
-  @ApiUnprocessableEntityResponse({
+  @ApiBadRequestResponse({
     description:
       'Some of the fields are incorrect. Make sure it fits the Login DTO.',
   })
