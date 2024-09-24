@@ -10,17 +10,8 @@ export class AppService {
         return "Hello World!";
     }
 
-    // TODO: find why object fields in LoginResponse are not required
     login(@Req() request: Request): LoginResponse {
-        const credentials = parseCredentials(request.body);
-
-        if (!credentials.success) {
-            return {
-                code: 400,
-                message: 'Invalid credentials',
-                error: credentials.error.format(),
-            };
-        }
+        // TODO: add swagger with validator
         return {
             code: 200,
             message: "Success",
