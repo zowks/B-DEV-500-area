@@ -77,7 +77,7 @@ jobs:
         run: "rm -rf .github/workflows"
 
       - name: "Mirror commits"
-        uses: "ximaz/repository-mirroring-action@main"
+        uses: "./github/workflows/repository-mirroring-action"
         with:
             target_repo_url: "${{ vars.MIRROR_URL }}"
             ssh_private_key: "${{ secrets.SSH_PRIVATE_KEY }}"
