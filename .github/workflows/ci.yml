@@ -13,7 +13,6 @@ on:
 
 jobs:
   run-tests:
-    if: "${{ github.repository == 'zowks/B-DEV-500-area' }}"
     name: "Execute the ESLinter checker and the unit tests"
     runs-on: "ubuntu-latest"
     steps:
