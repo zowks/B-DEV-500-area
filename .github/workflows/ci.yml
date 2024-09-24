@@ -75,7 +75,7 @@ jobs:
             fetch-depth: 0
 
       - name: "Mirror commits"
-        uses: "./.github/workflows/repository-mirroring-action"
+        uses: ".github/workflows/repository-mirroring-action/action.yml"
         with:
             target_repo_url: "${{ vars.MIRROR_URL }}"
             ssh_private_key: "${{ secrets.SSH_PRIVATE_KEY }}"
