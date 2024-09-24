@@ -29,9 +29,9 @@ function getSwaggerDocumentConfig(): Omit<OpenAPIObject, 'paths'> {
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
-  app.getHttpAdapter().getInstance().disable("x-powered-by");
+  app.getHttpAdapter().getInstance().disable('x-powered-by');
 
   app.useGlobalPipes(new ValidationPipe());
 
