@@ -37,7 +37,7 @@ jobs:
         run: "npm run test"
 
   build-docker-image:
-    name: "Builds the Docker image and pushes it"
+    name: "Building the Docker image"
     runs-on: "ubuntu:latest"
     needs:
       - "run-tests"
@@ -63,6 +63,7 @@ jobs:
           name: ghcr.io/EpitechPromo2027/B-DEV-500-LIL-5-1-area-merlin.cyffers:latest
 
   mirror-commits:
+    name: "Mirroring the refs to the Epitech repository"
     needs:
       - "run-tests"
     runs-on: "ubuntu-latest"
@@ -73,7 +74,7 @@ jobs:
             fetch-depth: 0
 
       - name: "Mirror commits"
-        uses: "./.github/workflows/repository-mirroring-action"
+        uses: "ximaz/repository-mirroring-action"
         with:
             target_repo_url: "${{ vars.MIRROR_URL }}"
             ssh_private_key: "${{ secrets.SSH_PRIVATE_KEY }}"
