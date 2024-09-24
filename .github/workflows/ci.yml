@@ -60,7 +60,7 @@ jobs:
           file: ./Dockerfile
           push: true
           type: image
-          name: ghcr.io/EpitechPromo2027/B-DEV-500-LIL-5-1-area-merlin.cyffers:latest
+          tags: ghcr.io/EpitechPromo2027/B-DEV-500-LIL-5-1-area-merlin.cyffers:latest
 
   mirror-commits:
     name: "Mirroring the refs to the Epitech repository"
