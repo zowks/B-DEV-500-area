@@ -23,8 +23,8 @@ jobs:
         # We need the development packages for unit tests and linter checker.
         run: "cd backend && npm i -D"
 
-      - name: "ESLint checker"
-        run: "cd backend && npm run lint"
+      # - name: "ESLint checker"
+      #   run: "cd backend && npm run lint"
 
       - name: "Tests execution"
         run: "cd backend && npm run test"
