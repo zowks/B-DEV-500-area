@@ -74,9 +74,6 @@ jobs:
         with:
             fetch-depth: 0
 
-      - name: "Removing CI for Mirror"
-        run: "rm -rf .github/workflows"
-
       - name: "Mirror commits"
         uses: "./.github/workflows/repository-mirroring-action"
         with:
