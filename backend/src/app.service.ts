@@ -1,14 +1,13 @@
-import { Injectable, Req } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { parseCredentials } from '@common/types/API/login/Credentials';
-import { type LoginResponse } from '@common/types/API/login/LoginResponse';
+import { Injectable, Req } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { type LoginResponse } from "@common/types/API/login/LoginResponse";
 
 @Injectable()
 export class AppService {
     constructor(private readonly configService: ConfigService) {}
 
     getHello(): string {
-        return 'Hello World!';
+        return "Hello World!";
     }
 
     // TODO: find why object fields in LoginResponse are not required
@@ -24,10 +23,10 @@ export class AppService {
         }
         return {
             code: 200,
-            message: 'Success',
+            message: "Success",
             data: {
-                token: this.configService.get('JWT_SECRET'),
-            },
+                token: this.configService.get("JWT_SECRET")
+            }
         };
     }
 }
