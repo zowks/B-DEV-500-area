@@ -30,7 +30,7 @@ jobs:
 
       - name: "ESLint checker"
         working-directory: "./backend/"
-        run: "cd backend && npm run lint"
+        run: "npm run lint"
 
       - name: "Tests execution"
         working-directory: "./backend/"
