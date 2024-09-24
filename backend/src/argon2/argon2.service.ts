@@ -4,8 +4,8 @@ import { randomBytes } from 'crypto';
 
 /* https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#argon2id */
 const OWASP_CONFIGS = [
-  { m: 47104, t: 1, p: 1 }, /* DO NOT USE WITH ARGON2I */
-  { m: 19456, t: 2, p: 1 }, /* DO NOT USE WITH ARGON2I */
+  { m: 47104, t: 1, p: 1 } /* DO NOT USE WITH ARGON2I */,
+  { m: 19456, t: 2, p: 1 } /* DO NOT USE WITH ARGON2I */,
   { m: 12288, t: 3, p: 1 },
   { m: 9216, t: 4, p: 1 },
   { m: 7168, t: 5, p: 1 },
@@ -22,7 +22,7 @@ export class Argon2Service {
       timeCost: Argon2Service.CONFIG.t,
       parallelism: Argon2Service.CONFIG.p,
       hashLength: 32,
-      salt: randomBytes(16)
+      salt: randomBytes(16),
     });
   }
 

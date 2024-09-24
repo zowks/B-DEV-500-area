@@ -17,10 +17,14 @@ import { Argon2Service } from './argon2/argon2.service';
 import { Argon2Module } from './argon2/argon2.module';
 import { JwtService } from './jwt/jwt.service';
 import { JwtModule } from './jwt/jwt.module';
+import { PrismaService } from './prisma/prisma.service';
+import { PrismaModule } from './prisma/prisma.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    PrismaModule,
     CredentialsModule,
     HttpModule,
     YoutubeModule,
@@ -29,6 +33,8 @@ import { JwtModule } from './jwt/jwt.module';
     AuthModule,
     Argon2Module,
     JwtModule,
+    PrismaModule,
+    UsersModule,
   ],
   controllers: [YoutubeController, AuthController],
   providers: [
@@ -39,6 +45,7 @@ import { JwtModule } from './jwt/jwt.module';
     AuthService,
     Argon2Service,
     JwtService,
+    PrismaService,
   ],
 })
 export class AppModule {}

@@ -1,6 +1,6 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { CredentialsModule } from '../credentials/credentials.module';
+import { CredentialsModule } from 'src/credentials/credentials.module';
 import { DiscordService } from './discord.service';
 
 @Module({

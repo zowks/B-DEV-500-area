@@ -1,12 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Argon2Service } from 'src/argon2/argon2.service';
 
 describe('AuthService', () => {
   let service: AuthService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService],
+      providers: [
+        { provide: PrismaService, useValue: {} },
+        { provide: Argon2Service, useValue: {} },
+        AuthService,
+      ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);

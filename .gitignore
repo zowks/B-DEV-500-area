@@ -58,3 +58,4 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 /backend/crypto/jwe_private_key.pem
 /backend/crypto/jwe_public_key.pem
 /backend/ssl/*.pem
+/backend/postgres

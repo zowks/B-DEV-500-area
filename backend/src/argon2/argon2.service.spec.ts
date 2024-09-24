@@ -32,7 +32,6 @@ describe('Argon2Service', () => {
 
       expect(argon2service.verifyPassword(hash, password)).resolves.toBe(false);
     });
-
   });
 
   describe('password hashing', () => {
@@ -47,6 +46,7 @@ describe('Argon2Service', () => {
       expect(m).toBe(Argon2Service.CONFIG.m);
       expect(t).toBe(Argon2Service.CONFIG.t);
       expect(p).toBe(Argon2Service.CONFIG.p);
+      expect(hash.length).toBeGreaterThan(0);
     });
   });
 });

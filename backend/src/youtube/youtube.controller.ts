@@ -1,8 +1,8 @@
 import { Controller, Get, Query, Req, Res } from '@nestjs/common';
 import { YouTubeService } from './youtube.service';
 import { Request, Response } from 'express';
-import { CronService } from '../cron/cron.service';
-import { DiscordService } from '../discord/discord.service';
+import { CronService } from 'src/cron/cron.service';
+import { DiscordService } from 'src/discord/discord.service';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('youtube')

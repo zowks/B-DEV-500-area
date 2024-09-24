@@ -5,6 +5,6 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [ConfigModule],
   providers: [JwtService],
-  exports: [JwtService]
+  exports: [JwtService],
 })
 export class JwtModule {}

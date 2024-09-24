@@ -1,10 +1,10 @@
 import { HttpService } from '@nestjs/axios';
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { YouTubeVideo } from './interfaces/youtube-video';
-import { YouTubeVideoListResponse } from './interfaces/repsonses';
-import { CredentialsService } from '../credentials/credentials.service';
-import { YouTubeCredentials } from '../credentials/interfaces/youtube';
-import { Poller } from '../cron/interfaces/poller';
+import { YouTubeVideo } from './interfaces/youtube-video.interface';
+import { YouTubeVideoListResponse } from './interfaces/repsonses.interface';
+import { CredentialsService } from 'src/credentials/credentials.service';
+import { YouTubeCredentials } from 'src/credentials/interfaces/youtube.interface';
+import { Poller } from 'src/cron/interfaces/poller.interface';
 
 @Injectable()
 export class YouTubeService {

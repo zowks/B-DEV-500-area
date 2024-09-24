@@ -24,6 +24,7 @@ export class LoginDto {
   @ApiProperty({
     description: 'The password to log the user in with.',
     minLength: 8,
+    example: 'PasswordOf8OrMoreCharacters',
   })
   readonly password: string;
 }

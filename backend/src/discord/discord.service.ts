@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { CredentialsService } from '../credentials/credentials.service';
-import { DiscordCredentials } from '../credentials/interfaces/discord';
-import { YouTubeVideo } from '../youtube/interfaces/youtube-video';
-import { Pusher } from '../cron/interfaces/pusher';
+import { CredentialsService } from 'src/credentials/credentials.service';
+import { DiscordCredentials } from 'src/credentials/interfaces/discord.interface';
+import { YouTubeVideo } from 'src/youtube/interfaces/youtube-video.interface';
+import { Pusher } from 'src/cron/interfaces/pusher.interface';
 
 @Injectable()
 export class DiscordService {

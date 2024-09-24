@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpModule } from '@nestjs/axios';
 import { YouTubeService } from './youtube.service';
-import { CredentialsModule } from '../credentials/credentials.module';
+import { CredentialsModule } from 'src/credentials/credentials.module';
 
 describe('YoutubeService', () => {
   let service: YouTubeService;

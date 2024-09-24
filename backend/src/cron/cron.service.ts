@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CronJob } from 'cron';
-import { Poller } from './interfaces/poller';
-import { Pusher } from './interfaces/pusher';
+import { Poller } from './interfaces/poller.interface';
+import { Pusher } from './interfaces/pusher.interface';
 
 @Injectable()
 export class CronService {

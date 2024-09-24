@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { YouTubeCredentials } from './interfaces/youtube';
-import { DiscordCredentials } from './interfaces/discord';
+import { YouTubeCredentials } from './interfaces/youtube.interface';
+import { DiscordCredentials } from './interfaces/discord.interface';
 
 @Injectable()
 export class CredentialsService {
