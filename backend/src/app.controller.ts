@@ -12,6 +12,7 @@ export class AppController {
     }
 
     @Post('login')
+    @HttpCode(200)
     login(@Req() request: Request): LoginResponse {
         return this.appService.login(request);
     }
