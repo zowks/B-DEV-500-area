@@ -8,7 +8,7 @@ export class CredentialsService {
   private baseURL: string;
 
   constructor(private readonly configService: ConfigService) {
-    const restAPIPort = this.configService.getOrThrow('REST_API_PORT');
+    const restAPIPort = this.configService.get<number>('REST_API_PORT', 3000);
     this.baseURL = `http://localhost:${restAPIPort}`;
   }
 

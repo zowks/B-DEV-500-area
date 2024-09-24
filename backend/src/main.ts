@@ -45,13 +45,6 @@ async function bootstrap() {
   };
   SwaggerModule.setup('/', app, document, swaggerConfig);
 
-  await app.listen(
-    parseInt(
-      configService.getOrThrow(
-        'REST_API_PORT',
-        "You must supply the 'REST_API_PORT' env variable.",
-      ),
-    ),
-  );
+  await app.listen(configService.get<number>('REST_API_PORT', 3000));
 }
 bootstrap();
