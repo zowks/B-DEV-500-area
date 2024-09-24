@@ -58,7 +58,6 @@ jobs:
         with:
           context: ./backend
           push: true
-          type: image
           tags: ghcr.io/epitechpromo2027/b-dev-500-lil-5-1-area-merlin.cyffers:latest
 
   mirror-commits:
