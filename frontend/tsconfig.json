@@ -8,10 +8,6 @@
         "resolveJsonModule": true,
         "skipLibCheck": true,
         "sourceMap": true,
-        "baseUrl": "./",
-        "paths": {
-            "@common/*": ["../common/src/*"]
-        },
         "strict": true,
         "moduleResolution": "bundler"
     }
