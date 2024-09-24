@@ -55,6 +55,6 @@ pids
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 /postgres
-/backend/crypto/jwe_private.pem
-/backend/crypto/jwe_public.pem
+/backend/crypto/jwe_private_key.pem
+/backend/crypto/jwe_public_key.pem
 /backend/ssl/*.pem
