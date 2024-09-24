@@ -1,0 +1,71 @@
+# This CI is meant to execute backend unit tests, integration tests and e2e
+# tests. If all the tests pass, the repository is mirrored to the Epitech one.
+# Finally, a Docker image will be built and pushed to a ghrc.io repository.
+
+name: "AREA Backend CI"
+
+on:
+  push:
+    branches:
+      main
+
+  workflow_dispatch:
+
+jobs:
+  run-tests:
+    name: "Execute the ESLinter checker and the unit tests"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4.1.1"
+
+      - name: "Install NPM package"
+        # We need the development packages for unit tests and linter checker.
+        runs: "npm i -D"
+
+      - name: "ESLint checker"
+        runs: "cd backend && npm run lint"
+
+      - name: "Tests execution"
+        runs: "cd backend && npm run test"
+
+  build-docker-image:
+    name: "Builds the Docker image and pushes it"
+    runs-on: "ubuntu:latest"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4.1.1"
+
+      - name: "Login to Docker"
+        uses: "docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a"
+        with:
+          registry: ghcr.io
+          username: "${{ secrets.GHCR_USER }}"
+          password: "${{ secrets.GHCR_PAT }}"
+
+      - name: "Build the image"
+        id: "push"
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: ./backend/.
+          file: ./Dockerfile
+          push: true
+          type: image
+          name: ghcr.io/EpitechPromo2027/B-DEV-500-LIL-5-1-area-merlin.cyffers:latest
+
+  mirror-commits:
+    needs:
+      - "run-tests"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4.1.1"
+        with:
+            fetch-depth: 0
+
+      - name: "Mirror commits"
+        uses: "./.github/workflows/repository-mirroring-action"
+        with:
+            target_repo_url: "${{ vars.MIRROR_URL }}"
+            ssh_private_key: "${{ secrets.SSH_PRIVATE_KEY }}"
+            ssh_private_key_passphrase: "${{ secrets.SSH_PRIVATE_KEY_PASSPHRASE }}"
