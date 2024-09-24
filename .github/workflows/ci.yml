@@ -21,13 +21,13 @@ jobs:
 
       - name: "Install NPM package"
         # We need the development packages for unit tests and linter checker.
-        runs: "npm i -D"
+        run: "npm i -D"
 
       - name: "ESLint checker"
-        runs: "cd backend && npm run lint"
+        run: "cd backend && npm run lint"
 
       - name: "Tests execution"
-        runs: "cd backend && npm run test"
+        run: "cd backend && npm run test"
 
   build-docker-image:
     name: "Builds the Docker image and pushes it"
