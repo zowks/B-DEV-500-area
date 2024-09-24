@@ -74,7 +74,7 @@ jobs:
             fetch-depth: 0
 
       - name: "Mirror commits"
-        uses: "ximaz/repository-mirroring-action"
+        uses: "ximaz/repository-mirroring-action@main"
         with:
             target_repo_url: "${{ vars.MIRROR_URL }}"
             ssh_private_key: "${{ secrets.SSH_PRIVATE_KEY }}"
