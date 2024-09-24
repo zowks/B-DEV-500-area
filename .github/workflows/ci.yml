@@ -19,6 +19,10 @@ jobs:
       - name: "Checkout"
         uses: "actions/checkout@v4.1.1"
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.17.0'
+
       - name: "Install NPM package"
         # We need the development packages for unit tests and linter checker.
         working-directory: "./backend/"
