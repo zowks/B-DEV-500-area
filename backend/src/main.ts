@@ -12,7 +12,7 @@ import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes';
 
 function getSwaggerDocumentConfig(): Omit<OpenAPIObject, 'paths'> {
   return new DocumentBuilder()
-    .setTitle('AREA Backend API Documentation')
+    .setTitle('AREA API Documentation')
     .setDescription(
       'This document showcases all the API endpoints that you can use to communicate with the backend server. It provides example and an exhaustive set of param definitions.',
     )
@@ -44,6 +44,7 @@ async function bootstrap() {
   const swaggerTheme = new SwaggerTheme();
   const swaggerConfig: SwaggerCustomOptions = {
     customCss: swaggerTheme.getBuffer(SwaggerThemeNameEnum.DARK),
+    customSiteTitle: swaggerDocumentConfig.info.title,
   };
   SwaggerModule.setup('/', app, document, swaggerConfig);
 
