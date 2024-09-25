@@ -176,6 +176,7 @@ __generated__
 *.mobileprovision
 *.orig.*
 web-build
+expo-env.d.ts
 
 ### Backend
 
