@@ -1,0 +1,20 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("POSTGRESQL_URL")
+}
+
+model users {
+    id              String  @unique @default(uuid()) @db.Uuid
+    // IEFT defined the email theorical limit to 254 bytes.
+    email           String  @unique @db.VarChar(254)
+    hashed_password String  @map("hashed_password") @db.VarChar(255)
+    firstname       String  @db.VarChar(255)
+    lastname        String  @db.VarChar(255)
+    is_admin        Boolean @default(false)
+
+    @@map("user")
+}
