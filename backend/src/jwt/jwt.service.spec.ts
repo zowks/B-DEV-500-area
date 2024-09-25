@@ -110,6 +110,7 @@ describe('CryptoService', () => {
       const timeout = setTimeout(async function () {
         try {
           await jwtService.verifyJwe(jwe);
+          fail('JWE must have expired.');
         } catch (e) {
           expect(e).toBeInstanceOf(jose.errors.JWTClaimValidationFailed);
         }
