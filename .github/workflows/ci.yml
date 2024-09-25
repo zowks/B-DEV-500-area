@@ -32,6 +32,10 @@ jobs:
         working-directory: "./backend/"
         run: "npm run test"
 
+      - name: "Building the project"
+        working-directory: "./backend/"
+        run: "npm run build"
+
   build-docker-image:
     name: "Building the Docker image"
     runs-on: "ubuntu-latest"
