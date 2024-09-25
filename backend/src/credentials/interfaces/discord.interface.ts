@@ -1,4 +1,4 @@
 export interface DiscordCredentials {
-  clientID: string;
-  clientSecret: string;
+    clientID: string;
+    clientSecret: string;
 }

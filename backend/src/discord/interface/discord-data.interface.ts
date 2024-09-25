@@ -1,4 +1,4 @@
 export interface DiscordData {
-  title: string;
-  message: string;
+    title: string;
+    message: string;
 }
