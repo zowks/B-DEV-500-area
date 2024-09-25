@@ -1,0 +1,6 @@
+*.spec.ts
+.env
+node_modules/
+dist/
+postgres/
+test/

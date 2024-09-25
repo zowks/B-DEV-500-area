@@ -1,0 +1,80 @@
+# This CI is meant to execute backend unit tests, integration tests and e2e
+# tests. If all the tests pass, the repository is mirrored to the Epitech one.
+# Finally, a Docker image will be built and pushed to a ghrc.io repository.
+
+name: "AREA Backend CI"
+
+on:
+  push:
+
+jobs:
+  run-tests:
+    name: "Execute the ESLinter checker and the unit tests"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4.1.1"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.17.0'
+
+      - name: "Install NPM package"
+        # We need the development packages for unit tests and linter checker.
+        working-directory: "./backend/"
+        run: "npm i -D"
+
+      # - name: "ESLint checker"
+      #   working-directory: "./backend/"
+      #   run: "npm run lint"
+
+      - name: "Tests execution"
+        working-directory: "./backend/"
+        run: "npm run test"
+
+      - name: "Building the project"
+        working-directory: "./backend/"
+        run: "npm run build"
+
+  build-docker-image:
+    name: "Building the Docker image"
+    runs-on: "ubuntu-latest"
+    needs:
+      - "run-tests"
+    if: "${{ github.ref_name == 'main' || github.ref_name == 'backend/dev' || github.ref_name == 'common/dev' }}"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4.1.1"
+
+      - name: "Login to Docker"
+        uses: "docker/login-action@master"
+        with:
+          registry: ghcr.io
+          username: "${{ vars.GHCR_USER }}"
+          password: "${{ secrets.GHCR_PAT }}"
+
+      - name: "Build the image"
+        id: "push"
+        uses: docker/build-push-action@master
+        with:
+          context: ./backend
+          push: true
+          tags: ghcr.io/epitechpromo2027/area-backend:latest
+
+  mirror-commits:
+    name: "Mirroring the refs to the Epitech repository"
+    needs:
+      - "run-tests"
+    if: "${{ github.ref_name == 'main' }}"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4.1.1"
+        with:
+            fetch-depth: 0
+
+      - name: "Mirror commits"
+        uses: "pixta-dev/repository-mirroring-action@v1.1.1"
+        with:
+            target_repo_url: "${{ vars.MIRROR_URL }}"
+            ssh_private_key: "${{ secrets.SSH_PRIVATE_KEY }}"
