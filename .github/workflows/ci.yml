@@ -24,9 +24,9 @@ jobs:
         working-directory: "./backend/"
         run: "npm i -D"
 
-      # - name: "ESLint checker"
-      #   working-directory: "./backend/"
-      #   run: "npm run lint"
+      - name: "ESLint checker"
+        working-directory: "./backend/"
+        run: "npm run lint -- backend"
 
       - name: "Tests execution"
         working-directory: "./backend/"
