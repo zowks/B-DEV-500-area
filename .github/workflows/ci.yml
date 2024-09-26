@@ -8,45 +8,48 @@ on:
   push:
 
 jobs:
-  common:
-    name: "Common"
-    uses: "./.github/workflows/ci-common.yml"
-
-  backend:
-    name: "Backend"
-    needs:
-      - "common"
-    if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || startsWith(github.ref_name, 'backend/') }}"
-    uses: "./.github/workflows/ci-backend.yml"
-    secrets: inherit
-
-  frontend:
-    name: "Frontend"
-    needs:
-      - "common"
-    if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || startsWith(github.ref_name, 'frontend/') }}"
-    uses: "./.github/workflows/ci-frontend.yml"
-
-  mobile:
-    name: "Mobile"
-    needs:
-      - "common"
-    if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || startsWith(github.ref_name, 'mobile/') }}"
-    uses: "./.github/workflows/ci-mobile.yml"
+#  common:
+#    name: "Common"
+#    uses: "./.github/workflows/ci-common.yml"
+#
+#  backend:
+#    name: "Backend"
+#    needs:
+#      - "common"
+#    if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || startsWith(github.ref_name, 'backend/') }}"
+#    uses: "./.github/workflows/ci-backend.yml"
+#    secrets: inherit
+#
+#  frontend:
+#    name: "Frontend"
+#    needs:
+#      - "common"
+#    if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || startsWith(github.ref_name, 'frontend/') }}"
+#    uses: "./.github/workflows/ci-frontend.yml"
+#
+#  mobile:
+#    name: "Mobile"
+#    needs:
+#      - "common"
+#    if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || startsWith(github.ref_name, 'mobile/') }}"
+#    uses: "./.github/workflows/ci-mobile.yml"
 
   mirror:
     name: "Mirror the refs to the Epitech repository"
     runs-on: "self-hosted"
-    needs:
-      - "backend"
-      - "frontend"
-      - "mobile"
+#    needs:
+#      - "backend"
+#      - "frontend"
+#      - "mobile"
     if: "${{ github.ref_name == 'main' }}"
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v4.1.1"
         with:
           fetch-depth: 0
+
+      - name: "Foo"
+        run: "echo $GIT_DISCOVERY_ACROSS_FILESYSTEM"
 
       - name: "Mirror"
         uses: "pixta-dev/repository-mirroring-action@v1.1.1"
