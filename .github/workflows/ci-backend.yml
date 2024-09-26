@@ -13,7 +13,7 @@ jobs:
     runs-on: "self-hosted"
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4.1.1"
+        uses: "actions/checkout@v4"
 
       - uses: actions/setup-node@v4
         with:
@@ -47,7 +47,7 @@ jobs:
     if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || github.ref_name == 'backend/dev' }}"
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4.1.1"
+        uses: "actions/checkout@v4"
 
       - name: "Login to Docker"
         uses: "docker/login-action@master"
