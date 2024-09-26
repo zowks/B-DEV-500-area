@@ -15,5 +15,5 @@ export type LoginResponse = {
 } | {
     code: 400;
     message: "Invalid credentials";
-    errors: string[]
+    errors: string[];
 };

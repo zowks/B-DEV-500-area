@@ -1,80 +1,55 @@
-# This CI is meant to execute backend unit tests, integration tests and e2e
-# tests. If all the tests pass, the repository is mirrored to the Epitech one.
-# Finally, a Docker image will be built and pushed to a ghrc.io repository.
+# This CI is meant to execute the backend, frontend, mobile and common ones.
+# If they are all successful, the repository is mirrored to the Epitech one
+# (only if the workflow runs on main).
 
-name: "AREA Backend CI"
+name: "AREA CI"
 
 on:
   push:
 
 jobs:
-  run-tests:
-    name: "Execute the ESLinter checker and the unit tests"
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v4.1.1"
+  common:
+    name: "Common"
+    uses: "./.github/workflows/ci-common.yml"
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20.17.0'
+  backend:
+    name: "Backend"
+    needs:
+      - "common"
+    if: "${{ github.ref_name == 'main' || startsWith(github.ref_name, 'common/') || startsWith(github.ref_name, 'backend/') }}"
+    uses: "./.github/workflows/ci-backend.yml"
+    secrets: inherit
 
-      - name: "Install NPM package"
-        # We need the development packages for unit tests and linter checker.
-        working-directory: "./backend/"
-        run: "npm i -D"
+  frontend:
+    name: "Frontend"
+    needs:
+      - "common"
+    if: "${{ github.ref_name == 'main' || startsWith(github.ref_name, 'common/') || startsWith(github.ref_name, 'frontend/') }}"
+    uses: "./.github/workflows/ci-frontend.yml"
 
-      - name: "ESLint checker"
-        working-directory: "./backend/"
-        run: "npm run lint"
+  mobile:
+    name: "Mobile"
+    needs:
+      - "common"
+    if: "${{ github.ref_name == 'main' || startsWith(github.ref_name, 'common/') || startsWith(github.ref_name, 'mobile/') }}"
+    uses: "./.github/workflows/ci-mobile.yml"
 
-      - name: "Tests execution"
-        working-directory: "./backend/"
-        run: "npm run test"
-
-      - name: "Building the project"
-        working-directory: "./backend/"
-        run: "npm run build"
-
-  build-docker-image:
-    name: "Building the Docker image"
+  mirror:
+    name: "Mirror the refs to the Epitech repository"
     runs-on: "ubuntu-latest"
     needs:
-      - "run-tests"
-    if: "${{ github.ref_name == 'main' || github.ref_name == 'backend/dev' || github.ref_name == 'common/dev' }}"
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v4.1.1"
-
-      - name: "Login to Docker"
-        uses: "docker/login-action@master"
-        with:
-          registry: ghcr.io
-          username: "${{ vars.GHCR_USER }}"
-          password: "${{ secrets.GHCR_PAT }}"
-
-      - name: "Build the image"
-        id: "push"
-        uses: docker/build-push-action@master
-        with:
-          context: ./backend
-          push: true
-          tags: ghcr.io/epitechpromo2027/b-dev-500-lil-5-1-area-merlin.cyffers:latest
-
-  mirror-commits:
-    name: "Mirroring the refs to the Epitech repository"
-    needs:
-      - "run-tests"
+      - "backend"
+      - "frontend"
+      - "mobile"
     if: "${{ github.ref_name == 'main' }}"
-    runs-on: "ubuntu-latest"
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v4.1.1"
         with:
-            fetch-depth: 0
+          fetch-depth: 0
 
-      - name: "Mirror commits"
+      - name: "Mirror"
         uses: "pixta-dev/repository-mirroring-action@v1.1.1"
         with:
-            target_repo_url: "${{ vars.MIRROR_URL }}"
-            ssh_private_key: "${{ secrets.SSH_PRIVATE_KEY }}"
+          target_repo_url: "${{ vars.MIRROR_URL }}"
+          ssh_private_key: "${{ secrets.SSH_PRIVATE_KEY }}"
