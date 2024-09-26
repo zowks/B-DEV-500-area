@@ -16,21 +16,22 @@ jobs:
     name: "Backend"
     needs:
       - "common"
-    if: "${{ github.ref_name == 'main' || startsWith(github.ref_name, 'backend/') }}"
+    if: "${{ github.ref_name == 'main' || startsWith(github.ref_name, 'common/') || startsWith(github.ref_name, 'backend/') }}"
     uses: "./.github/workflows/ci-backend.yml"
+    secrets: inherit
 
   frontend:
     name: "Frontend"
     needs:
       - "common"
-    if: "${{ github.ref_name == 'main' || startsWith(github.ref_name, 'frontend/') }}"
+    if: "${{ github.ref_name == 'main' || startsWith(github.ref_name, 'common/') || startsWith(github.ref_name, 'frontend/') }}"
     uses: "./.github/workflows/ci-frontend.yml"
 
   mobile:
     name: "Mobile"
     needs:
       - "common"
-    if: "${{ github.ref_name == 'main' || startsWith(github.ref_name, 'mobile/') }}"
+    if: "${{ github.ref_name == 'main' || startsWith(github.ref_name, 'common/') || startsWith(github.ref_name, 'mobile/') }}"
     uses: "./.github/workflows/ci-mobile.yml"
 
   mirror:
