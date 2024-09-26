@@ -36,7 +36,7 @@ jobs:
 
   mirror:
     name: "Mirror the refs to the Epitech repository"
-    runs-on: "ubuntu-latest"
+    runs-on: "self-hosted"
     needs:
       - "backend"
       - "frontend"
