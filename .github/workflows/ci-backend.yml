@@ -10,7 +10,7 @@ on:
 jobs:
   run-tests:
     name: "Execute the ESLint and Prettier checkers and the unit tests"
-    runs-on: "ubuntu-latest"
+    runs-on: "self-hosted"
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v4.1.1"
@@ -41,10 +41,10 @@ jobs:
 
   build-docker-image:
     name: "Building the Docker image"
-    runs-on: "ubuntu-latest"
+    runs-on: "self-hosted"
     needs:
       - "run-tests"
-    if: "${{ github.ref_name == 'main' || github.ref_name == 'backend/dev' || github.ref_name == 'common/dev' }}"
+    if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || github.ref_name == 'backend/dev' }}"
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v4.1.1"
