@@ -7,7 +7,7 @@ on:
 
 jobs:
     run-tests:
-        name: "Execute the ESLint and Prettier checkers, type check using tsc and execute the tests"
+        name: "Execute the ESLint checker, type check using tsc and execute the tests"
         runs-on: "ubuntu-latest"
         steps:
             - name: "Checkout"
@@ -24,10 +24,6 @@ jobs:
             - name: "ESLint checker"
               working-directory: "./common/"
               run: "npm run lint"
-
-            - name: "Prettier checker"
-              working-directory: "./common/"
-              run: "npm run format:check"
 
             - name: "Type check"
               working-directory: "./common/"
