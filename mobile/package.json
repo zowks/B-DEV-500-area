@@ -20,6 +20,8 @@
     "test": "jest",
     "test:watch": "jest --watchAll",
     "test:updatesnapshots": "jest -u --coverage=false",
+    "lint": "expo lint",
+    "lint:fix": "eslint . --fix",
     "clean": "rm -rf .expo node_modules",
     "postinstall": "npx tailwindcss -i ./global.css -o ./node_modules/.cache/nativewind/global.css"
   },
@@ -81,6 +83,9 @@
     "@types/jest": "^29.5.13",
     "@types/react": "~18.2.79",
     "@types/react-test-renderer": "^18.3.0",
+    "eslint": "^8.57.0",
+    "eslint-config-expo": "^7.1.2",
+    "eslint-plugin-testing-library": "^6.3.0",
     "jest": "^29.7.0",
     "jest-expo": "^51.0.4",
     "react-test-renderer": "18.2.0",
