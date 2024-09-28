@@ -6,12 +6,19 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "expo start -c --ios",
-    "dev:web": "expo start -c --web",
-    "dev:android": "expo start -c --android",
-    "android": "expo start -c --android",
-    "ios": "expo start -c --ios",
-    "web": "expo start -c --web",
+    "start": "expo start -c",
+    "start:android": "expo start -c --android",
+    "start:ios": "expo start -c --ios",
+    "start:web": "expo start -c --web",
+    "dev": "npm run start",
+    "dev:android": "npm run start:android",
+    "dev:ios": "npm run start:ios",
+    "dev:web": "npm run start:web",
+    "android": "npm run android",
+    "ios": "npm run start:ios",
+    "web": "npm run start:web",
+    "test": "jest --watchAll",
+    "test:watch": "jest --watchAll",
     "clean": "rm -rf .expo node_modules",
     "postinstall": "npx tailwindcss -i ./global.css -o ./node_modules/.cache/nativewind/global.css"
   },
@@ -37,7 +44,7 @@
     "nativewind": "^4.0.33",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.74.3",
+    "react-native": "^0.74.5",
     "react-native-reanimated": "~3.10.1",
     "react-native-safe-area-context": "4.10.5",
     "react-native-screens": "~3.31.1",
@@ -51,6 +58,6 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "~18.2.79",
-    "typescript": "^5.3.3"
+    "typescript": "~5.3.3"
   }
 }

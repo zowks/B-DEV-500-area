@@ -190,5 +190,7 @@ expo-env.d.ts
 
 ### Mobile
 
+mobile/.gitignore
+
 # Metro
 .metro-health-check*
