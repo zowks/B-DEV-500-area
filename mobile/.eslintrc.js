@@ -7,8 +7,9 @@ module.exports = {
     rules: {
         "indent": ["error", 4],
         "linebreak-style": ["error", "unix"],
-        "quotes": ["error", "double"],
-        "semi": ["error", "always"]
+        "quotes": ["warn", "double"],
+        "semi": ["error", "always"],
+        "object-curly-spacing": ["warn", "always"]
     },
     overrides: [
         {
