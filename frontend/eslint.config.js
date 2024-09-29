@@ -25,6 +25,18 @@ export default [
         }
     },
     {
+        files: ["src/lib/components/ui/**/*.svelte"],
+        rules: {
+            "@typescript-eslint/no-unused-vars": [
+                "warn",
+                {
+                    argsIgnorePattern: "^_",
+                    varsIgnorePattern: "^\\$\\$(Props|Events|Slots|Generic)$"
+                }
+            ]
+        }
+    },
+    {
         ignores: ["build/", ".svelte-kit/", "dist/"]
     },
     {
