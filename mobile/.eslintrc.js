@@ -6,7 +6,7 @@ module.exports = {
     extends: "expo",
     rules: {
         "indent": ["error", 4],
-        "linebreak-style": ["error", "unix"],
+        "linebreak-style": ["error", "off"],
         "quotes": ["warn", "double"],
         "semi": ["error", "always"],
         "object-curly-spacing": ["warn", "always"]
