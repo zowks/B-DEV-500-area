@@ -59,7 +59,7 @@
                         <p class="h-[1.2rem] w-[1.2rem]">
                             {i18nDisplayNames[$locale].short}
                         </p>
-                        <span class="sr-only">{$LL.selectLanguage()}</span>
+                        <span class="sr-only">{$LL.header.selectLanguage()}</span>
                     </Button>
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Content>
@@ -76,19 +76,19 @@
                         class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                     <Moon
                         class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                    <span class="sr-only">{$LL.toggleTheme()}</span>
+                    <span class="sr-only">{$LL.header.toggleTheme()}</span>
                 </Button>
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger asChild let:builder>
                         <Button builders={[builder]} variant="outline" class="px-0.5 rounded-l-none border-l-0">
                             <ArrowDown class="h-[1.2rem] w-[1.2rem]" />
-                            <span class="sr-only">{$LL.selectTheme()}</span>
+                            <span class="sr-only">{$LL.header.selectTheme()}</span>
                         </Button>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content align="end">
-                        <DropdownMenu.Item on:click={() => setMode("light")}>{$LL.light()}</DropdownMenu.Item>
-                        <DropdownMenu.Item on:click={() => setMode("dark")}>{$LL.dark()}</DropdownMenu.Item>
-                        <DropdownMenu.Item on:click={() => resetMode()}>{$LL.system()}</DropdownMenu.Item>
+                        <DropdownMenu.Item on:click={() => setMode("light")}>{$LL.header.light()}</DropdownMenu.Item>
+                        <DropdownMenu.Item on:click={() => setMode("dark")}>{$LL.header.dark()}</DropdownMenu.Item>
+                        <DropdownMenu.Item on:click={() => resetMode()}>{$LL.header.system()}</DropdownMenu.Item>
                     </DropdownMenu.Content>
                 </DropdownMenu.Root>
             </div>
