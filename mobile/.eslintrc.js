@@ -6,10 +6,17 @@ module.exports = {
     extends: "expo",
     rules: {
         "indent": ["error", 4],
-        "linebreak-style": ["error", "unix"],
+        "linebreak-style": "off",
         "quotes": ["warn", "double"],
         "semi": ["error", "always"],
-        "object-curly-spacing": ["warn", "always"]
+        "object-curly-spacing": ["warn", "always"],
+        "no-restricted-imports": [
+            "error",
+            {
+                "name": "react-use",
+                "message": "Please import the specific function from react-use instead of the whole library (e.g. `import useMount from \"react-use/lib/useMount\"`)"
+            }
+        ]
     },
     overrides: [
         {
