@@ -6,7 +6,8 @@ export default defineConfig({
     plugins: [sveltekit()],
     resolve: {
         alias: {
-            "@common": path.resolve(__dirname, "../common/src"),
-        },
-    },
+            "$i18n": path.resolve(__dirname, "./src/i18n"),
+            "@common": path.resolve(__dirname, "../common/src")
+        }
+    }
 });
