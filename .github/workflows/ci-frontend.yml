@@ -21,6 +21,10 @@ jobs:
         working-directory: "./frontend/"
         run: "npm ci"
 
+      - name: "Generate typesafe-i18n files"
+        working-directory: "./frontend/"
+        run: "npm run typesafe-i18n:ci"
+
       - name: "ESLint checker"
         working-directory: "./frontend/"
         run: "npm run lint"
