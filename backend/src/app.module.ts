@@ -12,6 +12,7 @@ import { Argon2Module } from "./argon2/argon2.module";
 import { JwtModule } from "./jwt/jwt.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { UsersModule } from "./users/users.module";
+import { JwtGuard } from "./auth/guards/jwt.guard";
 
 @Module({
     imports: [
@@ -28,6 +29,7 @@ import { UsersModule } from "./users/users.module";
         PrismaModule,
         UsersModule
     ],
-    controllers: [YoutubeController, AuthController]
+    controllers: [YoutubeController, AuthController],
+    providers: [JwtGuard]
 })
 export class AppModule {}

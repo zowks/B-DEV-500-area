@@ -57,8 +57,8 @@ export class AuthService {
                 email: loginDto.email
             },
             select: {
-                hashed_password: true,
-                id: true
+                id: true,
+                hashed_password: true
             }
         });
 

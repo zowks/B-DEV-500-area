@@ -29,7 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
 
         try {
             const payload = (await this.jwtService.verifyJwe(jwe)) as Pick<
-                User, // TODO: use the type 'User' when implemented,
+                User,
                 "id"
             >;
             return this.success(payload);

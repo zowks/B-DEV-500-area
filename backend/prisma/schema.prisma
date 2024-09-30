@@ -16,5 +16,5 @@ model users {
     lastname        String  @db.VarChar(255)
     is_admin        Boolean @default(false)
 
-    @@map("user")
+    @@map("users")
 }

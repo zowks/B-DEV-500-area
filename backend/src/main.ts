@@ -5,6 +5,7 @@ import {
     SwaggerCustomOptions,
     SwaggerModule
 } from "@nestjs/swagger";
+import helmet from "helmet";
 import { AppModule } from "./app.module";
 import { ConfigService } from "@nestjs/config";
 import { ValidationPipe } from "@nestjs/common";
@@ -29,11 +30,11 @@ function getSwaggerDocumentConfig(): Omit<OpenAPIObject, "paths"> {
 }
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule, { cors: true });
-
-    app.getHttpAdapter().getInstance().disable("x-powered-by");
+    const app = await NestFactory.create(AppModule);
 
     app.useGlobalPipes(new ValidationPipe());
+
+    app.use(helmet());
 
     const configService = app.get(ConfigService);
 
