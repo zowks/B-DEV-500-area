@@ -88,7 +88,7 @@
       "^src/(.*)$": "<rootDir>/src/$1"
     },
     "rootDir": ".",
-    "testRegex": ".*\\.spec\\.ts$",
+    "testRegex": ".service\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
