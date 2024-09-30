@@ -21,6 +21,10 @@ jobs:
         working-directory: "./mobile/"
         run: "npm ci"
 
+      - name: "Generate typesafe-i18n files"
+        working-directory: "./mobile/"
+        run: "npm run i18n:ci"
+
       - name: "ESLint checker"
         working-directory: "./mobile/"
         run: "npm run lint"

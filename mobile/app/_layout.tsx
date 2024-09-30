@@ -12,6 +12,7 @@ import { useColorScheme } from "~/lib/useColorScheme";
 import { PortalHost } from "@rn-primitives/portal";
 import { ThemeToggle } from "~/components/ThemeToggle";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
+import { useI18nContext } from "~/src/i18n/i18n-react";
 
 const LIGHT_THEME: Theme = {
     dark: false,
@@ -33,6 +34,8 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
     const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
     const [isColorSchemeLoaded, setIsColorSchemeLoaded] = useState(false);
+
+    const { LL } = useI18nContext();
 
     useMount(() => {
         (async () => {
@@ -71,7 +74,7 @@ export default function RootLayout() {
                 <Stack.Screen
                     name='index'
                     options={{
-                        title: "Starter Base",
+                        title: LL.HI({ name: "Rick" }),
                         headerRight: () => <ThemeToggle />,
                     }}
                 />
