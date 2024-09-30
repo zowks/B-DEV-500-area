@@ -6,3 +6,9 @@ export interface User {
     readonly lastname: string;
     readonly is_admin: boolean;
 }
+
+export interface UserInfo {
+    readonly email: string;
+    readonly firstname: string;
+    readonly lastname: string;
+}
