@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { HttpModule } from "@nestjs/axios";
 import { ConfigModule } from "@nestjs/config";
 
 import { PrismaModule } from "src/prisma/prisma.module";
@@ -20,7 +19,6 @@ import { DiscordCredentialsService } from "src/discord/discord_credentials.servi
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
         PrismaModule,
-        HttpModule,
         YoutubeModule,
         CronModule,
         DiscordModule,
