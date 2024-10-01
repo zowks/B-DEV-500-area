@@ -42,7 +42,7 @@ export default [
     {
         rules: {
             "indent": ["error", 4],
-            "linebreak-style": ["error", "unix"],
+            "linebreak-style": "off",
             "quotes": ["warn", "double"],
             "semi": ["error", "always"],
             "object-curly-spacing": ["warn", "always"]
