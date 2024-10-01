@@ -18,7 +18,13 @@ const en = {
         signIn: {
             title: "Sign in",
             subtitle: "Enter your credentials below to login to your account",
-            forgotPassword: "Forgot your password?",
+            forgotPassword: {
+                trigger: "Forgot your password?",
+                title: "Forgot password",
+                unavailable: "Password reset is not yet available.",
+                contact: "Please contact the support to reset your password.",
+                action: "Understood"
+            },
             action: "Sign in"
         },
         signUp: {

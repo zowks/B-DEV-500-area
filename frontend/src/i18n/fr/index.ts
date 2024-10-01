@@ -18,7 +18,13 @@ const fr = {
         signIn: {
             title: "Se connecter",
             subtitle: "Entrez vos identifiants ci-dessous pour vous connecter à votre compte",
-            forgotPassword: "Mot de passe oublié ?",
+            forgotPassword: {
+                trigger: "Mot de passe oublié ?",
+                title: "Mot de passe oublié",
+                unavailable: "La réinitialisation du mot de passe n'est pas encore disponible.",
+                contact: "Veuillez contacter le support pour réinitialiser votre mot de passe.",
+                action: "Compris"
+            },
             action: "Connexion"
         },
         signUp: {

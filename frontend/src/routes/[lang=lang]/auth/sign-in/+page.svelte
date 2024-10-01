@@ -1,4 +1,5 @@
 <script lang="ts">
+    import * as AlertDialog from "$lib/components/ui/alert-dialog";
     import { Button } from "$lib/components/ui/button";
     import { Input } from "$lib/components/ui/input";
     import { Label } from "$lib/components/ui/label";
@@ -22,9 +23,23 @@
                 <div class="flex items-center">
                     <Label for="password">{$LL.auth.password()}</Label>
                     <!-- TODO: Forgot password -->
-                    <a href="##" class="ml-auto inline-block text-sm underline">
-                        {$LL.auth.signIn.forgotPassword()}
-                    </a>
+                    <AlertDialog.Root closeOnOutsideClick>
+                        <AlertDialog.Trigger class="ml-auto inline-block text-sm underline">
+                            {$LL.auth.signIn.forgotPassword.trigger()}
+                        </AlertDialog.Trigger>
+                        <AlertDialog.Content>
+                            <AlertDialog.Header>
+                                <AlertDialog.Title>{$LL.auth.signIn.forgotPassword.title()}</AlertDialog.Title>
+                                <AlertDialog.Description>
+                                    {$LL.auth.signIn.forgotPassword.unavailable()}<br />
+                                    {$LL.auth.signIn.forgotPassword.contact()}
+                                </AlertDialog.Description>
+                            </AlertDialog.Header>
+                            <AlertDialog.Footer>
+                                <AlertDialog.Action>{$LL.auth.signIn.forgotPassword.action()}</AlertDialog.Action>
+                            </AlertDialog.Footer>
+                        </AlertDialog.Content>
+                    </AlertDialog.Root>
                 </div>
                 <Input id="password" type="password" placeholder="••••••••" required />
             </div>
