@@ -1,24 +1,25 @@
 import { Module } from "@nestjs/common";
-import { YoutubeController } from "./youtube/youtube.controller";
-import { CredentialsModule } from "./credentials/credentials.module";
-import { YoutubeModule } from "./youtube/youtube.module";
 import { HttpModule } from "@nestjs/axios";
 import { ConfigModule } from "@nestjs/config";
-import { CronModule } from "./cron/cron.module";
-import { DiscordModule } from "./discord/discord.module";
-import { AuthController } from "./auth/auth.controller";
-import { AuthModule } from "./auth/auth.module";
-import { Argon2Module } from "./argon2/argon2.module";
-import { JwtModule } from "./jwt/jwt.module";
-import { PrismaModule } from "./prisma/prisma.module";
-import { UsersModule } from "./users/users.module";
-import { JwtGuard } from "./auth/guards/jwt.guard";
+
+import { PrismaModule } from "src/prisma/prisma.module";
+import { AuthModule } from "src/auth/auth.module";
+import { Argon2Module } from "src/argon2/argon2.module";
+import { JwtModule } from "src/jwt/jwt.module";
+import { JwtGuard } from "src/auth/guards/jwt.guard";
+
+import { YoutubeModule } from "src/youtube/youtube.module";
+import { CronModule } from "src/cron/cron.module";
+import { DiscordModule } from "src/discord/discord.module";
+import { UsersModule } from "src/users/users.module";
+
+import { YoutubeCredentialsService } from 'src/youtube/youtube_credentials.service';
+import { DiscordCredentialsService } from 'src/discord/discord_credentials.service';
 
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
         PrismaModule,
-        CredentialsModule,
         HttpModule,
         YoutubeModule,
         CronModule,
@@ -29,7 +30,6 @@ import { JwtGuard } from "./auth/guards/jwt.guard";
         PrismaModule,
         UsersModule
     ],
-    controllers: [YoutubeController, AuthController],
-    providers: [JwtGuard]
+    providers: [JwtGuard, YoutubeCredentialsService, DiscordCredentialsService]
 })
 export class AppModule {}

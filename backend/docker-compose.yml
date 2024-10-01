@@ -18,6 +18,16 @@ services:
     ports:
       - 5480:8080
 
+  redis:
+    image: redis:8.0-M01
+    restart: always
+    container_name: area-redis
+    ports:
+      - 6379:6379
+    env_file:
+      - .env
+    command: /bin/sh -c redis-server --requirepass "$${REDIS_PASSWORD}"
+
   # server:
   #   build:
   #     context: .

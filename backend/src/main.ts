@@ -10,6 +10,9 @@ import { AppModule } from "./app.module";
 import { ConfigService } from "@nestjs/config";
 import { ValidationPipe } from "@nestjs/common";
 import { SwaggerTheme, SwaggerThemeNameEnum } from "swagger-themes";
+import * as session from "express-session";
+import RedisStore from "connect-redis";
+import { createClient } from "redis";
 
 function getSwaggerDocumentConfig(): Omit<OpenAPIObject, "paths"> {
     return new DocumentBuilder()
@@ -37,6 +40,22 @@ async function bootstrap() {
     app.use(helmet());
 
     const configService = app.get(ConfigService);
+    const redisPassword = configService.getOrThrow("REDIS_PASSWORD");
+    const redisStore = new RedisStore({
+        client: createClient({
+            url: `redis://${redisPassword}@localhost:6379`,
+            pingInterval: 60000
+        })
+    });
+
+    app.use(
+        session({
+            secret: configService.getOrThrow("EXPRESS_SESSION_SECRET"),
+            resave: false,
+            saveUninitialized: false,
+            store: redisStore
+        })
+    );
 
     const swaggerDocumentConfig = getSwaggerDocumentConfig();
 

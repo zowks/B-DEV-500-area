@@ -2,28 +2,23 @@ import { HttpService } from "@nestjs/axios";
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { YouTubeVideo } from "./interfaces/youtube-video.interface";
 import { YouTubeVideoListResponse } from "./interfaces/repsonses.interface";
-import { CredentialsService } from "src/credentials/credentials.service";
-import { YouTubeCredentials } from "src/credentials/interfaces/youtube.interface";
 import { Poller } from "src/cron/interfaces/poller.interface";
+import { YoutubeCredentialsService } from "./youtube_credentials.service";
 
 @Injectable()
 export class YouTubeService {
-    private credentials: YouTubeCredentials;
     private cache = {
         lastLikedVideoID: null,
         lastLikedVideoFirstRun: true
     };
 
     constructor(
-        private readonly credentialsService: CredentialsService,
+        private readonly youtubeCredentialsService: YoutubeCredentialsService,
         private readonly httpService: HttpService
-    ) {
-        this.credentials = this.credentialsService.getYouTubeCredentials();
-    }
+    ) {}
 
-    // TODO: Implement the 'state' parameter to avoid cross-site request forgery.
-    getOAuthURL() {
-        return this.credentials.oauthURL;
+    async getOAuthToken(state: string) {
+        return this.youtubeCredentialsService.getOAuthURL(state);
     }
 
     async getLastLikedVideo(accessToken: string): Promise<YouTubeVideo | null> {
@@ -64,7 +59,7 @@ export class YouTubeService {
 
     getPollerForLastLikedVideo(accessToken: string): Poller<YouTubeVideo> {
         return {
-            delay: this.credentials.pollingDelay,
+            delay: 10,
             method: () => this.getLastLikedVideo(accessToken)
         };
     }

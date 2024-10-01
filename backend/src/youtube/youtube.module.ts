@@ -1,11 +1,15 @@
 import { Module } from "@nestjs/common";
-import { YouTubeService } from "./youtube.service";
 import { HttpModule } from "@nestjs/axios";
-import { CredentialsModule } from "src/credentials/credentials.module";
+import { YouTubeService } from "./youtube.service";
+import { YoutubeCredentialsService } from "./youtube_credentials.service";
+import { YoutubeController } from "./youtube.controller";
+import { CronModule } from "src/cron/cron.module";
+import { DiscordModule } from "src/discord/discord.module";
 
 @Module({
-    imports: [CredentialsModule, HttpModule],
-    providers: [YouTubeService],
-    exports: [YouTubeService]
+    imports: [HttpModule, CronModule, DiscordModule],
+    providers: [YouTubeService, YoutubeCredentialsService],
+    exports: [YouTubeService, YoutubeCredentialsService],
+    controllers: [YoutubeController]
 })
 export class YoutubeModule {}

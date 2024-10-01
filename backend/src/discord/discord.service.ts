@@ -1,24 +1,19 @@
 import { Injectable } from "@nestjs/common";
 import { HttpService } from "@nestjs/axios";
-import { CredentialsService } from "src/credentials/credentials.service";
-import { DiscordCredentials } from "src/credentials/interfaces/discord.interface";
+import { DiscordCredentialsService } from "src/discord/discord_credentials.service";
 import { YouTubeVideo } from "src/youtube/interfaces/youtube-video.interface";
 import { Pusher } from "src/cron/interfaces/pusher.interface";
 
 @Injectable()
 export class DiscordService {
-    private credentials: DiscordCredentials;
-
     constructor(
-        private readonly credentialsService: CredentialsService,
+        private readonly discordCredentialsService: DiscordCredentialsService,
         private readonly httpService: HttpService
-    ) {
-        this.credentials = this.credentialsService.getDiscordCredentials();
-    }
+    ) {}
 
     pushNewYouTubeLikedVideo(data: YouTubeVideo): Promise<void> {
         return this.httpService.axiosRef.post(
-            `https://discord.com/api/webhooks/${this.credentials.clientID}/${this.credentials.clientSecret}`,
+            `https://discord.com/api/webhooks/${this.discordCredentialsService.clientID}/${this.discordCredentialsService.clientSecret}`,
             {
                 embeds: [
                     {

@@ -1,11 +1,11 @@
 import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
-import { CredentialsModule } from "src/credentials/credentials.module";
 import { DiscordService } from "./discord.service";
+import { DiscordCredentialsService } from "./discord_credentials.service";
 
 @Module({
-    imports: [CredentialsModule, HttpModule],
-    providers: [DiscordService],
-    exports: [DiscordService]
+    imports: [HttpModule],
+    providers: [DiscordService, DiscordCredentialsService],
+    exports: [DiscordService, DiscordCredentialsService]
 })
 export class DiscordModule {}

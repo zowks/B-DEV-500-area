@@ -13,6 +13,8 @@ WORKDIR /usr/app/
 
 COPY src/ src/
 
+COPY prisma/ prisma/
+
 COPY package.json package.json
 
 COPY package-lock.json package-lock.json
@@ -24,6 +26,8 @@ COPY tsconfig.json tsconfig.json
 RUN npm install --save
 
 FROM setup AS build
+
+RUN npm run prisma:generate
 
 RUN npm run build
 

@@ -8,13 +8,24 @@ datasource db {
 }
 
 model users {
-    id              String  @unique @default(uuid()) @db.Uuid
+    id              String         @unique @default(uuid()) @db.Uuid
     // IEFT defined the email theorical limit to 254 bytes.
-    email           String  @unique @db.VarChar(254)
-    hashed_password String  @map("hashed_password") @db.VarChar(255)
-    firstname       String  @db.VarChar(255)
-    lastname        String  @db.VarChar(255)
-    is_admin        Boolean @default(false)
+    email           String         @unique @db.VarChar(254)
+    hashed_password String         @map("hashed_password") @db.VarChar(255)
+    firstname       String         @db.VarChar(255)
+    lastname        String         @db.VarChar(255)
+    is_admin        Boolean        @default(false)
+    access_tokens   google_oauth[]
 
     @@map("users")
+}
+
+model google_oauth {
+    id           Int      @id @default(autoincrement())
+    access_token String   @unique @map("access_token")
+    expires_at   DateTime @map("expires_at") @db.Timestamp()
+    usersId      String   @map("users_id") @db.Uuid
+    users        users    @relation(fields: [usersId], references: [id], onDelete: Cascade)
+
+    @@map("google_oauth")
 }

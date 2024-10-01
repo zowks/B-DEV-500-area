@@ -1,22 +1,36 @@
-import { Controller, Get, Query, Req, Res } from "@nestjs/common";
+import { getRandomValues } from "node:crypto";
+import { Controller, Get, Query, Req, Res, UseGuards } from "@nestjs/common";
 import { YouTubeService } from "./youtube.service";
 import { Request, Response } from "express";
 import { CronService } from "src/cron/cron.service";
 import { DiscordService } from "src/discord/discord.service";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { JwtGuard } from "src/auth/guards/jwt.guard";
+import { YoutubeCredentialsService } from "./youtube_credentials.service";
 
+@UseGuards(JwtGuard)
 @ApiTags("youtube")
+@ApiUnauthorizedResponse({
+    description:
+        "This route is protected. The client must supply a Bearer token."
+})
 @Controller("youtube")
 export class YoutubeController {
     constructor(
         private readonly cronService: CronService,
         private readonly youtubeService: YouTubeService,
+        private readonly youtubeCredentialsService: YoutubeCredentialsService,
         private readonly discordService: DiscordService
     ) {}
 
     @Get("/")
-    oauthService(@Res() res: Response) {
-        return res.redirect(this.youtubeService.getOAuthURL());
+    oauthService(@Req() req: Request, @Res() res: Response) {
+        const stateArrayView = new Uint32Array(16);
+        getRandomValues(stateArrayView);
+        const state = Buffer.from(stateArrayView.buffer).toString("hex");
+        req.session["state"] = state;
+        req.session.save(console.error);
+        return res.redirect(this.youtubeCredentialsService.getOAuthURL(state));
     }
 
     // TODO: Implement the 'state' verification to avoid corss-site request
