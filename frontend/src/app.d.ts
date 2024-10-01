@@ -1,5 +1,4 @@
-type Locales = import("$i18n/i18n-types").Locales;
-type TranslationFunctions = import("$i18n/i18n-types").TranslationFun;
+import type { Locales, TranslationFunctions } from "$i18n/i18n-types";
 
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces

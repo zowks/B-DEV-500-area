@@ -6,8 +6,7 @@
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
     import { Button } from "$lib/components/ui/button";
     import { Separator } from "$lib/components/ui/separator";
-    // TODO: use pushState and replaceState
-    import { invalidateAll /* pushState, replaceState */ } from "$app/navigation";
+    import { invalidateAll } from "$app/navigation";
     import { browser } from "$app/environment";
     import { page } from "$app/stores";
     import type { Locales } from "$i18n/i18n-types";
@@ -17,13 +16,11 @@
     import * as i18nUtils from "$i18n/utils";
     import { default as i18nDisplayNames } from "$i18n/displayNames";
 
-    const switchLocale = async (newLocale: Locales, updateState = true) => {
+    const switchLocale = async (newLocale: Locales) => {
         if (!newLocale || $locale === newLocale) return;
 
         await loadLocaleAsync(newLocale);
         setLocale(newLocale);
-        if (updateState)
-            history.pushState({ locale: newLocale }, "", i18nUtils.replaceLocaleInUrl($page.url, newLocale));
         await invalidateAll();
     };
 
@@ -31,21 +28,11 @@
         document.querySelector("html")?.setAttribute("lang", $locale);
 
     /**
-     * Update locale when navigating via browser back/forward buttons.
-     */
-    const handlePopStateEvent = async ({ state }: PopStateEvent) => switchLocale(state.locale, false);
-
-    /**
      * Update locale when page store changes.
      */
-    $: if (browser) {
-        const lang = $page.params.lang as Locales;
-        switchLocale(lang, false);
-        history.replaceState({ ...history.state, locale: lang }, "", i18nUtils.replaceLocaleInUrl($page.url, lang));
-    }
+    $: if (browser)
+        switchLocale($page.params.lang as Locales);
 </script>
-
-<svelte:window on:popstate={handlePopStateEvent} />
 
 <header>
     <div class="grid grid-cols-2 m-2">
