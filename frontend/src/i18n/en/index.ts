@@ -41,6 +41,12 @@ const en = {
         alreadyHaveAccount: "Already have an account?",
         placeholders: {
             email: "email@example.com"
+        },
+        errors: {
+            missingEmail: "Email is required",
+            incorrectEmail: "Email is incorrect",
+            missingPassword: "Password is required",
+            incorrectPassword: "Password is incorrect (must be at least 8 characters)"
         }
     }
 } satisfies BaseTranslation;

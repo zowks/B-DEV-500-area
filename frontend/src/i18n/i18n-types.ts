@@ -64,10 +64,28 @@ type RootTranslation = {
 			 * E​n​t​e​r​ ​y​o​u​r​ ​c​r​e​d​e​n​t​i​a​l​s​ ​b​e​l​o​w​ ​t​o​ ​l​o​g​i​n​ ​t​o​ ​y​o​u​r​ ​a​c​c​o​u​n​t
 			 */
 			subtitle: string
-			/**
-			 * F​o​r​g​o​t​ ​y​o​u​r​ ​p​a​s​s​w​o​r​d​?
-			 */
-			forgotPassword: string
+			forgotPassword: {
+				/**
+				 * F​o​r​g​o​t​ ​y​o​u​r​ ​p​a​s​s​w​o​r​d​?
+				 */
+				trigger: string
+				/**
+				 * F​o​r​g​o​t​ ​p​a​s​s​w​o​r​d
+				 */
+				title: string
+				/**
+				 * P​a​s​s​w​o​r​d​ ​r​e​s​e​t​ ​i​s​ ​n​o​t​ ​y​e​t​ ​a​v​a​i​l​a​b​l​e​.
+				 */
+				unavailable: string
+				/**
+				 * P​l​e​a​s​e​ ​c​o​n​t​a​c​t​ ​t​h​e​ ​s​u​p​p​o​r​t​ ​t​o​ ​r​e​s​e​t​ ​y​o​u​r​ ​p​a​s​s​w​o​r​d​.
+				 */
+				contact: string
+				/**
+				 * U​n​d​e​r​s​t​o​o​d
+				 */
+				action: string
+			}
 			/**
 			 * S​i​g​n​ ​i​n
 			 */
@@ -110,6 +128,24 @@ type RootTranslation = {
 			 * e​m​a​i​l​@​e​x​a​m​p​l​e​.​c​o​m
 			 */
 			email: string
+		}
+		errors: {
+			/**
+			 * E​m​a​i​l​ ​i​s​ ​r​e​q​u​i​r​e​d
+			 */
+			missingEmail: string
+			/**
+			 * E​m​a​i​l​ ​i​s​ ​i​n​c​o​r​r​e​c​t
+			 */
+			incorrectEmail: string
+			/**
+			 * P​a​s​s​w​o​r​d​ ​i​s​ ​r​e​q​u​i​r​e​d
+			 */
+			missingPassword: string
+			/**
+			 * P​a​s​s​w​o​r​d​ ​i​s​ ​i​n​c​o​r​r​e​c​t​ ​(​m​u​s​t​ ​b​e​ ​a​t​ ​l​e​a​s​t​ ​8​ ​c​h​a​r​a​c​t​e​r​s​)
+			 */
+			incorrectPassword: string
 		}
 	}
 }
@@ -165,10 +201,28 @@ export type TranslationFunctions = {
 			 * Enter your credentials below to login to your account
 			 */
 			subtitle: () => LocalizedString
-			/**
-			 * Forgot your password?
-			 */
-			forgotPassword: () => LocalizedString
+			forgotPassword: {
+				/**
+				 * Forgot your password?
+				 */
+				trigger: () => LocalizedString
+				/**
+				 * Forgot password
+				 */
+				title: () => LocalizedString
+				/**
+				 * Password reset is not yet available.
+				 */
+				unavailable: () => LocalizedString
+				/**
+				 * Please contact the support to reset your password.
+				 */
+				contact: () => LocalizedString
+				/**
+				 * Understood
+				 */
+				action: () => LocalizedString
+			}
 			/**
 			 * Sign in
 			 */
@@ -211,6 +265,24 @@ export type TranslationFunctions = {
 			 * email@example.com
 			 */
 			email: () => LocalizedString
+		}
+		errors: {
+			/**
+			 * Email is required
+			 */
+			missingEmail: () => LocalizedString
+			/**
+			 * Email is incorrect
+			 */
+			incorrectEmail: () => LocalizedString
+			/**
+			 * Password is required
+			 */
+			missingPassword: () => LocalizedString
+			/**
+			 * Password is incorrect (must be at least 8 characters)
+			 */
+			incorrectPassword: () => LocalizedString
 		}
 	}
 }

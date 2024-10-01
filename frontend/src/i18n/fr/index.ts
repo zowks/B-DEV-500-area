@@ -40,6 +40,12 @@ const fr = {
         alreadyHaveAccount: "Vous avez déjà un compte ?",
         placeholders: {
             email: "mail@exemple.fr"
+        },
+        errors: {
+            missingEmail: "L'adresse mail est requise",
+            incorrectEmail: "L'adresse mail est incorrecte",
+            missingPassword: "Le mot de passe est requis",
+            incorrectPassword: "Le mot de passe est incorrect (doit contenir au moins 8 caractères)"
         }
     }
 } satisfies Translation;
