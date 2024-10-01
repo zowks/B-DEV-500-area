@@ -55,7 +55,4 @@ export class YoutubeCredentialsService {
             .join("&")}`;
     }
 
-    async refreshToken(access_token: string): Promise<string> {
-        return "";
-    }
 }

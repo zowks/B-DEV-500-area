@@ -13,8 +13,8 @@ import { CronModule } from "src/cron/cron.module";
 import { DiscordModule } from "src/discord/discord.module";
 import { UsersModule } from "src/users/users.module";
 
-import { YoutubeCredentialsService } from 'src/youtube/youtube_credentials.service';
-import { DiscordCredentialsService } from 'src/discord/discord_credentials.service';
+import { YoutubeCredentialsService } from "src/youtube/youtube_credentials.service";
+import { DiscordCredentialsService } from "src/discord/discord_credentials.service";
 
 @Module({
     imports: [

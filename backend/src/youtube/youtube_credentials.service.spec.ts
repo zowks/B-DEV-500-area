@@ -8,13 +8,13 @@ describe("YoutubeCredentialsService", () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-              {
-                provide: ConfigService,
-                useValue: {
-                    get: jest.fn(),
-                    getOrThrow: jest.fn()
-                }
-            },
+                {
+                    provide: ConfigService,
+                    useValue: {
+                        get: jest.fn(),
+                        getOrThrow: jest.fn()
+                    }
+                },
                 YoutubeCredentialsService
             ]
         }).compile();

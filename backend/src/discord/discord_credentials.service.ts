@@ -19,8 +19,4 @@ export class DiscordCredentialsService {
             );
         return property;
     }
-
-    async refreshToken(access_token: string): Promise<string> {
-        return "";
-    }
 }
