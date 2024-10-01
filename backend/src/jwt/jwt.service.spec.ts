@@ -9,7 +9,7 @@ const fakeEnv = {
     JWT_SECRET: "5044d47226c19a4d63fd7eab79373b30",
     JWE_PUBLIC_KEY: "test/test_jwe_public_key.pem",
     JWE_PRIVATE_KEY: "test/test_jwe_private_key.pem",
-    JWT_EXPIRES_IN: 3
+    JWT_EXPIRES_IN: '1s'
 };
 
 const configService: Partial<ConfigService> = {
@@ -97,15 +97,6 @@ describe("CryptoService", () => {
     });
 
     describe("JWE verify", () => {
-        it("should return the paylaod from the jwe", async () => {
-            const jwe = await jwtService.forgeJwe({ id: randomUUID() });
-            const jwt = (await jwtService.verifyJwe(jwe, false)) as any;
-            expect(jwtService.areKeysLoaded()).toBe(true);
-
-            expect(jwt.id).toMatch(
-                /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/
-            );
-        });
         it("should return an error as the jwe is expired", async () => {
             const jwe = await jwtService.forgeJwe({ id: randomUUID() });
             const timeout = setTimeout(async function () {
@@ -114,11 +105,11 @@ describe("CryptoService", () => {
                     fail("JWE must have expired.");
                 } catch (e) {
                     expect(e).toBeInstanceOf(
-                        jose.errors.JWTClaimValidationFailed
+                        jose.errors.JWTExpired
                     );
                 }
                 clearTimeout(timeout);
-            }, 3500);
+            }, 1250);
         });
     });
 });

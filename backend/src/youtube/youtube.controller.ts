@@ -4,12 +4,13 @@ import { YouTubeService } from "./youtube.service";
 import { Request, Response } from "express";
 import { CronService } from "src/cron/cron.service";
 import { DiscordService } from "src/discord/discord.service";
-import { ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { JwtGuard } from "src/auth/guards/jwt.guard";
 import { YoutubeCredentialsService } from "./youtube_credentials.service";
 
 @UseGuards(JwtGuard)
 @ApiTags("youtube")
+@ApiBearerAuth("bearer")
 @ApiUnauthorizedResponse({
     description:
         "This route is protected. The client must supply a Bearer token."

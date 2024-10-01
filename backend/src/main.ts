@@ -29,6 +29,12 @@ function getSwaggerDocumentConfig(): Omit<OpenAPIObject, "paths"> {
             "youtube",
             "Describes all the routes for the YouTube OAuth2.0 interactions."
         )
+        .addBearerAuth({
+            type: "http",
+            description:
+                "An encrypted JWT returned by the 'register' or 'login' endpoint.",
+            name: "bearer"
+        })
         .build();
 }
 

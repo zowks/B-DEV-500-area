@@ -16,7 +16,7 @@ import { readFileSync } from "node:fs";
 export class JwtService {
     private secret: Uint8Array;
     private issuer: string;
-    private expiresIn: number;
+    private expiresIn: string;
     private jwtRSAPublicKeyPath: string;
     private publicKey: KeyLike | null = null;
     private jwtRSAPrivateKeyPath: string;
@@ -34,7 +34,7 @@ export class JwtService {
         this.issuer = this.configService.getOrThrow<string>("JWT_ISSUER");
 
         this.expiresIn =
-            this.configService.getOrThrow<number>("JWT_EXPIRES_IN");
+            this.configService.getOrThrow<string>("JWT_EXPIRES_IN");
 
         this.jwtRSAPublicKeyPath =
             this.configService.getOrThrow<string>("JWE_PUBLIC_KEY");
@@ -62,9 +62,9 @@ export class JwtService {
         const now = new Date().getTime();
         const jws = await new SignJWT(payload)
             .setProtectedHeader({ alg: JwtService.JWS_ALG })
-            .setIssuedAt(now)
+            .setIssuedAt()
             .setIssuer(this.issuer)
-            .setExpirationTime(now + this.expiresIn * 1000)
+            .setExpirationTime(this.expiresIn)
             .sign(this.secret);
         const encodedJws = new TextEncoder().encode(jws);
 
@@ -79,10 +79,7 @@ export class JwtService {
         return jwe;
     }
 
-    async verifyJwe(
-        jwe: string,
-        checkExpiration: boolean = true
-    ): Promise<object> {
+    async verifyJwe(jwe: string): Promise<object> {
         if (!this.areKeysLoaded()) await this.getKeyPair();
         const { plaintext: encodedJws } = await compactDecrypt(
             jwe,
@@ -97,7 +94,7 @@ export class JwtService {
         const { payload } = await jwtVerify(jws, this.secret, {
             issuer: this.issuer,
             algorithms: [JwtService.JWS_ALG],
-            maxTokenAge: checkExpiration ? this.expiresIn : undefined
+            maxTokenAge: this.expiresIn
         });
 
         return payload;
