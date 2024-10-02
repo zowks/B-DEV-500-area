@@ -62,4 +62,4 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ghcr.io/epitechpromo2027/b-dev-500-lil-5-1-area-merlin.cyffers:latest
+          tags: ghcr.io/epitechpromo2027/area-backend:latest
