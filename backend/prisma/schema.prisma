@@ -29,3 +29,13 @@ model google_oauth {
 
     @@map("google_oauth")
 }
+
+model area {
+    id          String @unique @default(uuid()) @db.Uuid
+    name        String @db.VarChar(255)
+    description String @db.Text
+    action_id   String @db.Uuid
+    reaction_id String @db.Uuid
+
+    @@map("area")
+}
