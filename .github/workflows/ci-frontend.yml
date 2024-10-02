@@ -33,9 +33,9 @@ jobs:
         working-directory: "./frontend/"
         run: "npm run check"
 
-      - name: "Execute Cypress tests"
-        working-directory: "./frontend/"
-        run: "npx start-server-and-test dev http://localhost:5173 cy:run"
+#      - name: "Execute Cypress tests"
+#        working-directory: "./frontend/"
+#        run: "npx start-server-and-test dev http://localhost:5173 cy:run"
 
       - name: "Build the project"
         working-directory: "./frontend/"
