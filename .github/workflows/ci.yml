@@ -8,29 +8,29 @@ on:
   push:
 
 jobs:
-#  common:
-#    name: "Common"
-#    uses: "./.github/workflows/ci-common.yml"
+  common:
+    name: "Common"
+    uses: "./.github/workflows/ci-common.yml"
 
   backend:
     name: "Backend"
-#    needs:
-#      - "common"
+    needs:
+      - "common"
     if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || startsWith(github.ref_name, 'backend/') }}"
     uses: "./.github/workflows/ci-backend.yml"
     secrets: inherit
 
   frontend:
     name: "Frontend"
-#    needs:
-#      - "common"
+    needs:
+      - "common"
     if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || startsWith(github.ref_name, 'frontend/') }}"
     uses: "./.github/workflows/ci-frontend.yml"
 
   mobile:
     name: "Mobile"
-#    needs:
-#      - "common"
+    needs:
+      - "common"
     if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || startsWith(github.ref_name, 'mobile/') }}"
     uses: "./.github/workflows/ci-mobile.yml"
 

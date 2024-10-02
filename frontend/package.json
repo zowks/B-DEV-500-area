@@ -16,6 +16,7 @@
 		"i18n:nowatch": "typesafe-i18n --no-watch",
 		"i18n:ci": "npm run i18n:nowatch",
 		"cy:open": "cypress open",
+		"cy:run": "cypress run",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "eslint .",
@@ -35,13 +36,13 @@
 		"eslint-plugin-svelte": "^2.36.0",
 		"globals": "^15.0.0",
 		"npm-run-all": "^4.1.5",
+		"start-server-and-test": "^2.0.8",
 		"svelte": "^4.2.7",
 		"svelte-check": "^4.0.0",
 		"tailwindcss": "^3.4.9",
 		"typescript": "~5.5.0",
 		"typescript-eslint": "^8.0.0",
-		"vite": "^5.0.3",
-		"wait-on": "^8.0.1"
+		"vite": "^5.0.3"
 	},
 	"type": "module",
 	"dependencies": {
