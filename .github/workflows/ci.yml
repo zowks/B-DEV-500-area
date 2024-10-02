@@ -14,7 +14,7 @@ jobs:
 
   backend:
     name: "Backend"
-    needs:
+#    needs:
 #      - "common"
     if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || startsWith(github.ref_name, 'backend/') }}"
     uses: "./.github/workflows/ci-backend.yml"
@@ -29,7 +29,7 @@ jobs:
 
   mobile:
     name: "Mobile"
-    needs:
+#    needs:
 #      - "common"
     if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || startsWith(github.ref_name, 'mobile/') }}"
     uses: "./.github/workflows/ci-mobile.yml"
