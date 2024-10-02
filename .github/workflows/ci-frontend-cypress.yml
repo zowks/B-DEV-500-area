@@ -19,6 +19,7 @@ jobs:
       - name: Cypress install
         uses: cypress-io/github-action@v6
         with:
+          working-directory: "./frontend/"
           runTests: false
 
       - run: npm cypress info
@@ -75,6 +76,7 @@ jobs:
       - name: "UI Tests - Chrome"
         uses: cypress-io/github-action@v6
         with:
+          working-directory: "./frontend/"
           build: npm cypress info
           start: npm run preview
           wait-on: "http://localhost:5173"
@@ -120,6 +122,7 @@ jobs:
       - name: "UI Tests - Chrome - Mobile"
         uses: cypress-io/github-action@v6
         with:
+          working-directory: "./frontend/"
           config: '{"e2e":{"viewportWidth":375,"viewportHeight":667}}'
           start: npm run preview
           wait-on: "http://localhost:5173"
@@ -165,6 +168,7 @@ jobs:
       - name: "UI Tests - Firefox"
         uses: cypress-io/github-action@v6
         with:
+          working-directory: "./frontend/"
           start: npm run preview
           wait-on: "http://localhost:5173"
           wait-on-timeout: 120
@@ -208,6 +212,7 @@ jobs:
       - name: "UI Tests - Firefox - Mobile"
         uses: cypress-io/github-action@v6
         with:
+          working-directory: "./frontend/"
           config: '{"e2e":{"viewportWidth":375,"viewportHeight":667}}'
           start: npm run preview
           wait-on: "http://localhost:5173"
