@@ -38,10 +38,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
                 e instanceof jose.errors.JWTClaimValidationFailed &&
                 "iat" === e.claim &&
                 "check_failed" === e.reason
-            ) {
-                console.error(e);
+            )
                 return this.fail(HttpStatus.UNAUTHORIZED);
-            }
             console.error(e);
             return this.fail(HttpStatus.INTERNAL_SERVER_ERROR);
         }

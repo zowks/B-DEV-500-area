@@ -12,7 +12,7 @@ import { Request } from "express";
 import { User, UserInfo } from "./interfaces/user.interface";
 import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 
-@ApiTags("users")
+@ApiTags("Users")
 @Controller("users")
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
