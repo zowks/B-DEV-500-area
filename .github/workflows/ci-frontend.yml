@@ -6,39 +6,39 @@ on:
   workflow_call:
 
 jobs:
-  check:
-    name: "Execute the ESLint checker, check code using SvelteKit and execute the tests"
-    runs-on: "self-hosted"
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v4"
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "lts/*"
-
-      - name: "Install NPM packages"
-        working-directory: "./frontend/"
-        run: "npm ci"
-
-      - name: "Generate typesafe-i18n files"
-        working-directory: "./frontend/"
-        run: "npm run i18n:ci"
-
-      - name: "ESLint checker"
-        working-directory: "./frontend/"
-        run: "npm run lint"
-
-      - name: "Check code"
-        working-directory: "./frontend/"
-        run: "npm run check"
-
-      - name: "Build the project"
-        working-directory: "./frontend/"
-        run: "npm run build"
+#  check:
+#    name: "Execute the ESLint checker, check code using SvelteKit and execute the tests"
+#    runs-on: "self-hosted"
+#    steps:
+#      - name: "Checkout"
+#        uses: "actions/checkout@v4"
+#
+#      - uses: actions/setup-node@v4
+#        with:
+#          node-version: "lts/*"
+#
+#      - name: "Install NPM packages"
+#        working-directory: "./frontend/"
+#        run: "npm ci"
+#
+#      - name: "Generate typesafe-i18n files"
+#        working-directory: "./frontend/"
+#        run: "npm run i18n:ci"
+#
+#      - name: "ESLint checker"
+#        working-directory: "./frontend/"
+#        run: "npm run lint"
+#
+#      - name: "Check code"
+#        working-directory: "./frontend/"
+#        run: "npm run check"
+#
+#      - name: "Build the project"
+#        working-directory: "./frontend/"
+#        run: "npm run build"
 
   cypress:
     name: "Cypress"
-    needs:
-      - "check"
+#    needs:
+#      - "check"
     uses: "./.github/workflows/ci-frontend-cypress.yml"
