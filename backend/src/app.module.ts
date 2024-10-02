@@ -14,14 +14,12 @@ import { UsersModule } from "src/users/users.module";
 import { OAuthModule } from "./oauth/oauth.module";
 import { PollingModule } from "./polling/polling.module";
 import { WebhookModule } from "./webhook/webhook.module";
-import { CacheModule } from "@nestjs/cache-manager";
 import { ScheduleModule } from "@nestjs/schedule";
 import { SchedulerModule } from "./scheduler/scheduler.module";
 
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
-        CacheModule.register({ isGlobal: true }),
         ScheduleModule.forRoot(),
         PrismaModule,
         CronModule,
