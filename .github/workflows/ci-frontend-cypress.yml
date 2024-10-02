@@ -7,6 +7,8 @@ on:
 
 jobs:
   install:
+    name: "Install and setup Cypress for tests"
+    working-directory: "./frontend/"
     runs-on: ubuntu-latest
     container:
       image: cypress/browsers:latest
@@ -33,6 +35,8 @@ jobs:
           path: build
 
   ui-chrome-tests:
+    name: "UI Tests - Chrome"
+    working-directory: "./frontend/"
     timeout-minutes: 15
     runs-on: ubuntu-latest
     container:
@@ -83,6 +87,8 @@ jobs:
           DEBUG: "cypress:server:args"
 
   ui-chrome-mobile-tests:
+    name: "UI Tests - Chrome - Mobile"
+    working-directory: "./frontend/"
     timeout-minutes: 15
     runs-on: ubuntu-latest
     container:
@@ -127,6 +133,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   ui-firefox-tests:
+    name: "UI Tests - Firefox"
+    working-directory: "./frontend/"
     timeout-minutes: 15
     runs-on: ubuntu-latest
     container:
@@ -169,6 +177,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   ui-firefox-mobile-tests:
+    name: "UI Tests - Firefox - Mobile"
+    working-directory: "./frontend/"
     timeout-minutes: 15
     runs-on: ubuntu-latest
     container:

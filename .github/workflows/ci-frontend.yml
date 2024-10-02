@@ -39,4 +39,6 @@ jobs:
 
   cypress:
     name: "Cypress"
+    needs:
+      - "check"
     uses: "./.github/workflows/ci-frontend-cypress.yml"
