@@ -189,3 +189,4 @@ expo-env.d.ts
 ### Frontend
 
 /frontend/static/apk/client.apk
+/frontend/cypress/screenshots/
