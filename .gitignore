@@ -185,3 +185,7 @@ expo-env.d.ts
 /backend/crypto/jwe_public_key.pem
 /backend/ssl/*.pem
 /backend/postgres
+
+### Frontend
+
+/frontend/static/apk/client.apk

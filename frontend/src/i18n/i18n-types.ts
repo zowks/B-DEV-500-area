@@ -46,6 +46,16 @@ type RootTranslation = {
 		 */
 		system: string
 	}
+	apk: {
+		/**
+		 * D​o​w​n​l​o​a​d​ ​t​h​e​ ​A​n​d​r​o​i​d​ ​A​P​K
+		 */
+		title: string
+		/**
+		 * D​o​w​n​l​o​a​d
+		 */
+		download: string
+	}
 	auth: {
 		/**
 		 * E​m​a​i​l
@@ -182,6 +192,16 @@ export type TranslationFunctions = {
 		 * System
 		 */
 		system: () => LocalizedString
+	}
+	apk: {
+		/**
+		 * Download the Android APK
+		 */
+		title: () => LocalizedString
+		/**
+		 * Download
+		 */
+		download: () => LocalizedString
 	}
 	auth: {
 		/**

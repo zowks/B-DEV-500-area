@@ -12,6 +12,10 @@ const en = {
         dark: "Dark",
         system: "System"
     },
+    apk: {
+        title: "Download the Android APK",
+        download: "Download"
+    },
     auth: {
         email: "Email",
         password: "Password",
