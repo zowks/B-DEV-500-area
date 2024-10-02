@@ -1,4 +1,3 @@
-import { OnModuleDestroy } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
 import { YouTubeService } from "src/polling/youtube/youtube.service";
 import { DiscordService } from "src/webhook/discord/discord.service";

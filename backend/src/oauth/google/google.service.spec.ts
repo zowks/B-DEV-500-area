@@ -1,7 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { GoogleOAuthService } from "./google.service";
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import { PrismaModule } from "src/prisma/prisma.module";
+import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "src/prisma/prisma.service";
 
 describe("GoogleService", () => {
@@ -11,9 +10,12 @@ describe("GoogleService", () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 GoogleOAuthService,
-                { provide: ConfigService, useValue: {
-                    get: jest.fn()
-                } },
+                {
+                    provide: ConfigService,
+                    useValue: {
+                        get: jest.fn()
+                    }
+                },
                 { provide: PrismaService, useValue: {} }
             ]
         }).compile();

@@ -7,9 +7,7 @@ describe("YoutubeService", () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [],
-            providers: [
-                YouTubeService
-            ]
+            providers: [YouTubeService]
         }).compile();
 
         service = module.get<YouTubeService>(YouTubeService);

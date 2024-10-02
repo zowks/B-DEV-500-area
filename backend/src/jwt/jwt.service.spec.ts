@@ -9,7 +9,7 @@ const fakeEnv = {
     JWT_SECRET: "5044d47226c19a4d63fd7eab79373b30",
     JWE_PUBLIC_KEY: "test/test_jwe_public_key.pem",
     JWE_PRIVATE_KEY: "test/test_jwe_private_key.pem",
-    JWT_EXPIRES_IN: '1s'
+    JWT_EXPIRES_IN: "1s"
 };
 
 const configService: Partial<ConfigService> = {
@@ -104,9 +104,7 @@ describe("CryptoService", () => {
                     await jwtService.verifyJwe(jwe);
                     fail("JWE must have expired.");
                 } catch (e) {
-                    expect(e).toBeInstanceOf(
-                        jose.errors.JWTExpired
-                    );
+                    expect(e).toBeInstanceOf(jose.errors.JWTExpired);
                 }
                 clearTimeout(timeout);
             }, 1250);

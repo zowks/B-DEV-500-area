@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
 import { User } from "src/users/interfaces/user.interface";
 import { CreateAreaDto } from "./dto/create_area.dto";
 import { YouTubeService } from "src/polling/youtube/youtube.service";

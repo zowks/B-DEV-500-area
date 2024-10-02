@@ -59,7 +59,6 @@ export class JwtService {
     }
 
     async forgeJwe(payload: JWTPayload): Promise<string> {
-        const now = new Date().getTime();
         const jws = await new SignJWT(payload)
             .setProtectedHeader({ alg: JwtService.JWS_ALG })
             .setIssuedAt()

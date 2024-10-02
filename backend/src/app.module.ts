@@ -16,7 +16,7 @@ import { PollingModule } from "./polling/polling.module";
 import { WebhookModule } from "./webhook/webhook.module";
 import { CacheModule } from "@nestjs/cache-manager";
 import { ScheduleModule } from "@nestjs/schedule";
-import { SchedulerModule } from './scheduler/scheduler.module';
+import { SchedulerModule } from "./scheduler/scheduler.module";
 
 @Module({
     imports: [

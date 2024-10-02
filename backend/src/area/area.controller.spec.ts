@@ -1,18 +1,18 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AreaController } from './area.controller';
+import { Test, TestingModule } from "@nestjs/testing";
+import { AreaController } from "./area.controller";
 
-describe('ActionsController', () => {
-  let controller: AreaController;
+describe("ActionsController", () => {
+    let controller: AreaController;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [AreaController],
-    }).compile();
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            controllers: [AreaController]
+        }).compile();
 
-    controller = module.get<AreaController>(AreaController);
-  });
+        controller = module.get<AreaController>(AreaController);
+    });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+    it("should be defined", () => {
+        expect(controller).toBeDefined();
+    });
 });
