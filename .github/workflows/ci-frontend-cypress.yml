@@ -36,7 +36,7 @@ jobs:
         with:
           name: build
           if-no-files-found: error
-          path: build
+          path: "frontend/build"
 
   ui-chrome-tests:
     name: "UI Tests - Chrome"
@@ -63,7 +63,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build
-          path: build
+          path: "frontend/build"
 
       - name: Node info
         working-directory: "./frontend/"
@@ -117,7 +117,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build
-          path: build
+          path: "frontend/build"
 
       - name: "UI Tests - Chrome - Mobile"
         uses: cypress-io/github-action@v6
@@ -163,7 +163,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build
-          path: build
+          path: "frontend/build"
 
       - name: "UI Tests - Firefox"
         uses: cypress-io/github-action@v6
@@ -207,7 +207,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build
-          path: build
+          path: "frontend/build"
 
       - name: "UI Tests - Firefox - Mobile"
         uses: cypress-io/github-action@v6
