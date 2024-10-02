@@ -6,6 +6,9 @@ const config: Config = {
     content: ["./src/**/*.{html,js,svelte,ts}"],
     safelist: ["dark"],
     theme: {
+        screens: {
+            "mobile": "500px"
+        },
         container: {
             center: true,
             padding: "2rem",
