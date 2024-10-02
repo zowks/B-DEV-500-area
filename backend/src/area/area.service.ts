@@ -22,7 +22,6 @@ export class AreaService {
     private readonly reactionsTriggers: Record<string, ReactionTriggers>;
 
     constructor(
-        private readonly prismaService: PrismaService,
         private readonly schedulerService: SchedulerService,
         private readonly oauthService: OAuthService,
         private readonly youtubeService: YouTubeService,
