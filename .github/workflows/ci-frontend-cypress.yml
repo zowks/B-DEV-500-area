@@ -28,7 +28,7 @@ jobs:
         working-directory: "./frontend/"
       - run: node -p 'os.cpus()'
         working-directory: "./frontend/"
-      - run: npm build:ci
+      - run: npm run build:ci
         working-directory: "./frontend/"
 
       - name: Save build folder
