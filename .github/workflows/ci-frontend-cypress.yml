@@ -78,7 +78,7 @@ jobs:
         with:
           working-directory: "./frontend/"
           build: npx cypress info
-          start: npm run preview
+          start: node build
           wait-on: "http://localhost:5173"
           wait-on-timeout: 120
           browser: chrome
@@ -124,7 +124,7 @@ jobs:
         with:
           working-directory: "./frontend/"
           config: '{"e2e":{"viewportWidth":375,"viewportHeight":667}}'
-          start: npm run preview
+          start: node build
           wait-on: "http://localhost:5173"
           wait-on-timeout: 120
           browser: chrome
@@ -169,7 +169,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           working-directory: "./frontend/"
-          start: npm run preview
+          start: node build
           wait-on: "http://localhost:5173"
           wait-on-timeout: 120
           browser: firefox
@@ -214,7 +214,7 @@ jobs:
         with:
           working-directory: "./frontend/"
           config: '{"e2e":{"viewportWidth":375,"viewportHeight":667}}'
-          start: npm run preview
+          start: node build
           wait-on: "http://localhost:5173"
           wait-on-timeout: 120
           browser: firefox
