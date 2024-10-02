@@ -78,10 +78,8 @@ jobs:
         with:
           working-directory: "./frontend/"
           build: npx cypress info
-          env:
-            PORT: 8081
           start: node build
-          wait-on: "http://localhost:8081"
+          wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           browser: chrome
           record: true
@@ -126,10 +124,8 @@ jobs:
         with:
           working-directory: "./frontend/"
           config: '{"e2e":{"viewportWidth":375,"viewportHeight":667}}'
-          env:
-            PORT: 8081
           start: node build
-          wait-on: "http://localhost:8081"
+          wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           browser: chrome
           record: true
@@ -173,10 +169,8 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           working-directory: "./frontend/"
-          env:
-            PORT: 8081
           start: node build
-          wait-on: "http://localhost:8081"
+          wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           browser: firefox
           record: true
@@ -220,10 +214,8 @@ jobs:
         with:
           working-directory: "./frontend/"
           config: '{"e2e":{"viewportWidth":375,"viewportHeight":667}}'
-          env:
-            PORT: 8081
           start: node build
-          wait-on: "http://localhost:8081"
+          wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           browser: firefox
           record: true
