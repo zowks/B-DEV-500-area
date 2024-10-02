@@ -186,3 +186,4 @@ expo-env.d.ts
 /backend/ssl/*.pem
 /backend/postgres
 /backend/redis_data
+
