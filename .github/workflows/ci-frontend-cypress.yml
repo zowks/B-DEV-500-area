@@ -22,7 +22,7 @@ jobs:
           working-directory: "./frontend/"
           runTests: false
 
-      - run: npm cypress info
+      - run: npx cypress info
         working-directory: "./frontend/"
       - run: node --version
         working-directory: "./frontend/"
@@ -77,7 +77,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           working-directory: "./frontend/"
-          build: npm cypress info
+          build: npx cypress info
           start: npm run preview
           wait-on: "http://localhost:5173"
           wait-on-timeout: 120
