@@ -36,7 +36,7 @@ jobs:
       - name: "Execute Cypress tests"
         working-directory: "./frontend/"
         run: |
-          "npm start & wait-on http://localhost:3000"
+          "npm run dev & wait-on http://localhost:5173"
           "npx cypress run"
 
       - name: "Build the project"
