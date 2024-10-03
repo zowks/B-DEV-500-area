@@ -18,6 +18,7 @@ import {
     ApiExtraModels,
     ApiForbiddenResponse,
     ApiOkResponse,
+    ApiQuery,
     ApiTags,
     ApiUnauthorizedResponse,
     getSchemaPath
@@ -44,7 +45,16 @@ export class GoogleOAuthController {
         description:
             "This route is protected. The client must supply a Bearer token."
     })
-    oauthService(@Req() req: Request) {
+    @ApiQuery({
+        name: "redirect_uri",
+        description:
+            "The URI to which the user will be redirected once the authentication flow is successful.",
+        example: "http://localhost:5173/dashboard"
+    })
+    oauthService(
+        @Query("redirect_uri") redirect_uri: string,
+        @Req() req: Request
+    ) {
         const { id } = req.user as Pick<User, "id">;
 
         const stateArrayView = new Uint32Array(16);
@@ -53,6 +63,7 @@ export class GoogleOAuthController {
 
         req.session["state"] = state;
         req.session["user_id"] = id;
+        req.session["redirect_uri"] = redirect_uri;
         req.session.save(console.error);
 
         return {
@@ -88,7 +99,7 @@ export class GoogleOAuthController {
             tokens
         );
 
-        return res.redirect("/");
+        return res.redirect(session["redirect_uri"] || "/");
     }
 
     @UseGuards(JwtGuard)

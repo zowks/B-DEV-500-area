@@ -51,8 +51,8 @@ async function bootstrap() {
 
     const redisClient = createClient({
         socket: {
-            host: "localhost",
-            port: 6379
+            host: configService.getOrThrow("REDIS_HOST"),
+            port: configService.getOrThrow<number>("REDIS_PORT")
         }
     });
     await redisClient.connect();

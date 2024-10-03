@@ -181,9 +181,8 @@ expo-env.d.ts
 ### Backend
 
 /postgres
-/backend/crypto/jwe_private_key.pem
-/backend/crypto/jwe_public_key.pem
+/crypto/jwe_private_key.pem
+/crypto/jwe_public_key.pem
 /backend/ssl/*.pem
 /backend/postgres
 /backend/redis_data
-
