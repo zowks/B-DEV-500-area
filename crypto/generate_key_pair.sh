@@ -18,6 +18,7 @@ generate_jwt_key_pair() {
 random_key() {
     local random=$(head -n 1 /dev/urandom)
     local secret=$(xxd -l 16 -pc <<< "${random}")
+    echo "${secret}"
 }
 
 generate_jwt_secret() {
