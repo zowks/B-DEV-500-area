@@ -84,7 +84,7 @@ jobs:
           wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           browser: chrome
-          record: true
+          # record: true
           parallel: true
           group: "UI - Chrome"
           config-file: cypress.config.ts
@@ -129,7 +129,7 @@ jobs:
           wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           browser: chrome
-          record: true
+          # record: true
           parallel: true
           group: "UI - Chrome - Mobile"
 
@@ -174,7 +174,7 @@ jobs:
           wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           browser: firefox
-          record: true
+          # record: true
           parallel: true
           group: "UI - Firefox"
           config-file: cypress.config.ts
@@ -219,7 +219,7 @@ jobs:
           wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           browser: firefox
-          record: true
+          # record: true
           parallel: true
           group: "UI - Firefox - Mobile"
           config-file: cypress.config.ts
