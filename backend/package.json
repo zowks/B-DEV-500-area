@@ -30,7 +30,7 @@
     "container": "npx prisma migrate deploy && node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "node --env-file=.env.example node_modules/.bin/jest --runInBand --detectOpenHandles",
+    "test": "node node_modules/.bin/jest --runInBand --detectOpenHandles",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
