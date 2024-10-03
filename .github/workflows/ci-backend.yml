@@ -1,0 +1,65 @@
+# This CI is meant to execute backend unit tests, integration tests and e2e
+# tests. It also checks/lints the code.
+# After, a Docker image will be built and pushed to a ghcr.io repository.
+
+name: "AREA Backend CI"
+
+on:
+  workflow_call:
+
+jobs:
+  run-tests:
+    name: "Execute the ESLint and Prettier checkers and the unit tests"
+    runs-on: "self-hosted"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: "Install NPM packages"
+        working-directory: "./backend/"
+        run: "npm ci"
+
+      - name: "ESLint checker"
+        working-directory: "./backend/"
+        run: "npm run lint"
+
+      - name: "Prettier checker"
+        working-directory: "./backend/"
+        run: "npm run format:check"
+
+      - name: "Tests execution"
+        working-directory: "./backend/"
+        run: "npm run test"
+
+      - name: "Building the project"
+        working-directory: "./backend/"
+        run: "npm run build"
+
+  build-docker-image:
+    name: "Building the Docker image"
+    runs-on: "self-hosted"
+    needs:
+      - "run-tests"
+    if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || github.ref_name == 'backend/dev' }}"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+
+      - name: "Login to Docker"
+        uses: "docker/login-action@master"
+        with:
+          registry: ghcr.io
+          username: "${{ vars.GHCR_USER }}"
+          password: "${{ secrets.GHCR_PAT }}"
+
+      - name: "Build the image"
+        id: "push"
+        uses: docker/build-push-action@master
+        with:
+          context: ./backend
+          push: true
+          tags: ghcr.io/epitechpromo2027/area-backend:latest

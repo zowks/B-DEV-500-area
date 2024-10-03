@@ -22,13 +22,21 @@ function getSwaggerDocumentConfig(): Omit<OpenAPIObject, "paths"> {
         )
         .setVersion("1.0")
         .addTag(
-            "authentication",
+            "Authentication",
             "Describes all the routes for authentication purposes."
         )
         .addTag(
-            "youtube",
-            "Describes all the routes for the YouTube OAuth2.0 interactions."
+            "Google OAuth",
+            "Describes all the endpoints to deal with Google OAuth2.0 credentials."
         )
+        .addTag("AREA", "Describes all the routes to deal with AREA's CRUD.")
+        .addTag("Users", "Describes all the routes to deal with users CRUD.")
+        .addBearerAuth({
+            type: "http",
+            description:
+                "An encrypted JWT returned by the 'register' or 'login' endpoint.",
+            name: "bearer"
+        })
         .build();
 }
 
@@ -40,12 +48,17 @@ async function bootstrap() {
     app.use(helmet());
 
     const configService = app.get(ConfigService);
-    const redisPassword = configService.getOrThrow("REDIS_PASSWORD");
+
+    const redisClient = createClient({
+        socket: {
+            host: configService.getOrThrow("REDIS_HOST"),
+            port: configService.getOrThrow<number>("REDIS_PORT")
+        }
+    });
+    await redisClient.connect();
+
     const redisStore = new RedisStore({
-        client: createClient({
-            url: `redis://${redisPassword}@localhost:6379`,
-            pingInterval: 60000
-        })
+        client: redisClient
     });
 
     app.use(
@@ -53,7 +66,12 @@ async function bootstrap() {
             secret: configService.getOrThrow("EXPRESS_SESSION_SECRET"),
             resave: false,
             saveUninitialized: false,
-            store: redisStore
+            store: redisStore,
+            cookie: {
+                secure: false, // Set true if using HTTPS
+                httpOnly: true,
+                maxAge: 1000 * 60 * 10 // Session expiration time (e.g., 10 minutes)
+            }
         })
     );
 
