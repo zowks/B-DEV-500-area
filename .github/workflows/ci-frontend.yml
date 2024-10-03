@@ -41,8 +41,8 @@ jobs:
         working-directory: "./frontend/"
         run: "npm run build"
 
-#  cypress:
-#    name: "Cypress"
-##    needs:
-##      - "check"
-#    uses: "./.github/workflows/ci-frontend-cypress.yml"
+  cypress:
+    name: "Cypress"
+    needs:
+      - "check"
+    uses: "./.github/workflows/ci-frontend-cypress.yml"
