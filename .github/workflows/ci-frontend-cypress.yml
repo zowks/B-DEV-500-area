@@ -28,13 +28,8 @@ jobs:
           working-directory: "./frontend/"
           runTests: false
 
-      - run: npx cypress info
-        working-directory: "./frontend/"
-      - run: node --version
-        working-directory: "./frontend/"
-      - run: node -p 'os.cpus()'
-        working-directory: "./frontend/"
-      - run: npm run build:ci
+      - name: "Build the project"
+        run: npm run build:ci
         working-directory: "./frontend/"
 
       - name: Save build folder
@@ -70,14 +65,6 @@ jobs:
           name: build
           path: "frontend/build"
 
-      - name: Node info
-        working-directory: "./frontend/"
-        run: node -v
-
-      - name: __e Dir
-        working-directory: "./frontend/"
-        run: ls /__e
-
       - name: "UI Tests - Chrome"
         uses: cypress-io/github-action@v6
         with:
@@ -91,6 +78,7 @@ jobs:
           # parallel: true
           # group: "UI - Chrome"
           config-file: cypress.config.ts
+          env: CYPRESS_HOST="http://localhost:3000"
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
@@ -136,6 +124,7 @@ jobs:
           # group: "UI - Chrome - Mobile"
 
           config-file: cypress.config.ts
+          env: CYPRESS_HOST="http://localhost:3000"
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
@@ -179,6 +168,7 @@ jobs:
           # parallel: true
           # group: "UI - Firefox"
           config-file: cypress.config.ts
+          env: CYPRESS_HOST="http://localhost:3000"
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
@@ -223,6 +213,7 @@ jobs:
           # parallel: true
           # group: "UI - Firefox - Mobile"
           config-file: cypress.config.ts
+          env: CYPRESS_HOST="http://localhost:3000"
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
