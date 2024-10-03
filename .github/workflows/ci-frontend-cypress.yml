@@ -5,6 +5,8 @@ name: "AREA Frontend Cypress CI"
 on:
   workflow_call:
 
+permissions: read-all
+
 jobs:
   install:
     name: "Install and setup Cypress for tests"
