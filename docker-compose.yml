@@ -15,8 +15,10 @@ services:
     image: redis:alpine3.20
     restart: unless-stopped
     container_name: area-redis
+    env_file:
+      - .env
     ports:
-      - 6379:6379
+      - ${REDIS_PORT}:${REDIS_PORT}
     volumes:
       - area-redis-volume:/data:rw
     command: redis-server --save 60 1 --loglevel warning
