@@ -15,10 +15,17 @@ generate_jwt_key_pair() {
 
 # This function generates a random 32 bytes secret key used to sign a JWT. It
 # requires xdd to be installed.
-generate_jwt_secret() {
+random_key() {
     local random=$(head -n 1 /dev/urandom)
     local secret=$(xxd -l 16 -pc <<< "${random}")
-    echo "${secret}" > secret_key.txt
+}
+
+generate_jwt_secret() {
+    echo $(random_key) > jwt_secret_key.txt
+}
+
+generate_express_session_secret() {
+    echo $(random_key) > express_session.txt
 }
 
 # This function generates an SSL certificate and it's private key in order to
@@ -50,6 +57,7 @@ generate_ssl_context() {
         -subj "${CONFIG}"
 }
 
-# generate_ssl_context
+generate_ssl_context
 generate_jwt_secret
-# generate_jwt_key_pair
+generate_express_session_secret
+generate_jwt_key_pair
