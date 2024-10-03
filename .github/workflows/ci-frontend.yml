@@ -46,3 +46,4 @@ jobs:
     needs:
       - "check"
     uses: "./.github/workflows/ci-frontend-cypress.yml"
+    secrets: inherit
