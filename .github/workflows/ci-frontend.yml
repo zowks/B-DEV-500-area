@@ -5,6 +5,8 @@ name: "AREA Frontend CI"
 on:
   workflow_call:
 
+permissions: read-all
+
 jobs:
   check:
     name: "Execute the ESLint checker, check code using SvelteKit and execute the tests"
