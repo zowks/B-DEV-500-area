@@ -1,0 +1,38 @@
+# This CI is meant to create a preview of the mobile app in pull requests.
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  mobile-preview:
+    name: "Mobile preview"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: "Setup EAS"
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          eas-cache: true
+          packager: "npm"
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: "Install NPM packages"
+        working-directory: "./mobile/"
+        run: "npm ci"
+
+      - name: "Create preview"
+        uses: expo/expo-github-action/preview@v8
+        with:
+          working-directory: "./mobile/"
+          command: eas update --auto --branch ${{ github.event.pull_request.head.ref }}
