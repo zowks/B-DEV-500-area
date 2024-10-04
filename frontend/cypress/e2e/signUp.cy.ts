@@ -1,6 +1,6 @@
 describe("authentication", () => {
     it("sign-up", function() {
-        cy.visit("http://localhost:5173");
+        cy.visit(Cypress.env("CYPRESS_HOST"));
         cy.location("pathname", { timeout: 60000 }).should("include", "/auth/sign-in");
         cy.get("h1").contains("Sign in").should("be.visible");
         cy.get("a").contains("Sign up").click();
