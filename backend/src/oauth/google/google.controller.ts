@@ -64,7 +64,9 @@ export class GoogleOAuthController {
         req.session["state"] = state;
         req.session["user_id"] = id;
         req.session["redirect_uri"] = redirect_uri;
-        req.session.save(console.error);
+        req.session.save((err) => {
+            if (err) console.error(err);
+        });
 
         return {
             redirect_uri: this.googleOAuthService.getOAuthUrl(state)
