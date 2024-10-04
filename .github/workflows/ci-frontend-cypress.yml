@@ -1,4 +1,4 @@
-# This CI is meant to execute frontend tests with Cypress;
+# This CI is meant to execute frontend tests with Cypress.
 
 name: "AREA Frontend Cypress CI"
 

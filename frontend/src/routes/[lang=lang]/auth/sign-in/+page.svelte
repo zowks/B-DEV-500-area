@@ -21,7 +21,7 @@
         <form method="POST" use:enhance class="grid gap-4">
             <div class="grid gap-2">
                 <Label for="email">{$LL.auth.email()}</Label>
-                <Input id="email" name="email" type="email" value={form?.email ?? ""} placeholder={$LL.auth.placeholders.email()} required />
+                <Input id="email" name="email" type="email" autocomplete="email" value={form?.email || ""} placeholder={$LL.auth.placeholders.email()} required />
                 {#if form?.emailError}
                     <p class="text-sm text-red-500">{form?.emailError}</p>
                 {/if}
@@ -48,7 +48,7 @@
                         </AlertDialog.Content>
                     </AlertDialog.Root>
                 </div>
-                <Input id="password" name="password" type="password" placeholder="••••••••" required />
+                <Input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required />
                 {#if form?.passwordError}
                     <p class="text-sm text-red-500">{form?.passwordError}</p>
                 {/if}
