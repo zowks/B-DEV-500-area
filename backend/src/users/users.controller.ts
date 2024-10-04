@@ -10,7 +10,14 @@ import { UsersService } from "./users.service";
 import { JwtGuard } from "src/auth/guards/jwt.guard";
 import { Request } from "express";
 import { User, UserInfo } from "./interfaces/user.interface";
-import { ApiBearerAuth, ApiExtraModels, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from "@nestjs/swagger";
+import {
+    ApiBearerAuth,
+    ApiExtraModels,
+    ApiOkResponse,
+    ApiTags,
+    ApiUnauthorizedResponse,
+    getSchemaPath
+} from "@nestjs/swagger";
 
 @ApiTags("Users")
 @Controller("users")

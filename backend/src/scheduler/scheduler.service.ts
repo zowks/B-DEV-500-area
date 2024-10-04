@@ -70,24 +70,18 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         const data = await this.getData(cron);
         if (null === data) return;
 
-        console.log(data["id"]);
-
-        const transformedData = transformer(data, cron.reactionBody);
-        const cacheValue = hash(
-            "sha512",
-            JSON.stringify(transformedData),
-            "hex"
-        ).toString();
+        const transformedData = transformer(data, { ...cron.reactionBody });
 
         const key = this.buildCacheKey(cron.userId, attributes);
-        const cachedValue = await this.cacheManager.get(key);
-        const cachingDelay = (cron.delay + 5) * 1000;
-        await this.cacheManager.set(key, cacheValue, cachingDelay);
-        if (firstRun || cacheValue === cachedValue) return;
+        const oldCache = await this.cacheManager.get(key);
+
+        const newCache = hash("sha512", JSON.stringify(data), "hex").toString();
+        await this.cacheManager.set(key, newCache, (cron.delay + 5) * 1000);
+
+        if (firstRun || newCache === oldCache) return;
 
         try {
             await cron.reaction(cron.fields, transformedData);
-            console.log("reaction triggered");
         } catch (e) {
             console.error(e);
         }
@@ -97,9 +91,10 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         await this.executeTask(attributes, cron, true);
 
         this.intervalIds.push(
-            setInterval(async () => {
-                await this.executeTask(attributes, cron, false);
-            }, cron.delay * 1000)
+            setInterval(
+                () => this.executeTask(attributes, cron, false),
+                cron.delay * 1000
+            )
         );
     }
 }
