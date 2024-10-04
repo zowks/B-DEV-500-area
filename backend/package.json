@@ -36,7 +36,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "share-types": "mkdir -p ../common/backend && for p in $(find ./dist -type f -name '*.dto.d.ts' -o  -name '*.interface.d.ts'); do mkdir -p ../common/backend/$(dirname \"${p}\"); cp \"${p}\" $_/$(basename \"${p}\"); done"
+    "share-types": "mkdir -p ../common/src/types && for p in $(find ./dist -type f -name '*.dto.d.ts' -o  -name '*.interface.d.ts'); do mkdir -p ../common/src/types/$(dirname \"${p:7}\"); cp \"${p}\" $_/$(basename \"${p}\"); done"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^2.2.2",
