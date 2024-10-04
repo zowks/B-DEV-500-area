@@ -5,6 +5,8 @@ name: "AREA Frontend CI"
 on:
   workflow_call:
 
+permissions: read-all
+
 jobs:
   check:
     name: "Execute the ESLint checker, check code using SvelteKit and execute the tests"
@@ -41,8 +43,9 @@ jobs:
         working-directory: "./frontend/"
         run: "npm run build"
 
-#  cypress:
-#    name: "Cypress"
-##    needs:
-##      - "check"
-#    uses: "./.github/workflows/ci-frontend-cypress.yml"
+  cypress:
+    name: "Cypress"
+    needs:
+      - "check"
+    uses: "./.github/workflows/ci-frontend-cypress.yml"
+    secrets: inherit

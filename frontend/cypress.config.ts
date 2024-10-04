@@ -1,9 +1,10 @@
 import { defineConfig } from "cypress";
+import { dotenv } from "cypress-plugin-dotenv";
 
 export default defineConfig({
     e2e: {
-        setupNodeEvents() {
-            // implement node event listeners here
+        setupNodeEvents(_, config) {
+            return dotenv(config);
         },
         experimentalStudio: true
     },

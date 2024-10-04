@@ -5,6 +5,12 @@ name: "AREA Frontend Cypress CI"
 on:
   workflow_call:
 
+permissions: read-all
+
+# Some parameters of `cypress-io/github-action` ae commented because they need
+# record, which needs a subscription to Cypress Cloud.
+# Since parallel must be disabled as explained above, matrices are also disabled.
+
 jobs:
   install:
     name: "Install and setup Cypress for tests"
@@ -22,13 +28,8 @@ jobs:
           working-directory: "./frontend/"
           runTests: false
 
-      - run: npx cypress info
-        working-directory: "./frontend/"
-      - run: node --version
-        working-directory: "./frontend/"
-      - run: node -p 'os.cpus()'
-        working-directory: "./frontend/"
-      - run: npm run build:ci
+      - name: "Build the project"
+        run: npm run build:ci
         working-directory: "./frontend/"
 
       - name: Save build folder
@@ -46,15 +47,14 @@ jobs:
       image: cypress/browsers:latest
       options: --user 1001
     needs: install
-    strategy:
+    # strategy:
       # when one test fails, DO NOT cancel the other
       # containers, because this will kill Cypress processes
       # leaving Cypress Cloud hanging ...
       # https://github.com/cypress-io/github-action/issues/48
-      fail-fast: false
-      matrix:
-        # run copies of the current job in parallel
-        containers: [1, 2, 3, 4, 5]
+      # fail-fast: false
+      # matrix:
+      #   containers: [1, 2, 3, 4, 5]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -65,14 +65,6 @@ jobs:
           name: build
           path: "frontend/build"
 
-      - name: Node info
-        working-directory: "./frontend/"
-        run: node -v
-
-      - name: __e Dir
-        working-directory: "./frontend/"
-        run: ls /__e
-
       - name: "UI Tests - Chrome"
         uses: cypress-io/github-action@v6
         with:
@@ -82,10 +74,11 @@ jobs:
           wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           browser: chrome
-          record: true
-          parallel: true
-          group: "UI - Chrome"
+          # record: true
+          # parallel: true
+          # group: "UI - Chrome"
           config-file: cypress.config.ts
+          env: CYPRESS_HOST="http://localhost:3000"
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
@@ -99,15 +92,14 @@ jobs:
       image: cypress/browsers:latest
       options: --user 1001
     needs: install
-    strategy:
+    # strategy:
       # when one test fails, DO NOT cancel the other
       # containers, because this will kill Cypress processes
       # leaving Cypress Cloud hanging ...
       # https://github.com/cypress-io/github-action/issues/48
-      fail-fast: false
-      matrix:
-        # run copies of the current job in parallel
-        containers: [1, 2, 3, 4, 5]
+      # fail-fast: false
+      # matrix:
+      #   containers: [1, 2, 3, 4, 5]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -127,11 +119,12 @@ jobs:
           wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           browser: chrome
-          record: true
-          parallel: true
-          group: "UI - Chrome - Mobile"
+          # record: true
+          # parallel: true
+          # group: "UI - Chrome - Mobile"
 
           config-file: cypress.config.ts
+          env: CYPRESS_HOST="http://localhost:3000"
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
@@ -145,15 +138,14 @@ jobs:
       image: cypress/browsers:latest
       options: --user 1001
     needs: install
-    strategy:
+    # strategy:
       # when one test fails, DO NOT cancel the other
       # containers, because this will kill Cypress processes
       # leaving Cypress Cloud hanging ...
       # https://github.com/cypress-io/github-action/issues/48
-      fail-fast: false
-      matrix:
-        # run copies of the current job in parallel
-        containers: [1, 2, 3, 4, 5]
+      # fail-fast: false
+      # matrix:
+      #   containers: [1, 2, 3, 4, 5]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -172,10 +164,11 @@ jobs:
           wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           browser: firefox
-          record: true
-          parallel: true
-          group: "UI - Firefox"
+          # record: true
+          # parallel: true
+          # group: "UI - Firefox"
           config-file: cypress.config.ts
+          env: CYPRESS_HOST="http://localhost:3000"
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
@@ -189,15 +182,14 @@ jobs:
       image: cypress/browsers:latest
       options: --user 1001
     needs: install
-    strategy:
+    # strategy:
       # when one test fails, DO NOT cancel the other
       # containers, because this will kill Cypress processes
       # leaving Cypress Cloud hanging ...
       # https://github.com/cypress-io/github-action/issues/48
-      fail-fast: false
-      matrix:
-        # run copies of the current job in parallel
-        containers: [1, 2, 3, 4, 5]
+      # fail-fast: false
+      # matrix:
+      #   containers: [1, 2, 3, 4, 5]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -217,10 +209,11 @@ jobs:
           wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           browser: firefox
-          record: true
-          parallel: true
-          group: "UI - Firefox - Mobile"
+          # record: true
+          # parallel: true
+          # group: "UI - Firefox - Mobile"
           config-file: cypress.config.ts
+          env: CYPRESS_HOST="http://localhost:3000"
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
