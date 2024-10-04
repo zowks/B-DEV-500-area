@@ -42,6 +42,7 @@ jobs:
   build-docker-image:
     name: "Building the Docker image"
     runs-on: "self-hosted"
+    permissions: write-all
     needs:
       - "run-tests"
     if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || github.ref_name == 'backend/dev' }}"
