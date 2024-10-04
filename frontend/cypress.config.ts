@@ -4,7 +4,7 @@ import { dotenv } from "cypress-plugin-dotenv";
 export default defineConfig({
     e2e: {
         setupNodeEvents(_, config) {
-            return dotenv(config, undefined, !!process.env.IS_CONTINUOUS_INTEGRATION);
+            return dotenv(config, undefined, !!process.env.CYPRESS_IS_CI);
         },
         experimentalStudio: true
     },
