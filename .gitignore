@@ -189,9 +189,15 @@ expo-env.d.ts
 /backend/postgres
 /backend/redis_data
 
+### Frontend
+
+/frontend/static/apk/client.apk
+/frontend/cypress/downloads/
+/frontend/cypress/screenshots/
+
 ### Mobile
 
-mobile/.gitignore
+/mobile/.gitignore
 
 # Metro
 .metro-health-check*
