@@ -32,11 +32,7 @@ export class CronService {
                 if (null === data) return;
 
                 try {
-                    await cronConfig.reaction(
-                        cronConfig.webhookUrl,
-                        cronConfig.fields,
-                        data
-                    );
+                    await cronConfig.reaction(cronConfig.fields, data);
                 } catch (e) {
                     console.error(e);
                     cron.stop();

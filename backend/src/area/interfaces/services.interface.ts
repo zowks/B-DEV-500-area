@@ -1,7 +1,3 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { YouTubeService } from "src/polling/youtube/youtube.service";
-import { DiscordService } from "src/webhook/discord/discord.service";
-
 export type ActionTrigger = (accessToken: string) => Promise<any>;
 
 export type ActionTriggers = {
@@ -15,19 +11,7 @@ export abstract class Action {
     }
 }
 
-export abstract class Actions {
-    @ApiProperty({
-        description: "The available YouTube action endpoints",
-        example: YouTubeService.endpoints
-    })
-    readonly youtube: string[];
-}
-
-export type ReactionTrigger = (
-    webhookUrl: string,
-    fields: { [k: string]: string },
-    data: any
-) => Promise<any>;
+export type ReactionTrigger = (fields: object, data: object) => Promise<any>;
 
 export type ReactionTriggers = {
     [name: string]: ReactionTrigger;
@@ -38,12 +22,4 @@ export abstract class Reaction {
     static get endpoints(): string[] {
         return [];
     }
-}
-
-export abstract class Reactions {
-    @ApiProperty({
-        description: "The available Discord reaction endpoints",
-        example: DiscordService.endpoints
-    })
-    readonly discord: string[];
 }

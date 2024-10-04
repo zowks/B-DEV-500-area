@@ -9,8 +9,8 @@ export interface AreaTask {
     oauthManager: OAuth;
     action: ActionTrigger;
     reaction: ReactionTrigger;
-    webhookUrl: string;
-    fields: { [k: string]: string };
+    fields: object;
+    reactionBody: object;
     delay: number;
 }
 
