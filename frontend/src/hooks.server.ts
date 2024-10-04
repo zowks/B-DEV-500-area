@@ -1,9 +1,9 @@
 import { redirect, type Handle, type RequestEvent } from "@sveltejs/kit";
-import { base } from "$app/paths";
+import { initAcceptLanguageHeaderDetector } from "typesafe-i18n/detectors";
+import isPublicPath from "$lib/utils/isPublicPath";
 import type { Locales } from "$i18n/i18n-types.js";
 import { detectLocale, i18n, isLocale } from "$i18n/i18n-util";
 import { loadAllLocales } from "$i18n/i18n-util.sync";
-import { initAcceptLanguageHeaderDetector } from "typesafe-i18n/detectors";
 import * as i18nUtils from "$i18n/utils";
 
 loadAllLocales();
@@ -32,6 +32,7 @@ function getPreferredLocale({ request, cookies }: RequestEvent): Locales {
  * - Get the current locale from the URL.
  * - If it's not set, redirect to the preferred locale.
  * - Else, bind the locale and translation functions to the current request, and replace the html lang attribute.
+ * - Also get the access token and store it in the locals.
  *
  * @param event The current request event.
  * @param resolve The resolve function to continue the request.
@@ -40,13 +41,17 @@ export const handle: Handle = async ({ event, resolve }) => {
     const currentLocale = i18nUtils.getCurrentLocale(event);
 
     if (!currentLocale)
-        throw redirect(307, `${base}/${getPreferredLocale(event)}`);
+        return redirect(307, `/${getPreferredLocale(event)}`);
 
     const locale = isLocale(currentLocale) ? (currentLocale as Locales) : getPreferredLocale(event);
-    const LL = L[locale];
+    const accessToken = event.cookies.get("accessToken");
+
+    if (!isPublicPath(event.url.pathname, locale) && !accessToken)
+        return redirect(302, `/${locale}/auth/sign-in`);
 
     event.locals.locale = locale;
-    event.locals.LL = LL;
+    event.locals.LL = L[locale];
+    event.locals.accessToken = accessToken ?? null; // TODO: Make a request to the backend to validate the token
 
     return resolve(event, { transformPageChunk: ({ html }) => html.replace("%lang%", locale) });
 };

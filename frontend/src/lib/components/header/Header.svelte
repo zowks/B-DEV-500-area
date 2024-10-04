@@ -6,6 +6,7 @@
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
     import { Button, buttonVariants } from "$lib/components/ui/button";
     import { Separator } from "$lib/components/ui/separator";
+    import { cn } from "$lib/utils.js";
     import { invalidateAll } from "$app/navigation";
     import { browser } from "$app/environment";
     import { page } from "$app/stores";
@@ -40,7 +41,7 @@
             <h1 class="font-bold text-4xl">AREA</h1>
         </a>
         <div class="flex justify-end items-center space-x-2">
-            <a href="/{$locale}/apk" class={buttonVariants()}>
+            <a href="/{$locale}/apk" class={cn(buttonVariants(), "max-mobile:hidden")}>
                 {$LL.apk.title()}
             </a>
             <DropdownMenu.Root>

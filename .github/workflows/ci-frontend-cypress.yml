@@ -1,0 +1,220 @@
+# This CI is meant to execute frontend tests with Cypress.
+
+name: "AREA Frontend Cypress CI"
+
+on:
+  workflow_call:
+
+permissions: read-all
+
+# Some parameters of `cypress-io/github-action` ae commented because they need
+# record, which needs a subscription to Cypress Cloud.
+# Since parallel must be disabled as explained above, matrices are also disabled.
+
+jobs:
+  install:
+    name: "Install and setup Cypress for tests"
+    runs-on: ubuntu-latest
+    container:
+      image: cypress/browsers:latest
+      options: --user 1001
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cypress install
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: "./frontend/"
+          runTests: false
+
+      - name: "Build the project"
+        run: npm run build:ci
+        working-directory: "./frontend/"
+
+      - name: Save build folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          if-no-files-found: error
+          path: "frontend/build"
+
+  ui-chrome-tests:
+    name: "UI Tests - Chrome"
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    container:
+      image: cypress/browsers:latest
+      options: --user 1001
+    needs: install
+    # strategy:
+      # when one test fails, DO NOT cancel the other
+      # containers, because this will kill Cypress processes
+      # leaving Cypress Cloud hanging ...
+      # https://github.com/cypress-io/github-action/issues/48
+      # fail-fast: false
+      # matrix:
+      #   containers: [1, 2, 3, 4, 5]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download the build folders
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: "frontend/build"
+
+      - name: "UI Tests - Chrome"
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: "./frontend/"
+          build: npx cypress info
+          start: node build
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 120
+          browser: chrome
+          # record: true
+          # parallel: true
+          # group: "UI - Chrome"
+          config-file: cypress.config.ts
+          env: CYPRESS_HOST="http://localhost:3000"
+        env:
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  ui-chrome-mobile-tests:
+    name: "UI Tests - Chrome - Mobile"
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    container:
+      image: cypress/browsers:latest
+      options: --user 1001
+    needs: install
+    # strategy:
+      # when one test fails, DO NOT cancel the other
+      # containers, because this will kill Cypress processes
+      # leaving Cypress Cloud hanging ...
+      # https://github.com/cypress-io/github-action/issues/48
+      # fail-fast: false
+      # matrix:
+      #   containers: [1, 2, 3, 4, 5]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download the build folders
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: "frontend/build"
+
+      - name: "UI Tests - Chrome - Mobile"
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: "./frontend/"
+          config: '{"e2e":{"viewportWidth":375,"viewportHeight":667}}'
+          start: node build
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 120
+          browser: chrome
+          # record: true
+          # parallel: true
+          # group: "UI - Chrome - Mobile"
+
+          config-file: cypress.config.ts
+          env: CYPRESS_HOST="http://localhost:3000"
+        env:
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  ui-firefox-tests:
+    name: "UI Tests - Firefox"
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    container:
+      image: cypress/browsers:latest
+      options: --user 1001
+    needs: install
+    # strategy:
+      # when one test fails, DO NOT cancel the other
+      # containers, because this will kill Cypress processes
+      # leaving Cypress Cloud hanging ...
+      # https://github.com/cypress-io/github-action/issues/48
+      # fail-fast: false
+      # matrix:
+      #   containers: [1, 2, 3, 4, 5]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download the build folders
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: "frontend/build"
+
+      - name: "UI Tests - Firefox"
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: "./frontend/"
+          start: node build
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 120
+          browser: firefox
+          # record: true
+          # parallel: true
+          # group: "UI - Firefox"
+          config-file: cypress.config.ts
+          env: CYPRESS_HOST="http://localhost:3000"
+        env:
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  ui-firefox-mobile-tests:
+    name: "UI Tests - Firefox - Mobile"
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    container:
+      image: cypress/browsers:latest
+      options: --user 1001
+    needs: install
+    # strategy:
+      # when one test fails, DO NOT cancel the other
+      # containers, because this will kill Cypress processes
+      # leaving Cypress Cloud hanging ...
+      # https://github.com/cypress-io/github-action/issues/48
+      # fail-fast: false
+      # matrix:
+      #   containers: [1, 2, 3, 4, 5]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download the build folders
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: "frontend/build"
+
+      - name: "UI Tests - Firefox - Mobile"
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: "./frontend/"
+          config: '{"e2e":{"viewportWidth":375,"viewportHeight":667}}'
+          start: node build
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 120
+          browser: firefox
+          # record: true
+          # parallel: true
+          # group: "UI - Firefox - Mobile"
+          config-file: cypress.config.ts
+          env: CYPRESS_HOST="http://localhost:3000"
+        env:
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -9,6 +9,7 @@ declare global {
         interface Locals {
             locale: Locales;
             LL: TranslationFunctions;
+            accessToken: string | null;
         }
 
         // interface PageData {}
