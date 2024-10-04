@@ -21,7 +21,6 @@ import { SchedulerModule } from "./scheduler/scheduler.module";
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
         ScheduleModule.forRoot(),
-        PrismaModule,
         CronModule,
         AuthModule,
         Argon2Module,
