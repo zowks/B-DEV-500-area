@@ -10,7 +10,7 @@ on:
 jobs:
   run-tests:
     name: "Execute the ESLint and Prettier checkers and the unit tests"
-    runs-on: "self-hosted"
+    runs-on: "ubuntu-latest"
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v4"
@@ -63,4 +63,4 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ghcr.io/epitechpromo2027/area-backend:latest
+          tags: ghcr.io/zowks/area-backend:latest

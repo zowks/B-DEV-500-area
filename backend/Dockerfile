@@ -1,6 +1,6 @@
 FROM alpine:3.20.3 AS base
 
-LABEL org.opencontainers.image.source https://github.com/EpitechPromo2027/B-DEV-500-LIL-5-1-area-merlin.cyffers
+LABEL org.opencontainers.image.source https://github.com/zowks/B-DEV-500-area
 
 RUN apk update                 \
     && apk upgrade             \
