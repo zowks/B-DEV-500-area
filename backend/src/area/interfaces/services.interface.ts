@@ -14,7 +14,10 @@ export abstract class Action {
     }
 }
 
-export type ReactionTrigger = (fields: object, data: AreaDiscordEmbed) => Promise<void>;
+export type ReactionTrigger = (
+    fields: object,
+    data: AreaDiscordEmbed
+) => Promise<void>;
 
 export type ReactionTriggers = {
     [name: string]: ReactionTrigger;

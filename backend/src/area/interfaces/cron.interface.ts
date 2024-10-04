@@ -1,4 +1,7 @@
-import { ActionTrigger, ReactionTrigger } from "../../area/interfaces/services.interface";
+import {
+    ActionTrigger,
+    ReactionTrigger
+} from "../../area/interfaces/services.interface";
 import { OAuth } from "../../oauth/oauth.interface";
 export interface AreaTask {
     userId: string;
