@@ -44,8 +44,6 @@ jobs:
     runs-on: "self-hosted"
     needs:
       - "run-tests"
-    permissions:
-      packages: write
     if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || github.ref_name == 'backend/dev' }}"
     steps:
       - name: "Checkout"
