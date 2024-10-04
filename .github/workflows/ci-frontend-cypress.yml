@@ -78,7 +78,7 @@ jobs:
           # parallel: true
           # group: "UI - Chrome"
           config-file: cypress.config.ts
-          env: IS_CONTINUOUS_INTEGRATION=1,CYPRESS_HOST="http://localhost:3000"
+          env: IS_CONTINUOUS_INTEGRATION=1,CYPRESS_HOST=http://localhost:3000
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
@@ -124,7 +124,7 @@ jobs:
           # group: "UI - Chrome - Mobile"
 
           config-file: cypress.config.ts
-          env: IS_CONTINUOUS_INTEGRATION=1,CYPRESS_HOST="http://localhost:3000"
+          env: IS_CONTINUOUS_INTEGRATION=1,CYPRESS_HOST=http://localhost:3000
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
@@ -168,7 +168,7 @@ jobs:
           # parallel: true
           # group: "UI - Firefox"
           config-file: cypress.config.ts
-          env: IS_CONTINUOUS_INTEGRATION=1,CYPRESS_HOST="http://localhost:3000"
+          env: IS_CONTINUOUS_INTEGRATION=1,CYPRESS_HOST=http://localhost:3000
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
@@ -213,7 +213,7 @@ jobs:
           # parallel: true
           # group: "UI - Firefox - Mobile"
           config-file: cypress.config.ts
-          env: IS_CONTINUOUS_INTEGRATION=1,CYPRESS_HOST="http://localhost:3000"
+          env: IS_CONTINUOUS_INTEGRATION=1,CYPRESS_HOST=http://localhost:3000
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
