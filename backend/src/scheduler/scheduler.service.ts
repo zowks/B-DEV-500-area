@@ -8,7 +8,7 @@ import {
 import { Cache } from "cache-manager";
 import { hash } from "crypto";
 import { transformer } from "../area/generic_transformer";
-import { AreaConfig, AreaTask } from "../cron/interfaces/cron.interface";
+import { AreaConfig, AreaTask } from "../area/interfaces/cron.interface";
 import { OAuthCredentials } from "../oauth/oauth.interface";
 
 @Injectable()
@@ -49,17 +49,15 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         return `${attributes.action.service}.${attributes.action.method}/${attributes.reaction.service}.${attributes.reaction.method}/${userId}`;
     }
 
-    private async getData(cron: AreaTask): Promise<any | null> {
+    private async getData(cron: AreaTask) {
         const credential = await this.getLatestCredential(cron);
 
-        let data: any;
         try {
-            data = await cron.action(credential.access_token);
+            return await cron.action(credential.access_token);
         } catch (e) {
             console.error(e);
             return null;
         }
-        return data;
     }
 
     private async executeTask(
