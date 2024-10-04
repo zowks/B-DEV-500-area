@@ -7,7 +7,7 @@ import {
     UseGuards
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
-import { JwtGuard } from "src/auth/guards/jwt.guard";
+import { JwtGuard } from "../auth/guards/jwt.guard";
 import { Request } from "express";
 import { User, UserInfo } from "./interfaces/user.interface";
 import {

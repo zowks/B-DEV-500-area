@@ -7,9 +7,9 @@ import {
 } from "@nestjs/common";
 import { Cache } from "cache-manager";
 import { hash } from "crypto";
-import { transformer } from "src/area/generic_transformer";
-import { AreaConfig, AreaTask } from "src/cron/interfaces/cron.interface";
-import { OAuthCredentials } from "src/oauth/oauth.interface";
+import { transformer } from "../area/generic_transformer";
+import { AreaConfig, AreaTask } from "../cron/interfaces/cron.interface";
+import { OAuthCredentials } from "../oauth/oauth.interface";
 
 @Injectable()
 export class SchedulerService implements OnModuleInit, OnModuleDestroy {
