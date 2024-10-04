@@ -29,23 +29,23 @@ services:
     ports:
       - 5480:8080
 
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    depends_on:
-      - postgres
-      - redis
-    image: area-backend:latest
-    container_name: area-backend-api
-    env_file:
-      - .env
-    ports:
-      - ${REST_API_PORT}:${REST_API_PORT}
-    volumes:
-      - ./crypto/jwe_public_key.pem:${JWE_PUBLIC_KEY}:ro
-      - ./crypto/jwe_private_key.pem:${JWE_PRIVATE_KEY}:ro
-    entrypoint: npm run container
+  # backend:
+  #  build:
+  #    context: ./backend
+  #    dockerfile: Dockerfile
+  #  depends_on:
+  #    - postgres
+  #    - redis
+  #  image: area-backend:latest
+  #  container_name: area-backend-api
+  #  env_file:
+  #    - .env
+  #  ports:
+  #    - ${REST_API_PORT}:${REST_API_PORT}
+  #  volumes:
+  #    - ./crypto/jwe_public_key.pem:${JWE_PUBLIC_KEY}:ro
+  #    - ./crypto/jwe_private_key.pem:${JWE_PRIVATE_KEY}:ro
+  #  entrypoint: npm run container
 
 volumes:
   area-postgres-volume:

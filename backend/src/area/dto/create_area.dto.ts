@@ -1,11 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {
-    IsNotEmpty,
-    IsObject,
-    IsString,
-    IsUrl,
-    Matches
-} from "class-validator";
+import { IsNotEmpty, IsObject, IsString, Matches } from "class-validator";
 
 export class CreateAreaDto {
     @ApiProperty({
@@ -29,26 +23,27 @@ export class CreateAreaDto {
     readonly reactionId: string;
 
     @ApiProperty({
-        description: "The reaction webhook.",
-        example: "https://discord.com/api/webhooks/XXX/XXX"
-    })
-    @IsUrl()
-    @IsNotEmpty()
-    readonly reactionWebhookUrl: string;
-
-    @ApiProperty({
         description:
-            "The fields to be used in both action and reaction. The keys are the fields of the action response object, the values are the fields of the reaction body object.",
+            "The object representing the reaction payload. It may contain variables from the action object.",
         example: {
-            title: "title",
-            description: "description",
-            thumbnail: "image",
-            url: "url",
-            channelName: "author"
+            title: "You liked the video {{title}}.",
+            description: "You can access the video by clicking [here]({{url}})",
+            imageUrl: "{{thumbnail}}",
+            authorName: "{{channelName}}",
+            authorUrl: "https://youtube.com/channel/{{channelId}}"
         }
     })
     @IsObject()
-    readonly fields: {
-        [k: string]: string;
-    };
+    readonly reactionBody: object;
+
+    @ApiProperty({
+        description:
+            "The fields represent the required elements to make the reaction possible. For instance, it may contain a webhook URL.",
+        example: {
+            webhook:
+                "https://discord.com/api/webhooks/XXXXXXXXXXXXXXXX/XXXXXXXXXXXXXXXX"
+        }
+    })
+    @IsObject()
+    readonly fields: object;
 }

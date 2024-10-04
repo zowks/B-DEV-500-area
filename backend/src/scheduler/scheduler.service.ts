@@ -1,4 +1,5 @@
 import { Injectable, OnModuleDestroy } from "@nestjs/common";
+import { transformer } from "src/area/generic_transformer";
 import { AreaConfig, AreaTask } from "src/cron/interfaces/cron.interface";
 import { OAuthCredentials } from "src/oauth/oauth.interface";
 
@@ -66,12 +67,17 @@ export class SchedulerService implements OnModuleDestroy {
         this.timeoutIds.push(
             setTimeout(async () => {
                 const data = await this.getData(attributes, cron);
-                if (null !== data)
+                if (null !== data) {
+                    const transformedData = transformer(
+                        data,
+                        cron.reactionBody
+                    );
                     try {
-                        await cron.reaction(cron.webhookUrl, cron.fields, data);
+                        await cron.reaction(cron.fields, transformedData);
                     } catch (e) {
                         console.error(e);
                     }
+                }
 
                 this.schedulePolling(attributes, cron);
             }, cron.delay)

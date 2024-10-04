@@ -2,8 +2,6 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { AreaService } from "./area.service";
 import { SchedulerService } from "src/scheduler/scheduler.service";
 import { OAuthService } from "src/oauth/oauth.service";
-import { YouTubeService } from "src/polling/youtube/youtube.service";
-import { DiscordService } from "src/webhook/discord/discord.service";
 
 describe("AreaService", () => {
     let service: AreaService;
@@ -13,9 +11,7 @@ describe("AreaService", () => {
             providers: [
                 AreaService,
                 { provide: SchedulerService, useValue: {} },
-                { provide: OAuthService, useValue: {} },
-                { provide: YouTubeService, useValue: {} },
-                { provide: DiscordService, useValue: {} }
+                { provide: OAuthService, useValue: {} }
             ]
         }).compile();
 
