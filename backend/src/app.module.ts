@@ -11,7 +11,6 @@ import { JwtGuard } from "./auth/guards/jwt.guard";
 import { CacheModule } from "@nestjs/cache-manager";
 
 import { AreaModule } from "./area/area.module";
-import { CronModule } from "./cron/cron.module";
 import { UsersModule } from "./users/users.module";
 
 import { OAuthModule } from "./oauth/oauth.module";
@@ -24,7 +23,6 @@ import { RedisOptions } from "./app.config";
         CacheModule.registerAsync(RedisOptions),
         ConfigModule.forRoot({ isGlobal: true }),
         ScheduleModule.forRoot(),
-        CronModule,
         AuthModule,
         Argon2Module,
         JwtModule,
