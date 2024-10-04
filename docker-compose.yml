@@ -25,6 +25,7 @@ services:
 
   adminer:
     image: adminer
+    container_name: area-adminer
     restart: always
     ports:
       - 5480:8080

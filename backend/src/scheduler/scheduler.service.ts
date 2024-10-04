@@ -1,26 +1,29 @@
-import { Injectable, OnModuleDestroy } from "@nestjs/common";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import {
+    Inject,
+    Injectable,
+    OnModuleDestroy,
+    OnModuleInit
+} from "@nestjs/common";
+import { Cache } from "cache-manager";
+import { hash } from "crypto";
 import { transformer } from "src/area/generic_transformer";
 import { AreaConfig, AreaTask } from "src/cron/interfaces/cron.interface";
 import { OAuthCredentials } from "src/oauth/oauth.interface";
 
 @Injectable()
-export class SchedulerService implements OnModuleDestroy {
-    private timeoutIds: NodeJS.Timeout[] = [];
+export class SchedulerService implements OnModuleInit, OnModuleDestroy {
+    private intervalIds: NodeJS.Timeout[] = [];
 
-    private cache = {};
+    constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
-    onModuleDestroy() {
-        this.timeoutIds.forEach(clearTimeout);
+    async onModuleInit() {
+        await this.cacheManager.reset();
     }
 
-    private buildCacheKey(
-        userId: string,
-        attributes: {
-            action: { service: string; method: string };
-            reaction: { service: string; method: string };
-        }
-    ) {
-        return `${attributes.action.service}.${attributes.action.method}/${attributes.reaction.service}.${attributes.reaction.method}/${userId}`;
+    async onModuleDestroy() {
+        this.intervalIds.forEach(clearInterval);
+        await this.cacheManager.reset();
     }
 
     private async getLatestCredential(
@@ -36,15 +39,17 @@ export class SchedulerService implements OnModuleDestroy {
         return await cron.oauthManager.refreshCredentials(credentials[0]);
     }
 
-    private isFirstRun(attributes: AreaConfig, cron: AreaTask): boolean {
-        const key = this.buildCacheKey(cron.userId, attributes);
-        return undefined === this.cache[key];
+    private buildCacheKey(
+        userId: string,
+        attributes: {
+            action: { service: string; method: string };
+            reaction: { service: string; method: string };
+        }
+    ) {
+        return `${attributes.action.service}.${attributes.action.method}/${attributes.reaction.service}.${attributes.reaction.method}/${userId}`;
     }
 
-    private async getData(
-        attributes: AreaConfig,
-        cron: AreaTask
-    ): Promise<any | null> {
+    private async getData(cron: AreaTask): Promise<any | null> {
         const credential = await this.getLatestCredential(cron);
 
         let data: any;
@@ -52,39 +57,49 @@ export class SchedulerService implements OnModuleDestroy {
             data = await cron.action(credential.access_token);
         } catch (e) {
             console.error(e);
+            return null;
         }
-        if (null === data) return;
-
-        const key = this.buildCacheKey(cron.userId, attributes);
-        const firstRun = this.isFirstRun(attributes, cron);
-        if (!firstRun && data === this.cache[key]) return null;
-
-        this.cache[key] = data;
         return data;
     }
 
-    private schedulePolling(attributes: AreaConfig, cron: AreaTask) {
-        this.timeoutIds.push(
-            setTimeout(async () => {
-                const data = await this.getData(attributes, cron);
-                if (null !== data) {
-                    const transformedData = transformer(
-                        data,
-                        cron.reactionBody
-                    );
-                    try {
-                        await cron.reaction(cron.fields, transformedData);
-                    } catch (e) {
-                        console.error(e);
-                    }
-                }
+    private async executeTask(
+        attributes: AreaConfig,
+        cron: AreaTask,
+        firstRun: boolean = false
+    ) {
+        const data = await this.getData(cron);
+        if (null === data) return;
 
-                this.schedulePolling(attributes, cron);
-            }, cron.delay)
-        );
+        console.log(data["id"]);
+
+        const transformedData = transformer(data, cron.reactionBody);
+        const cacheValue = hash(
+            "sha512",
+            JSON.stringify(transformedData),
+            "hex"
+        ).toString();
+
+        const key = this.buildCacheKey(cron.userId, attributes);
+        const cachedValue = await this.cacheManager.get(key);
+        const cachingDelay = (cron.delay + 5) * 1000;
+        await this.cacheManager.set(key, cacheValue, cachingDelay);
+        if (firstRun || cacheValue === cachedValue) return;
+
+        try {
+            await cron.reaction(cron.fields, transformedData);
+            console.log("reaction triggered");
+        } catch (e) {
+            console.error(e);
+        }
     }
 
-    startPolling(attributes: AreaConfig, cron: AreaTask) {
-        this.schedulePolling(attributes, cron);
+    async startPolling(attributes: AreaConfig, cron: AreaTask) {
+        await this.executeTask(attributes, cron, true);
+
+        this.intervalIds.push(
+            setInterval(async () => {
+                await this.executeTask(attributes, cron, false);
+            }, cron.delay * 1000)
+        );
     }
 }

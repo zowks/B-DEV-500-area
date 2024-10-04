@@ -87,7 +87,7 @@ export class AreaService {
             action.service
         );
 
-        this.schedulerService.startPolling(
+        await this.schedulerService.startPolling(
             {
                 action,
                 reaction
@@ -99,7 +99,7 @@ export class AreaService {
                 reaction: reaction.config.produce,
                 fields: createAreaDto.fields,
                 reactionBody: createAreaDto.reactionBody,
-                delay: 10 * 1000
+                delay: createAreaDto.delay
             }
         );
     }

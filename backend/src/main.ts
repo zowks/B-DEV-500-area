@@ -86,6 +86,6 @@ async function bootstrap() {
     };
     SwaggerModule.setup("/", app, document, swaggerConfig);
 
-    await app.listen(configService.get<number>("REST_API_PORT", 3000));
+    await app.listen(configService.get<number>("REST_API_PORT", 8080));
 }
 bootstrap();
