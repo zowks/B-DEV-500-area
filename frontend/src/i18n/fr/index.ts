@@ -12,6 +12,10 @@ const fr = {
         dark: "Sombre",
         system: "Système"
     },
+    apk: {
+        title: "Télécharger l'APK Android",
+        download: "Télécharger"
+    },
     auth: {
         email: "Adresse mail",
         password: "Mot de passe",

@@ -4,7 +4,7 @@
     import Moon from "lucide-svelte/icons/moon";
     import ArrowDown from "lucide-svelte/icons/arrow-down";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-    import { Button } from "$lib/components/ui/button";
+    import { Button, buttonVariants } from "$lib/components/ui/button";
     import { Separator } from "$lib/components/ui/separator";
     import { invalidateAll } from "$app/navigation";
     import { browser } from "$app/environment";
@@ -40,6 +40,9 @@
             <h1 class="font-bold text-4xl">AREA</h1>
         </a>
         <div class="flex justify-end items-center space-x-2">
+            <a href="/{$locale}/apk" class={buttonVariants()}>
+                {$LL.apk.title()}
+            </a>
             <DropdownMenu.Root>
                 <DropdownMenu.Trigger asChild let:builder>
                     <Button builders={[builder]} variant="outline" size="icon">

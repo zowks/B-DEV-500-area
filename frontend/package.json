@@ -25,6 +25,7 @@
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/eslint": "^9.6.0",
 		"@types/node": "^22.6.0",
+		"@types/qrcode": "^1.5.5",
 		"autoprefixer": "^10.4.20",
 		"eslint": "^9.0.0",
 		"eslint-plugin-svelte": "^2.36.0",
@@ -43,6 +44,7 @@
 		"clsx": "^2.1.1",
 		"lucide-svelte": "^0.446.0",
 		"mode-watcher": "^0.4.1",
+		"qrcode": "^1.5.4",
 		"tailwind-merge": "^2.5.2",
 		"tailwind-variants": "^0.2.1",
 		"typesafe-i18n": "^5.26.2"
