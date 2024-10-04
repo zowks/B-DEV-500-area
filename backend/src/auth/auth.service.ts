@@ -19,7 +19,7 @@ export class AuthService {
         private readonly jwtService: JwtService
     ) {}
 
-    async register(registerDto: RegisterDto): Promise<string> {
+    async register(registerDto: RegisterDto): Promise<void> {
         if (!registerDto.has_accepted_terms_and_conditions)
             throw new UnprocessableEntityException();
 
@@ -39,7 +39,7 @@ export class AuthService {
                     id: true
                 }
             });
-            return await this.jwtService.forgeJwe({ id: createdUser.id });
+            await this.jwtService.forgeJwe({ id: createdUser.id });
         } catch (e) {
             if (
                 e instanceof PrismaClientKnownRequestError &&
@@ -57,8 +57,8 @@ export class AuthService {
                 email: loginDto.email
             },
             select: {
-                hashed_password: true,
-                id: true
+                id: true,
+                hashed_password: true
             }
         });
 
