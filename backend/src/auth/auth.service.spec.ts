@@ -132,11 +132,7 @@ describe("AuthService", () => {
                 id: randomUUID()
             } as any);
 
-            expect(await authService.register(registerDto)).toStrictEqual({
-                id: expect.stringMatching(
-                    /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/
-                )
-            });
+            expect(await authService.register(registerDto)).toBe(void 0);
             expect(argon2Service.hashPassword).toHaveBeenCalledWith(
                 registerDto.password
             );

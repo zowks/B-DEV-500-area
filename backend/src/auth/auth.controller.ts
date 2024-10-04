@@ -21,13 +21,9 @@ export class AuthController {
 
     @Post("/register")
     @HttpCode(HttpStatus.CREATED)
-    @ApiExtraModels(LoginResponseDto)
     @ApiCreatedResponse({
         description:
-            "Creates a new user account. An access token is returned. It must be present as a Bearer token to talk to the API.",
-        schema: {
-            $ref: getSchemaPath(LoginResponseDto)
-        }
+            "Creates a new user account. The user should then be able to log itself in."
     })
     @ApiConflictResponse({
         description: "The email is already taken."
@@ -40,11 +36,8 @@ export class AuthController {
         description:
             "Some of the fields are incorrect. Make sure it fits the Register DTO."
     })
-    async register(
-        @Body() registerDto: RegisterDto
-    ): Promise<LoginResponseDto> {
-        const accessToken = await this.authService.register(registerDto);
-        return { access_token: accessToken };
+    async register(@Body() registerDto: RegisterDto): Promise<void> {
+        await this.authService.register(registerDto);
     }
 
     @Post("/login")
