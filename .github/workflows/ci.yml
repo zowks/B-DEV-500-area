@@ -33,6 +33,7 @@ jobs:
       - "common"
     if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || startsWith(github.ref_name, 'mobile/') }}"
     uses: "./.github/workflows/ci-mobile.yml"
+    secrets: inherit
 
   mirror:
     name: "Mirror the refs to the Epitech repository"
