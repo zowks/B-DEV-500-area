@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Avatar /> Avatar without AvatarImage renders correctly 1`] = `
+<View
+  className="relative flex shrink-0 overflow-hidden rounded-full w-24 h-24"
+>
+  <View
+    aria-label="Hello, World! I'm Avatar alt."
+    className="flex h-full w-full items-center justify-center rounded-full bg-muted"
+    role="img"
+  >
+    <Text
+      className="text-base text-foreground web:select-text"
+    >
+      Hello, World! I'm AvatarFallback.
+    </Text>
+  </View>
+</View>
+`;
