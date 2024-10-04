@@ -1,5 +1,7 @@
 # This CI is meant to create a preview of the mobile app in pull requests.
 
+name: "AREA Mobile preview CI"
+
 on:
   pull_request:
     branches:
