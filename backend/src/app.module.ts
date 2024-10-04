@@ -3,16 +3,16 @@ import { ConfigModule } from "@nestjs/config";
 
 import { AppController } from "./app.controller";
 
-import { PrismaModule } from "src/prisma/prisma.module";
-import { AuthModule } from "src/auth/auth.module";
-import { Argon2Module } from "src/argon2/argon2.module";
-import { JwtModule } from "src/jwt/jwt.module";
-import { JwtGuard } from "src/auth/guards/jwt.guard";
+import { PrismaModule } from "./prisma/prisma.module";
+import { AuthModule } from "./auth/auth.module";
+import { Argon2Module } from "./argon2/argon2.module";
+import { JwtModule } from "./jwt/jwt.module";
+import { JwtGuard } from "./auth/guards/jwt.guard";
 import { CacheModule } from "@nestjs/cache-manager";
 
 import { AreaModule } from "./area/area.module";
-import { CronModule } from "src/cron/cron.module";
-import { UsersModule } from "src/users/users.module";
+import { CronModule } from "./cron/cron.module";
+import { UsersModule } from "./users/users.module";
 
 import { OAuthModule } from "./oauth/oauth.module";
 import { ScheduleModule } from "@nestjs/schedule";

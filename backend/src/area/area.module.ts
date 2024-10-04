@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { AreaController } from "./area.controller";
 import { AreaService } from "./area.service";
-import { PrismaModule } from "src/prisma/prisma.module";
-import { OAuthModule } from "src/oauth/oauth.module";
-import { SchedulerModule } from "src/scheduler/scheduler.module";
+import { PrismaModule } from "../prisma/prisma.module";
+import { OAuthModule } from "../oauth/oauth.module";
+import { SchedulerModule } from "../scheduler/scheduler.module";
 
 @Module({
     imports: [PrismaModule, SchedulerModule, OAuthModule],

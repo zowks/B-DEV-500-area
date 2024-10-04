@@ -136,6 +136,7 @@ web_modules
 
 # compiled output
 dist
+!/common/backend/dist
 build
 
 ### Nest

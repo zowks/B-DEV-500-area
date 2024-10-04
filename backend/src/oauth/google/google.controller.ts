@@ -24,8 +24,8 @@ import {
     getSchemaPath
 } from "@nestjs/swagger";
 import { GoogleOAuthService } from "./google.service";
-import { JwtGuard } from "src/auth/guards/jwt.guard";
-import { User } from "src/users/interfaces/user.interface";
+import { JwtGuard } from "../../auth/guards/jwt.guard";
+import { User } from "../../users/interfaces/user.interface";
 import { GoogleOAuthCredentials } from "./interfaces/responses";
 
 @ApiTags("Google OAuth")

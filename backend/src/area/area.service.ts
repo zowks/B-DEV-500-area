@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { User } from "src/users/interfaces/user.interface";
+import { User } from "../users/interfaces/user.interface";
 import { CreateAreaDto } from "./dto/create_area.dto";
-import { OAuthService } from "src/oauth/oauth.service";
-import { SchedulerService } from "src/scheduler/scheduler.service";
+import { OAuthService } from "../oauth/oauth.service";
+import { SchedulerService } from "../scheduler/scheduler.service";
 import { YOUTUBE_ACTIONS } from "./services/youtube/youtube.actions";
 import { YOUTUBE_REACTIONS } from "./services/youtube/youtube.reactions";
 import { DISCORD_ACTIONS } from "./services/discord/discord.actions";

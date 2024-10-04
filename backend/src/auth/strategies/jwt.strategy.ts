@@ -2,8 +2,8 @@ import { HttpStatus, Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Request } from "express";
 import { Strategy } from "passport-strategy";
-import { JwtService } from "src/jwt/jwt.service";
-import { User } from "src/users/interfaces/user.interface";
+import { JwtService } from "../../jwt/jwt.service";
+import { User } from "../../users/interfaces/user.interface";
 import * as jose from "jose";
 
 @Injectable()
