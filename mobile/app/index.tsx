@@ -11,7 +11,7 @@ export default function Screen() {
 
     useEffect(() => {
         if (isMounted)
-            router.replace("/(auth)/login");
+            router.replace("/(auth)/signup");
     }, [isMounted, router]);
     return null;
 }
