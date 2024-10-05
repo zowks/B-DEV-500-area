@@ -7,9 +7,6 @@ name: "AREA CI"
 on:
   push:
 
-env:
-  API_URL: "https://api-area.zowks.fr"
-
 jobs:
   common:
     name: "Common"
@@ -33,7 +30,7 @@ jobs:
     permissions: read-all
     secrets: inherit
     with:
-        API_URL: "${{ env.API_URL }}"
+        API_URL: "https://api-area.zowks.fr"
 
   mobile:
     name: "Mobile"
