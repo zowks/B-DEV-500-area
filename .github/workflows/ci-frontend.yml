@@ -10,6 +10,9 @@ on:
         required: true
         type: string
 
+env:
+  VITE_API_URL: "${{ inputs.API_URL }}"
+
 permissions: read-all
 
 jobs:
@@ -38,8 +41,6 @@ jobs:
 
       - name: "Check code"
         working-directory: "./frontend/"
-        env:
-            VITE_API_URL: "${{ inputs.API_URL }}"
         run: "npm run check"
 
       - name: "Build the project"
