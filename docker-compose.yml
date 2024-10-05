@@ -1,0 +1,52 @@
+services:
+  postgres:
+    image: postgres:12.20-alpine3.20
+    container_name: area-postgres
+    shm_size: 128mb
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - area-postgres-volume:/var/lib/postgresql/data:rw
+    ports:
+      - 5432:5432
+
+  redis:
+    image: redis:alpine3.20
+    restart: unless-stopped
+    container_name: area-redis
+    env_file:
+      - .env
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    volumes:
+      - area-redis-volume:/data:rw
+    command: redis-server --save 60 1 --loglevel warning
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 5480:8080
+
+  backend:
+   build:
+     context: ./backend
+     dockerfile: Dockerfile
+   depends_on:
+     - postgres
+     - redis
+   image: area-backend:latest
+   container_name: area-backend-api
+   env_file:
+     - .env
+   ports:
+     - ${REST_API_PORT}:${REST_API_PORT}
+   volumes:
+     - ./crypto/jwe_public_key.pem:${JWE_PUBLIC_KEY}:ro
+     - ./crypto/jwe_private_key.pem:${JWE_PRIVATE_KEY}:ro
+   entrypoint: npm run container
+
+volumes:
+  area-postgres-volume:
+  area-redis-volume:

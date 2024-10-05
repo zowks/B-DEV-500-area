@@ -2,6 +2,7 @@
     "expo": {
         "name": "area-mobile",
         "slug": "area-mobile",
+        "owner": "area-51-team",
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/images/icon.png",
@@ -20,7 +21,8 @@
             "adaptiveIcon": {
                 "foregroundImage": "./assets/images/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
-            }
+            },
+            "package": "area.mobile.app"
         },
         "web": {
             "bundler": "metro",
@@ -33,6 +35,11 @@
         ],
         "experiments": {
             "typedRoutes": true
+        },
+        "extra": {
+            "eas": {
+                "projectId": "b50e0670-3fde-454e-aafa-d6fbb5186d1b"
+            }
         }
     }
 }
