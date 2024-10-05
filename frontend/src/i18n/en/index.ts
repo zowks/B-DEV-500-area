@@ -3,6 +3,14 @@ import type { BaseTranslation } from "../i18n-types";
 const en = {
     error: {
         goHome: "Go to homepage",
+        api: {
+            unknown: "An unknown error occurred",
+            unauthorized: "You are not authorized to perform this action",
+            incorrectFields: "One or more fields are incorrect",
+            emailAlreadyTaken: "The email is already taken",
+            termsDenied: "You must accept the terms and conditions",
+            invalidCredentials: "Invalid credentials"
+        }
     },
     header: {
         selectLanguage: "Select language",
