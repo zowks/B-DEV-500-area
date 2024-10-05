@@ -78,15 +78,15 @@ jobs:
         with:
           working-directory: "./frontend/"
           build: npx cypress info
-          start: node build
-          wait-on: "http://localhost:3000"
+          start: npm run prod
+          wait-on: "http://localhost:8081"
           wait-on-timeout: 120
           browser: chrome
           # record: true
           # parallel: true
           # group: "UI - Chrome"
           config-file: cypress.config.ts
-          env: CYPRESS_HOST="http://localhost:3000"
+          env: CYPRESS_HOST="http://localhost:8081"
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
@@ -123,8 +123,8 @@ jobs:
         with:
           working-directory: "./frontend/"
           config: '{"e2e":{"viewportWidth":375,"viewportHeight":667}}'
-          start: node build
-          wait-on: "http://localhost:3000"
+          start: npm run prod
+          wait-on: "http://localhost:8081"
           wait-on-timeout: 120
           browser: chrome
           # record: true
@@ -132,7 +132,7 @@ jobs:
           # group: "UI - Chrome - Mobile"
 
           config-file: cypress.config.ts
-          env: CYPRESS_HOST="http://localhost:3000"
+          env: CYPRESS_HOST="http://localhost:8081"
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
@@ -168,15 +168,15 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           working-directory: "./frontend/"
-          start: node build
-          wait-on: "http://localhost:3000"
+          start: npm run prod
+          wait-on: "http://localhost:8081"
           wait-on-timeout: 120
           browser: firefox
           # record: true
           # parallel: true
           # group: "UI - Firefox"
           config-file: cypress.config.ts
-          env: CYPRESS_HOST="http://localhost:3000"
+          env: CYPRESS_HOST="http://localhost:8081"
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
@@ -213,15 +213,15 @@ jobs:
         with:
           working-directory: "./frontend/"
           config: '{"e2e":{"viewportWidth":375,"viewportHeight":667}}'
-          start: node build
-          wait-on: "http://localhost:3000"
+          start: npm run prod
+          wait-on: "http://localhost:8081"
           wait-on-timeout: 120
           browser: firefox
           # record: true
           # parallel: true
           # group: "UI - Firefox - Mobile"
           config-file: cypress.config.ts
-          env: CYPRESS_HOST="http://localhost:3000"
+          env: CYPRESS_HOST="http://localhost:8081"
         env:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
