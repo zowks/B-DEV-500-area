@@ -7,9 +7,6 @@ name: "AREA CI"
 on:
   push:
 
-env:
-  VITE_API_URL: "http://localhost:8080"
-
 jobs:
   common:
     name: "Common"

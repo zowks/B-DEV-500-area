@@ -4,8 +4,16 @@ name: "AREA Frontend Cypress CI"
 
 on:
   workflow_call:
+    inputs:
+      API_URL:
+        description: "The API URL"
+        required: true
+        type: string
 
 permissions: read-all
+
+env:
+  VITE_API_URL: "${{ inputs.API_URL }}"
 
 # Some parameters of `cypress-io/github-action` ae commented because they need
 # record, which needs a subscription to Cypress Cloud.
