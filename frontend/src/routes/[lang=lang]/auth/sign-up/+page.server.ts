@@ -49,7 +49,7 @@ export const actions: Actions = {
             return redirect(303, "sign-in");
 
         const errorKey = response.errorKey || "unknown";
-        const errorMessage = LL.error.api[errorKey] ? LL.error.api[errorKey]() : LL.error.api.unknown();
+        const errorMessage = LL.error.api[errorKey];
 
         return fail(response.status, { errorMessage });
     }
