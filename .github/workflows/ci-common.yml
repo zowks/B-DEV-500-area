@@ -17,9 +17,9 @@ jobs:
               with:
                   node-version: "lts/*"
 
-            - name: "Install frontend NPM packages" # common import files from frontend (from i18n, those need frontend `typesafe-i18n` package)
+            - name: "Install typesafe-i18n in frontend" # common imports files from frontend (from i18n, those need `typesafe-i18n` package in the frontend)
               working-directory: "./frontend/"
-              run: "npm ci"
+              run: "npm i typesafe-i18n"
 
             - name: "Install NPM packages"
               working-directory: "./common/"
