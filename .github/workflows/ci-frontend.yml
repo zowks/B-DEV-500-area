@@ -4,9 +4,11 @@ name: "AREA Frontend CI"
 
 on:
   workflow_call:
-
-env:
-  VITE_API_URL: "http://localhost:8080"
+    inputs:
+      API_URL:
+        description: "The API URL"
+        required: true
+        type: string
 
 permissions: read-all
 
@@ -36,6 +38,8 @@ jobs:
 
       - name: "Check code"
         working-directory: "./frontend/"
+        env:
+            VITE_API_URL: "${{ inputs.API_URL }}"
         run: "npm run check"
 
       - name: "Build the project"
@@ -49,4 +53,4 @@ jobs:
     uses: "./.github/workflows/ci-frontend-cypress.yml"
     secrets: inherit
     with:
-        API_URL: "${{ env.VITE_API_URL }}"
+        API_URL: "${{ inputs.API_URL }}"
