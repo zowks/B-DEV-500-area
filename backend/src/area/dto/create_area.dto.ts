@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
     IsNotEmpty,
     IsNumber,
@@ -28,7 +28,7 @@ export class CreateAreaDto {
     @IsNotEmpty()
     readonly reactionId: string;
 
-    @ApiProperty({
+    @ApiPropertyOptional({
         description:
             "The object representing the reaction payload. It may contain variables from the action object.",
         example: {
@@ -59,6 +59,5 @@ export class CreateAreaDto {
         example: 10
     })
     @IsNumber()
-    @IsNotEmpty()
     readonly delay: number;
 }
