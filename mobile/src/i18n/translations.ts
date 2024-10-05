@@ -1,15 +1,9 @@
 const englishTranslations = {
-    "Welcome to React": "Welcome to React and react-i18next",
-    "Scientist": "Scientist",
-    "Freelance": "Freelance",
-    "Dimension": "Dimension",
-    "Age": "Age",
-    "Species": "Species",
-    "Human": "Human",
-    "Change language": "Change language",
-    foo: {
-        bar: "Example text in sub-object"
-    }
+    "login": "Log in",
+    "signup": "Sign up",
+    "password": "Password",
+    "language": "En",
+    "newUser": "Don't have an account ?"
 };
 
 type Translation = {
@@ -22,17 +16,11 @@ const translations: Record<string, Translation> = {
     },
     fr: {
         translation: {
-            "Welcome to React": "Bienvenue à React et react-i18next",
-            "Scientist": "Scientifique",
-            "Freelance": "Freelance",
-            "Dimension": "Dimension",
-            "Age": "Âge",
-            "Species": "Espèce",
-            "Human": "Humain",
-            "Change language": "Changer la langue",
-            foo: {
-                bar: "Test d'exemple dans un sous-objet"
-            }
+            "login": "Se connecter",
+            "signup": "Créer un compte",
+            "password": "Mot de passe",
+            "language": "Fr",
+            "newUser": "Vous n'avez pas de compte ?"
         }
     }
 };
