@@ -1,7 +1,7 @@
 import {
     YouTubeVideo,
     AreaYouTubeVideo
-} from "./interfaces/youtube_video.interface";
+} from "./interfaces/youtubeVideo.interface";
 
 export function transformYouTubeVideoToArea(
     raw: YouTubeVideo

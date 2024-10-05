@@ -18,12 +18,12 @@ import {
     getSchemaPath
 } from "@nestjs/swagger";
 import { JwtGuard } from "../auth/guards/jwt.guard";
-import { CreateAreaDto } from "./dto/create_area.dto";
+import { CreateAreaDto } from "./dto/createArea.dto";
 import { User } from "../users/interfaces/user.interface";
 import { Request } from "express";
 import { AreaService } from "./area.service";
 import { Area } from "./interfaces/area.interface";
-import { UpdateAreaDto } from "./dto/update_area.dto";
+import { UpdateAreaDto } from "./dto/updateArea.dto";
 
 @ApiTags("AREA")
 @Controller("area")
@@ -61,7 +61,7 @@ export class AreaController {
     @ApiCreatedResponse({
         description: "Updates the AREA",
         schema: {
-            $ref: getSchemaPath(Area)
+            $ref: getSchemaPath(UpdateAreaDto)
         }
     })
     @ApiUnauthorizedResponse({

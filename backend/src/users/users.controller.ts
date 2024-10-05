@@ -39,9 +39,8 @@ export class UsersController {
         description:
             "Either the JWT is expired or invalid or the user has been deleted."
     })
-    async getUser(@Req() req: Request): Promise<{ user: UserInfo }> {
+    async getUser(@Req() req: Request): Promise<UserInfo> {
         const { id } = req.user as Pick<User, "id">;
-        const user = await this.usersService.getUser(id);
-        return { user };
+        return await this.usersService.getUser(id);
     }
 }

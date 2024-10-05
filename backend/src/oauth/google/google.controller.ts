@@ -26,7 +26,6 @@ import {
 import { GoogleOAuthService } from "./google.service";
 import { JwtGuard } from "../../auth/guards/jwt.guard";
 import { User } from "../../users/interfaces/user.interface";
-import { GoogleOAuthCredentials } from "./interfaces/responses";
 import { OAuthCredential } from "../oauth.interface";
 
 @ApiTags("Google OAuth")
@@ -107,7 +106,7 @@ export class GoogleOAuthController {
 
     @UseGuards(JwtGuard)
     @Get("/credentials")
-    @ApiExtraModels(GoogleOAuthCredentials)
+    @ApiExtraModels(OAuthCredential)
     @ApiBearerAuth("bearer")
     @ApiOkResponse({
         description:

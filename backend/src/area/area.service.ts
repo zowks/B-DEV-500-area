@@ -5,7 +5,7 @@ import {
     NotFoundException
 } from "@nestjs/common";
 import { User } from "../users/interfaces/user.interface";
-import { CreateAreaDto } from "./dto/create_area.dto";
+import { CreateAreaDto } from "./dto/createArea.dto";
 import { OAuthService } from "../oauth/oauth.service";
 import { SchedulerService } from "../scheduler/scheduler.service";
 import { YOUTUBE_ACTIONS } from "./services/youtube/youtube.actions";
@@ -19,7 +19,7 @@ import {
 import { PrismaService } from "../prisma/prisma.service";
 import { Area, AreaAction, AreaReaction } from "./interfaces/area.interface";
 import { AreaStatus, Area as PrismaArea } from "@prisma/client";
-import { UpdateAreaDto } from "./dto/update_area.dto";
+import { UpdateAreaDto } from "./dto/updateArea.dto";
 
 @Injectable()
 export class AreaService {

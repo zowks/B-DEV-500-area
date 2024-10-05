@@ -90,7 +90,7 @@ export abstract class Area {
 
     @ApiProperty({
         description: "The current state of the AREA.",
-        examples: [AreaStatus.RUNNING, AreaStatus.STOPPED, AreaStatus.ERROR],
+        enum: [AreaStatus.RUNNING, AreaStatus.STOPPED, AreaStatus.ERROR],
         default: AreaStatus.STOPPED
     })
     readonly status: AreaStatus;

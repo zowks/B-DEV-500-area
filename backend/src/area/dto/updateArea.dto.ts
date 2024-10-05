@@ -70,7 +70,7 @@ export class UpdateAreaDto {
 
     @ApiPropertyOptional({
         description: "The AREA status.",
-        examples: [AreaStatus.RUNNING, AreaStatus.STOPPED, AreaStatus.ERROR]
+        enum: [AreaStatus.RUNNING, AreaStatus.STOPPED, AreaStatus.ERROR]
     })
     readonly status?: AreaStatus;
 }

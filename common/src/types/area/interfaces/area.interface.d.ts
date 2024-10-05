@@ -1,6 +1,6 @@
 import { AreaStatus, OAuthCredential } from "@prisma/client";
 import { ActionDescription, ReactionDescription } from "../services/interfaces/service.interface";
-import { OAuth } from "src/oauth/oauth.interface";
+import { OAuth } from "../../oauth/oauth.interface";
 export interface AreaAction {
     service: string;
     method: string;
