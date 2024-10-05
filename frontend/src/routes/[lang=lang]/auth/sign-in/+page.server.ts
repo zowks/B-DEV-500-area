@@ -5,10 +5,12 @@ import validateCredentials from "$lib/utils/auth/validateCredentials";
 export const actions: Actions = {
     default: async ({ request, locals: { LL } }) => {
         const data = await request.formData();
-        const errors = validateCredentials(data, LL);
+        const email = data.get("email");
+        const password = data.get("password");
+        const credentials = validateCredentials({ email, password }, LL);
 
-        if (errors)
-            return fail(400, errors);
+        if (credentials.error)
+            return fail(400, credentials);
         redirect(303, "..");
     }
 };

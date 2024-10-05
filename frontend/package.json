@@ -47,7 +47,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"bits-ui": "^0.21.15",
+		"bits-ui": "^0.21.16",
 		"clsx": "^2.1.1",
 		"lucide-svelte": "^0.446.0",
 		"mode-watcher": "^0.4.1",
