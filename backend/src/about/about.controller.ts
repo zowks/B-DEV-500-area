@@ -1,7 +1,7 @@
-import { Controller, Get, Ip } from '@nestjs/common';
-import { AboutJson } from './interfaces/about.interface';
-import discord from 'src/area/services/discord';
-import youtube from 'src/area/services/youtube';
+import { Controller, Get, Ip } from "@nestjs/common";
+import { AboutJson } from "./interfaces/about.interface";
+import discord from "src/area/services/discord";
+import youtube from "src/area/services/youtube";
 
 @Controller()
 export class AboutController {
