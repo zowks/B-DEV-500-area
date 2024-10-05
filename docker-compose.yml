@@ -25,6 +25,7 @@ services:
 
   adminer:
     image: adminer
+    container_name: area-adminer
     restart: always
     ports:
       - 5480:8080
@@ -45,7 +46,6 @@ services:
    volumes:
      - ./crypto/jwe_public_key.pem:${JWE_PUBLIC_KEY}:ro
      - ./crypto/jwe_private_key.pem:${JWE_PRIVATE_KEY}:ro
-   entrypoint: npm run container
 
 volumes:
   area-postgres-volume:

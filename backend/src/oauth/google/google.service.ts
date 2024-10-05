@@ -1,9 +1,9 @@
 import * as axios from "axios";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { OAuth, OAuthCredentials } from "src/oauth/oauth.interface";
-import { User } from "src/users/interfaces/user.interface";
-import { PrismaService } from "src/prisma/prisma.service";
+import { OAuth, OAuthCredentials } from "../../oauth/oauth.interface";
+import { User } from "../../users/interfaces/user.interface";
+import { PrismaService } from "../../prisma/prisma.service";
 
 @Injectable()
 export class GoogleOAuthService implements OAuth {
