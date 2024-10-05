@@ -33,11 +33,14 @@ model google_oauth {
 }
 
 model area {
-    id          String @unique @default(uuid()) @db.Uuid
-    name        String @db.VarChar(255)
-    description String @db.Text
-    action_id   String @db.Uuid
-    reaction_id String @db.Uuid
+    id            String @unique @default(uuid()) @db.Uuid
+    name          String @db.VarChar(255)
+    description   String @db.Text
+    action_id     String @map("action_id") @db.VarChar(255)
+    reaction_id   String @map("reaction_id") @db.VarChar(255)
+    delay         Int
+    reaction_body Json?  @map("reaction_body")
+    fields        Json
 
     @@map("area")
 }

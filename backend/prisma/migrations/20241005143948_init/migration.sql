@@ -20,6 +20,18 @@ CREATE TABLE "google_oauth" (
     CONSTRAINT "google_oauth_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "area" (
+    "id" UUID NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "description" TEXT NOT NULL,
+    "action_id" VARCHAR(255) NOT NULL,
+    "reaction_id" VARCHAR(255) NOT NULL,
+    "delay" INTEGER NOT NULL,
+    "reaction_body" JSONB,
+    "fields" JSONB NOT NULL
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_id_key" ON "users"("id");
 
@@ -31,6 +43,9 @@ CREATE UNIQUE INDEX "google_oauth_access_token_key" ON "google_oauth"("access_to
 
 -- CreateIndex
 CREATE UNIQUE INDEX "google_oauth_refresh_token_key" ON "google_oauth"("refresh_token");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "area_id_key" ON "area"("id");
 
 -- AddForeignKey
 ALTER TABLE "google_oauth" ADD CONSTRAINT "google_oauth_users_id_fkey" FOREIGN KEY ("users_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
