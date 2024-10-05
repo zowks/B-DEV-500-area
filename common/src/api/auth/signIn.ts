@@ -1,7 +1,7 @@
 import type { RequestResponse } from "../api";
 import type { LoginDto, LoginResponseDto } from "../../types/auth/dto/login.dto";
 
-export default async function signUp(apiUrl: string, payload: LoginDto): Promise<RequestResponse<LoginResponseDto, 200 | 400 | 403>> {
+export default async function signIn(apiUrl: string, payload: LoginDto): Promise<RequestResponse<LoginResponseDto, 200 | 400 | 403>> {
     try {
         const response = await fetch(`${apiUrl}/auth/login`, {
             method: "POST",
