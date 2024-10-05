@@ -4,7 +4,7 @@ import {
     ReactionDescription
 } from "../services/interfaces/service.interface";
 import { ApiProperty } from "@nestjs/swagger";
-import { OAuth } from "src/oauth/oauth.interface";
+import { OAuth } from "../../oauth/oauth.interface";
 
 export interface AreaAction {
     service: string;

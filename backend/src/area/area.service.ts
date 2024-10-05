@@ -16,7 +16,7 @@ import {
     ActionDescription,
     ReactionDescription
 } from "./services/interfaces/service.interface";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "../prisma/prisma.service";
 import { Area, AreaAction, AreaReaction } from "./interfaces/area.interface";
 import { AreaStatus, Area as PrismaArea } from "@prisma/client";
 import { UpdateAreaDto } from "./dto/update_area.dto";

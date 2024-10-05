@@ -13,8 +13,8 @@ import { hash } from "crypto";
 import { transformer } from "../area/generic_transformer";
 import { OAuthCredential } from "../oauth/oauth.interface";
 import { AreaStatus } from "@prisma/client";
-import { AreaTask } from "src/area/interfaces/area.interface";
-import { AreaService } from "src/area/area.service";
+import { AreaTask } from "../area/interfaces/area.interface";
+import { AreaService } from "../area/area.service";
 
 @Injectable()
 export class SchedulerService implements OnModuleInit, OnModuleDestroy {

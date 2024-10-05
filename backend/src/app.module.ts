@@ -43,7 +43,6 @@ export class AppModule implements OnModuleInit {
     ) {}
 
     async onModuleInit() {
-        console.log("init");
         const areas = await this.prismaService.area.findMany({
             select: {
                 id: true
