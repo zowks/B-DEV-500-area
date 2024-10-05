@@ -21,7 +21,6 @@ import { AboutModule } from "./about/about.module";
     imports: [
         CacheModule.registerAsync(RedisOptions),
         ConfigModule.forRoot({ isGlobal: true }),
-        ScheduleModule.forRoot(),
         AuthModule,
         Argon2Module,
         JwtModule,
@@ -29,6 +28,7 @@ import { AboutModule } from "./about/about.module";
         UsersModule,
         OAuthModule,
         AreaModule,
+        ScheduleModule.forRoot(),
         SchedulerModule,
         AboutModule
     ],

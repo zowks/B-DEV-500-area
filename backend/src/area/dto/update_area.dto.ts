@@ -1,52 +1,35 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiPropertyOptional } from "@nestjs/swagger";
+import { AreaStatus } from "@prisma/client";
 import {
     IsNotEmpty,
     IsNumber,
     IsObject,
+    IsOptional,
     IsPositive,
     IsString,
-    Matches,
     MaxLength
 } from "class-validator";
 
-export class CreateAreaDto {
-    @ApiProperty({
+export class UpdateAreaDto {
+    @ApiPropertyOptional({
         description: "The name of the AREA being created.",
         example: "LikeNotifier"
     })
     @IsString()
+    @IsOptional()
     @IsNotEmpty()
     @MaxLength(255)
-    readonly name: string;
+    readonly name?: string;
 
-    @ApiProperty({
+    @ApiPropertyOptional({
         description: "The description of the AREA being created.",
         example:
             "This AREA will notify me every time I like a new video via a Discord webhook."
     })
     @IsString()
+    @IsOptional()
     @IsNotEmpty()
-    readonly description: string;
-
-    @ApiProperty({
-        description:
-            "The action ID. It must contain the service and the method separated by a dot.",
-        example: "youtube.on_liked_video"
-    })
-    @IsString()
-    @Matches(/[a-z_]+\.[a-z_]+/)
-    @IsNotEmpty()
-    readonly actionId: string;
-
-    @ApiProperty({
-        description:
-            "The reaction ID. It must contain the service and the method separated by a dot.",
-        example: "discord.send_embed"
-    })
-    @IsString()
-    @Matches(/[a-z_]+\.[a-z_]+/)
-    @IsNotEmpty()
-    readonly reactionId: string;
+    readonly description?: string;
 
     @ApiPropertyOptional({
         description:
@@ -59,10 +42,11 @@ export class CreateAreaDto {
             authorUrl: "https://youtube.com/channel/{{channelId}}"
         }
     })
+    @IsOptional()
     @IsObject()
-    readonly reactionBody: object;
+    readonly reactionBody?: object;
 
-    @ApiProperty({
+    @ApiPropertyOptional({
         description:
             "The fields represent the required elements to make the reaction possible. For instance, it may contain a webhook URL.",
         example: {
@@ -70,15 +54,23 @@ export class CreateAreaDto {
                 "https://discord.com/api/webhooks/XXXXXXXXXXXXXXXX/XXXXXXXXXXXXXXXX"
         }
     })
+    @IsOptional()
     @IsObject()
-    readonly reactionFields: object;
+    readonly reactionFields?: object;
 
-    @ApiProperty({
+    @ApiPropertyOptional({
         description:
             "The delay in seconds to which the poll-based event should be triggered.",
         example: 10
     })
+    @IsOptional()
     @IsNumber()
     @IsPositive()
-    readonly delay: number;
+    readonly delay?: number;
+
+    @ApiPropertyOptional({
+        description: "The AREA status.",
+        examples: [AreaStatus.RUNNING, AreaStatus.STOPPED, AreaStatus.ERROR]
+    })
+    readonly status?: AreaStatus;
 }

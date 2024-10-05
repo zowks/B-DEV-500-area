@@ -27,6 +27,7 @@ import { GoogleOAuthService } from "./google.service";
 import { JwtGuard } from "../../auth/guards/jwt.guard";
 import { User } from "../../users/interfaces/user.interface";
 import { GoogleOAuthCredentials } from "./interfaces/responses";
+import { OAuthCredential } from "../oauth.interface";
 
 @ApiTags("Google OAuth")
 @Controller("oauth/google")
@@ -96,7 +97,7 @@ export class GoogleOAuthController {
 
         const tokens = await this.googleOAuthService.getCredentials(code);
 
-        await this.googleOAuthService.saveCredentials(
+        await this.googleOAuthService.saveCredential(
             session["user_id"],
             tokens
         );
@@ -112,17 +113,15 @@ export class GoogleOAuthController {
         description:
             "Returns all the OAuth2.0 credentials related to the user.",
         schema: {
-            $ref: getSchemaPath(GoogleOAuthCredentials)
+            $ref: getSchemaPath(OAuthCredential)
         }
     })
     @ApiUnauthorizedResponse({
         description:
             "This route is protected. The client must supply a Bearer token."
     })
-    async credentials(@Req() req: Request): Promise<GoogleOAuthCredentials> {
+    async credentials(@Req() req: Request): Promise<OAuthCredential[]> {
         const { id } = req.user as Pick<User, "id">;
-        const tokens = await this.googleOAuthService.loadCredentials(id);
-
-        return { tokens };
+        return await this.googleOAuthService.loadCredentials(id);
     }
 }

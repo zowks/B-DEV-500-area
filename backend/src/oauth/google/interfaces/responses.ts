@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { OAuthCredentials } from "../../../oauth/oauth.interface";
+import { OAuthCredential } from "../../../oauth/oauth.interface";
 
 export class GoogleOAuthCredentials {
     @ApiProperty({
         description: "The list of Google OAuth authorizations for a user.",
         isArray: true,
-        type: OAuthCredentials
+        type: OAuthCredential
     })
-    readonly tokens: OAuthCredentials[];
+    readonly tokens: OAuthCredential[];
 }

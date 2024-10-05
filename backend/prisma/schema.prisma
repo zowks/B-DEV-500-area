@@ -7,40 +7,54 @@ datasource db {
     url      = env("POSTGRESQL_URL")
 }
 
-model users {
-    id              String         @unique @default(uuid()) @db.Uuid
+model User {
+    id               String            @unique @default(uuid()) @db.Uuid
     // IEFT defined the email theorical limit to 254 bytes.
-    email           String         @unique @db.VarChar(254)
-    hashed_password String         @map("hashed_password") @db.VarChar(255)
-    firstname       String         @db.VarChar(255)
-    lastname        String         @db.VarChar(255)
-    is_admin        Boolean        @default(false)
-    access_tokens   google_oauth[]
+    email            String            @unique @db.VarChar(254)
+    hashedPassword   String            @map("hashed_password") @db.VarChar(255)
+    firstname        String            @db.VarChar(255)
+    lastname         String            @db.VarChar(255)
+    isAdmin          Boolean           @default(false) @map("is_admin")
+    oauthCredentials OAuthCredential[]
 
     @@map("users")
 }
 
-model google_oauth {
-    id            Int      @id @default(autoincrement())
-    access_token  String   @unique @map("access_token")
-    refresh_token String   @unique @map("refresh_token")
-    expires_at    DateTime @map("expires_at") @db.Timestamp()
-    scope         String
-    usersId       String   @map("users_id") @db.Uuid
-    users         users    @relation(fields: [usersId], references: [id], onDelete: Cascade)
+model OAuthCredential {
+    id           Int      @id @default(autoincrement())
+    accessToken  String   @unique @map("access_token")
+    refreshToken String   @unique @map("refresh_token")
+    expiresAt    DateTime @map("expires_at") @db.Timestamp()
+    scope        String
+    revokeUrl    String   @map("revoke_url")
+    tokenUrl     String   @map("token_url")
+    User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId       String   @map("users_id") @db.Uuid
+    area         Area[]
 
-    @@map("google_oauth")
+    @@map("oauth_credentials")
 }
 
-model area {
-    id            String @unique @default(uuid()) @db.Uuid
-    name          String @db.VarChar(255)
-    description   String @db.Text
-    action_id     String @map("action_id") @db.VarChar(255)
-    reaction_id   String @map("reaction_id") @db.VarChar(255)
-    delay         Int
-    reaction_body Json?  @map("reaction_body")
-    fields        Json
+enum AreaStatus {
+    RUNNING
+    STOPPED
+    ERROR
 
-    @@map("area")
+    @@map("area_status")
+}
+
+model Area {
+    id                String           @unique @default(uuid()) @db.Uuid
+    name              String           @db.VarChar(255)
+    description       String           @db.Text
+    actionId          String           @map("action_id") @db.VarChar(255)
+    reactionId        String           @map("reaction_id") @db.VarChar(255)
+    reactionBody      Json?            @map("reaction_body")
+    reactionFields    Json             @map("reaction_fields")
+    delay             Int
+    status            AreaStatus       @default(STOPPED)
+    oauthCredential   OAuthCredential? @relation(fields: [oauthCredentialId], references: [id])
+    oauthCredentialId Int?             @map("oauth_credential_id")
+
+    @@map("areas")
 }
