@@ -24,6 +24,7 @@ gen
 
 .DS_Store
 Thumbs.db
+*.pem
 
 ### Node
 
@@ -31,11 +32,11 @@ Thumbs.db
 logs
 *.log
 npm-debug.*
-.pnpm-debug.log*
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
+.pnpm-debug.*
+pnpm-debug.*
+yarn-debug.*
+yarn-error.*
+lerna-debug.*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -107,6 +108,7 @@ web_modules
 .env.*
 !.env.example
 !.env.test
+.env*.local
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -186,3 +188,16 @@ expo-env.d.ts
 /backend/ssl/*.pem
 /backend/postgres
 /backend/redis_data
+
+### Frontend
+
+/frontend/static/apk/client.apk
+/frontend/cypress/downloads/
+/frontend/cypress/screenshots/
+
+### Mobile
+
+/mobile/.gitignore
+
+# Metro
+.metro-health-check*

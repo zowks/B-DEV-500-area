@@ -1,8 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 
-import { AppController } from "./app.controller";
-
 import { PrismaModule } from "./prisma/prisma.module";
 import { AuthModule } from "./auth/auth.module";
 import { Argon2Module } from "./argon2/argon2.module";
@@ -17,6 +15,7 @@ import { OAuthModule } from "./oauth/oauth.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { SchedulerModule } from "./scheduler/scheduler.module";
 import { RedisOptions } from "./app.config";
+import { AboutModule } from "./about/about.module";
 
 @Module({
     imports: [
@@ -30,9 +29,9 @@ import { RedisOptions } from "./app.config";
         UsersModule,
         OAuthModule,
         AreaModule,
-        SchedulerModule
+        SchedulerModule,
+        AboutModule
     ],
-    providers: [JwtGuard],
-    controllers: [AppController]
+    providers: [JwtGuard]
 })
 export class AppModule {}
