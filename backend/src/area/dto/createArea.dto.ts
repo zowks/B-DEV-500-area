@@ -3,7 +3,6 @@ import {
     IsNotEmpty,
     IsNumber,
     IsObject,
-    IsOptional,
     IsPositive,
     IsString,
     Matches,
@@ -15,7 +14,6 @@ import {
 } from "class-validator";
 import { AreaServiceAuthDto } from "./areaServiceAuth.dto";
 import { Optional } from "@nestjs/common";
-import { AreaStatus } from "@prisma/client";
 
 @ValidatorConstraint({ name: "CreateAreaDto", async: false })
 class CreateAreaDtoConstraint implements ValidatorConstraintInterface {

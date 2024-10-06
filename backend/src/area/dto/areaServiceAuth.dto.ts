@@ -57,7 +57,10 @@ export class AreaServiceAuthDto {
         description:
             "The webhook URL used to get data from the actoin service or post data to the reaction service. The value for an action MUST BE 'local'.",
         type: String,
-        examples: ["local", "https://discord.com/webhooks/webhookId/webhookSecret"]
+        examples: [
+            "local",
+            "https://discord.com/webhooks/webhookId/webhookSecret"
+        ]
     })
     @IsUrl()
     @Matches(/^local$/)
