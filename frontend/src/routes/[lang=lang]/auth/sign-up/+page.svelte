@@ -5,6 +5,8 @@
     import { Input } from "$lib/components/ui/input";
     import { Checkbox } from "$lib/components/ui/checkbox";
     import { Label } from "$lib/components/ui/label";
+    import EmailInput from "$lib/components/auth/inputs/Email.svelte";
+    import PasswordInput from "$lib/components/auth/inputs/Password.svelte";
     import LL from "$i18n/i18n-svelte";
     import type { ActionData } from "./$types";
 
@@ -30,13 +32,7 @@
             }}
             class="grid gap-4"
         >
-            <div class="grid gap-2">
-                <Label for="email">{$LL.auth.email()}</Label>
-                <Input id="email" name="email" type="email" autocomplete="email" placeholder={$LL.auth.placeholders.email()} required />
-                {#if form?.emailError}
-                    <p class="text-sm text-red-500">{form?.emailError}</p>
-                {/if}
-            </div>
+            <EmailInput emailError={form?.emailError} />
             <div class="grid gap-2">
                 <Label for="firstname">{$LL.auth.firstname()}</Label>
                 <Input id="firstname" name="firstname" type="text" autocomplete="given-name" placeholder="John" required />
@@ -45,21 +41,7 @@
                 <Label for="lastname">{$LL.auth.lastname()}</Label>
                 <Input id="lastname" name="lastname" type="text" autocomplete="family-name" placeholder="Doe" required />
             </div>
-            <div class="grid gap-2">
-                <Label for="password">{$LL.auth.password()}</Label>
-                <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autocomplete="new-password"
-                    placeholder="••••••••"
-                    required
-                    minlength={8}
-                />
-                {#if form?.passwordError}
-                    <p class="text-sm text-red-500">{form?.passwordError}</p>
-                {/if}
-            </div>
+            <PasswordInput passwordError={form?.passwordError} />
             <div>
             </div>
             <div class="flex items-center space-x-2">
