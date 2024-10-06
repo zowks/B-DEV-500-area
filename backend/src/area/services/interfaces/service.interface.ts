@@ -2,18 +2,28 @@ import { ApiProperty } from "@nestjs/swagger";
 import { AreaDiscordEmbed } from "../discord/interfaces/discordEmbed.interface";
 import { AreaYouTubeVideo } from "../youtube/interfaces/youtubeVideo.interface";
 
+export class ActionField {
+    @ApiProperty({
+        description: "The name of the field.",
+        type: String,
+        examples: ["apiKey", "oauth", "webhook"]
+    })
+    readonly name: keyof AreaServiceAuth;
+
+    @ApiProperty({
+        description: "The name of the field.",
+        example: "The GitHub webhook URL to get data on action."
+    })
+    readonly description: string;
+}
+
 export class ReactionField {
     @ApiProperty({
         description: "The name of the field.",
-        example: "webhook"
+        type: String,
+        examples: ["apiKey", "oauth", "webhook"]
     })
-    readonly name: string;
-
-    @ApiProperty({
-        description: "The type of the field.",
-        example: "string"
-    })
-    readonly type: string;
+    readonly name: keyof AreaServiceAuth;
 
     @ApiProperty({
         description: "The name of the field.",
@@ -22,13 +32,22 @@ export class ReactionField {
     readonly description: string;
 }
 
+export interface AreaServiceAuth {
+    readonly apiKey?: string;
+    readonly oauth?: string;
+    readonly webhook?: string;
+}
+
 export interface ActionDescription {
     description: string;
-    trigger: (accessToken: string) => Promise<AreaYouTubeVideo>;
+    oauthScopes?: string[];
+    fields: { name: keyof AreaServiceAuth; description: string }[];
+    trigger: (auth: AreaServiceAuth) => Promise<AreaYouTubeVideo>;
 }
 
 export interface ReactionDescription {
     description: string;
-    fields: ReactionField[];
-    produce: (fields: object, data: AreaDiscordEmbed) => Promise<void>;
+    oauthScopes?: string[];
+    fields: { name: keyof AreaServiceAuth; description: string }[];
+    produce: (auth: AreaServiceAuth, data: AreaDiscordEmbed) => Promise<void>;
 }

@@ -1,10 +1,9 @@
-import { AreaStatus, OAuthCredential } from "@prisma/client";
+import { AreaServiceAuthentication, AreaStatus } from "@prisma/client";
 import {
     ActionDescription,
     ReactionDescription
 } from "../services/interfaces/service.interface";
 import { ApiProperty } from "@nestjs/swagger";
-import { OAuth } from "../../oauth/oauth.interface";
 
 export interface AreaAction {
     service: string;
@@ -21,12 +20,11 @@ export interface AreaReaction {
 export interface AreaTask {
     areaId: Area["id"];
     name: string;
-    credentialsManager: OAuth;
-    oauthCredentialId: OAuthCredential["id"];
     action: AreaAction;
+    actionAuth: Omit<AreaServiceAuthentication, "id">;
     reaction: AreaReaction;
     reactionBody: object;
-    reactionFields: object;
+    reactionAuth: Omit<AreaServiceAuthentication, "id">;
     delay: number;
 }
 
@@ -53,6 +51,13 @@ export abstract class Area {
     readonly action_id: string;
 
     @ApiProperty({
+        description:
+            "The ID of the service authentication method used to get data.",
+        example: 1
+    })
+    readonly action_auth_id: number;
+
+    @ApiProperty({
         description: "The AREA Reaction ID.",
         example: "discord.send_embed"
     })
@@ -73,13 +78,10 @@ export abstract class Area {
 
     @ApiProperty({
         description:
-            "The fields represent the required elements to make the reaction possible. For instance, it may contain a webhook URL.",
-        example: {
-            webhook:
-                "https://discord.com/api/webhooks/XXXXXXXXXXXXXXXX/XXXXXXXXXXXXXXXX"
-        }
+            "The ID of the service authentication method used to post data.",
+        example: 1
     })
-    readonly reaction_fields: object;
+    readonly reaction_auth_id: number;
 
     @ApiProperty({
         description:

@@ -8,18 +8,15 @@ import { PrismaService } from "../../prisma/prisma.service";
 
 @Injectable()
 export class GoogleOAuthService implements OAuth {
-    readonly clientID: string;
-
-    readonly clientSecret: string;
-
-    readonly redirectUri: string;
-
     private readonly OAUTH_TOKEN_URL: string = `https://oauth2.googleapis.com/token`;
+
     private readonly OAUTH_REVOKE_URL: string = `https://oauth2.googleapis.com/revoke`;
 
-    readonly scope: string = encodeURIComponent(
-        ["https://www.googleapis.com/auth/youtube.readonly"].join(" ")
-    );
+    private readonly clientId: string;
+
+    private readonly clientSecret: string;
+
+    private readonly redirectUri: string;
 
     constructor(
         private readonly configService: ConfigService,
@@ -31,7 +28,7 @@ export class GoogleOAuthService implements OAuth {
         );
         const baseURL = `http://localhost:${restAPIPort}`;
 
-        this.clientID = this.configService.get<string>("GOOGLE_CLIENT_ID");
+        this.clientId = this.configService.get<string>("GOOGLE_CLIENT_ID");
         this.clientSecret = this.configService.get<string>(
             "GOOGLE_CLIENT_SECRET"
         );
@@ -40,11 +37,11 @@ export class GoogleOAuthService implements OAuth {
         );
     }
 
-    getOAuthUrl(state: string): string {
+    getOAuthUrl(state: string, scope: string): string {
         const queries = {
-            client_id: this.clientID,
+            client_id: this.clientId,
             redirect_uri: this.redirectUri,
-            scope: this.scope,
+            scope,
             state,
             response_type: "code",
             access_type: "offline",
@@ -70,7 +67,7 @@ export class GoogleOAuthService implements OAuth {
                 this.OAUTH_TOKEN_URL,
                 {
                     code,
-                    client_id: this.clientID,
+                    client_id: this.clientId,
                     client_secret: this.clientSecret,
                     grant_type: "authorization_code",
                     redirect_uri: decodeURIComponent(this.redirectUri)
@@ -94,7 +91,7 @@ export class GoogleOAuthService implements OAuth {
     }
 
     async saveCredential(
-        userId: Pick<User, "id">["id"],
+        userId: User["id"],
         credentials: OAuthCredential
     ): Promise<number> {
         return (
@@ -103,7 +100,7 @@ export class GoogleOAuthService implements OAuth {
                     accessToken: credentials.access_token,
                     refreshToken: credentials.refresh_token,
                     expiresAt: credentials.expires_at,
-                    scope: credentials.scope,
+                    scopes: credentials.scope.split(" "),
                     tokenUrl: this.OAUTH_TOKEN_URL,
                     revokeUrl: this.OAUTH_REVOKE_URL,
                     userId
@@ -120,19 +117,19 @@ export class GoogleOAuthService implements OAuth {
         accessToken,
         refreshToken,
         expiresAt,
-        scope
+        scopes
     }: Partial<PrismaOAuthCredential>): OAuthCredential {
         return {
             id,
             access_token: accessToken,
             refresh_token: refreshToken,
             expires_at: expiresAt,
-            scope
+            scope: scopes.join(" ")
         };
     }
 
-    async loadCredentials(
-        userId: Pick<User, "id">["id"]
+    async loadCredentialsByUserId(
+        userId: User["id"]
     ): Promise<OAuthCredential[]> {
         return (
             await this.prismaService.oAuthCredential.findMany({
@@ -144,13 +141,32 @@ export class GoogleOAuthService implements OAuth {
                     accessToken: true,
                     refreshToken: true,
                     expiresAt: true,
-                    scope: true
+                    scopes: true
                 }
             })
         ).map(this.prismaCredentialToCredential);
     }
 
-    async loadCredential(
+    async loadCredentialsByScopes(
+        scopes: string[]
+    ): Promise<OAuthCredential[]> {
+        return (
+            await this.prismaService.oAuthCredential.findMany({
+                where: {
+                    scopes: { hasEvery: scopes }
+                },
+                select: {
+                    id: true,
+                    accessToken: true,
+                    refreshToken: true,
+                    expiresAt: true,
+                    scopes: true
+                }
+            })
+        ).map(this.prismaCredentialToCredential);
+    }
+
+    async loadCredentialById(
         oauthCredentialId: OAuthCredential["id"]
     ): Promise<OAuthCredential> {
         const credential = await this.prismaService.oAuthCredential.findUnique({
@@ -162,7 +178,7 @@ export class GoogleOAuthService implements OAuth {
                 accessToken: true,
                 refreshToken: true,
                 expiresAt: true,
-                scope: true
+                scopes: true
             }
         });
 
@@ -182,7 +198,7 @@ export class GoogleOAuthService implements OAuth {
             }>(
                 this.OAUTH_TOKEN_URL,
                 {
-                    client_id: this.clientID,
+                    client_id: this.clientId,
                     client_secret: this.clientSecret,
                     grant_type: "refresh_token",
                     refresh_token: oauthCredential.refresh_token
@@ -215,7 +231,7 @@ export class GoogleOAuthService implements OAuth {
                 accessToken: oauthCredential.access_token,
                 refreshToken: oauthCredential.refresh_token,
                 expiresAt: oauthCredential.expires_at,
-                scope: oauthCredential.scope
+                scopes: oauthCredential.scope.split(" ")
             }
         });
     }

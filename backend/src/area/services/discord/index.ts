@@ -3,11 +3,20 @@ import { DISCORD_REACTIONS } from "./discord.reactions";
 
 export default {
     name: "discord",
-    actions: Object.entries(DISCORD_ACTIONS).map(([name, { description }]) => ({
-        name,
-        description
-    })),
+    actions: Object.entries(DISCORD_ACTIONS).map(
+        ([name, { description, fields, oauthScopes }]) => ({
+            name,
+            description,
+            fields,
+            oauthScopes
+        })
+    ),
     reactions: Object.entries(DISCORD_REACTIONS).map(
-        ([name, { description, fields }]) => ({ name, description, fields })
+        ([name, { description, fields, oauthScopes }]) => ({
+            name,
+            description,
+            fields,
+            oauthScopes
+        })
     )
 };

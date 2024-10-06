@@ -1,6 +1,5 @@
-import { AreaStatus, OAuthCredential } from "@prisma/client";
+import { AreaServiceAuthentication, AreaStatus } from "@prisma/client";
 import { ActionDescription, ReactionDescription } from "../services/interfaces/service.interface";
-import { OAuth } from "../../oauth/oauth.interface";
 export interface AreaAction {
     service: string;
     method: string;
@@ -14,12 +13,11 @@ export interface AreaReaction {
 export interface AreaTask {
     areaId: Area["id"];
     name: string;
-    credentialsManager: OAuth;
-    oauthCredentialId: OAuthCredential["id"];
     action: AreaAction;
+    actionAuth: Omit<AreaServiceAuthentication, "id">;
     reaction: AreaReaction;
     reactionBody: object;
-    reactionFields: object;
+    reactionAuth: Omit<AreaServiceAuthentication, "id">;
     delay: number;
 }
 export declare abstract class Area {
@@ -27,9 +25,10 @@ export declare abstract class Area {
     readonly name: string;
     readonly description: string;
     readonly action_id: string;
+    readonly action_auth_id: number;
     readonly reaction_id: string;
     readonly reaction_body: object;
-    readonly reaction_fields: object;
+    readonly reaction_auth_id: number;
     readonly delay: number;
     readonly status: AreaStatus;
 }

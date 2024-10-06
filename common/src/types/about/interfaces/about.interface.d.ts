@@ -1,15 +1,18 @@
-import { ReactionField } from "../../area/services/interfaces/service.interface";
+import { ActionField, ReactionField } from "../../area/services/interfaces/service.interface";
 declare class AboutJsonClient {
     readonly host: string;
 }
 declare class AboutJsonServerServiceAction {
     readonly name: string;
     readonly description: string;
+    readonly fields: ActionField[];
+    readonly oauthScopes?: string[];
 }
 declare class AboutJsonServerServiceReaction {
     readonly name: string;
     readonly description: string;
     readonly fields: ReactionField[];
+    readonly oauthScopes?: string[];
 }
 declare class AboutJsonServerService {
     readonly name: string;

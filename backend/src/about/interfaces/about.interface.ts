@@ -1,5 +1,8 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { ReactionField } from "../../area/services/interfaces/service.interface";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import {
+    ActionField,
+    ReactionField
+} from "../../area/services/interfaces/service.interface";
 
 class AboutJsonClient {
     @ApiProperty({ description: "The host (IP address) of the client." })
@@ -16,6 +19,22 @@ class AboutJsonServerServiceAction {
         description: "The description of the action."
     })
     readonly description: string;
+
+    @ApiProperty({
+        description: "The fields required to watch the action.",
+        type: ActionField,
+        isArray: true
+    })
+    readonly fields: ActionField[];
+
+    @ApiPropertyOptional({
+        description:
+            "The required OAuth scopes. Only set when the 'name' property is set to 'oauth'.",
+        type: String,
+        isArray: true,
+        examples: ["https://www.googleapis.com/auth/youtube.readonly"]
+    })
+    readonly oauthScopes?: string[];
 }
 
 class AboutJsonServerServiceReaction {
@@ -35,6 +54,15 @@ class AboutJsonServerServiceReaction {
         isArray: true
     })
     readonly fields: ReactionField[];
+
+    @ApiPropertyOptional({
+        description:
+            "The required OAuth scopes. Only set when the 'name' property is set to 'oauth'.",
+        type: String,
+        isArray: true,
+        examples: ["https://www.googleapis.com/auth/youtube.readonly"]
+    })
+    readonly oauthScopes?: string[];
 }
 
 class AboutJsonServerService {
@@ -82,18 +110,4 @@ export class AboutJson {
             "Some informations about the server, including the supported AREAs."
     })
     readonly server: AboutJsonServer;
-    // current_time: number;
-    // services: {
-    //     name: string;
-    //     actions: {
-    //         name: string;
-    //         description: string;
-    //         params: DescriptionParam[];
-    //     }[];
-    //     reactions: {
-    //         name: string;
-    //         description: string;
-    //         params: DescriptionParam[];
-    //     }[];
-    // }[];
 }
