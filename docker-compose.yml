@@ -10,6 +10,8 @@ services:
       - area-postgres-volume:/var/lib/postgresql/data:rw
     ports:
       - 5432:5432
+    networks:
+      - area_network
 
   redis:
     image: redis:alpine3.20
@@ -21,14 +23,9 @@ services:
       - ${REDIS_PORT}:${REDIS_PORT}
     volumes:
       - area-redis-volume:/data:rw
+    networks:
+      - area_network
     command: redis-server --save 60 1 --loglevel warning
-
-  adminer:
-    image: adminer
-    container_name: area-adminer
-    restart: always
-    ports:
-      - 5480:8080
 
   backend:
     build:
@@ -57,7 +54,7 @@ services:
       - backend
     image: area-frontend:latest
     environment:
-      - API_URL=backend:${REST_API_PORT}
+      - API_URL=http://backend:${REST_API_PORT}
     env_file:
       - .env
     ports:
