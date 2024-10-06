@@ -43,7 +43,11 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         credentialsManager: OAuthManager
     ): Promise<OAuthCredential | null> {
         const credentials: OAuthCredential[] =
-            await credentialsManager.loadCredentialsByScopes(scopes);
+            await credentialsManager.loadCredentialsByScopes(
+                scopes,
+                credentialsManager.OAUTH_TOKEN_URL,
+                credentialsManager.OAUTH_REVOKE_URL
+            );
         if (0 === credentials.length) return null;
 
         const credential = credentials[0];

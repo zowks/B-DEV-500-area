@@ -19,6 +19,7 @@ import { AboutModule } from "./about/about.module";
 import { PrismaService } from "./prisma/prisma.service";
 import { AreaService } from "./area/area.service";
 import { WebhookModule } from "./webhook/webhook.module";
+import { OAuthDBService } from "./oauth/oauthDb.service";
 
 @Module({
     imports: [
@@ -36,7 +37,8 @@ import { WebhookModule } from "./webhook/webhook.module";
         AboutModule,
         WebhookModule
     ],
-    providers: [JwtGuard]
+    providers: [JwtGuard, OAuthDBService],
+    controllers: []
 })
 export class AppModule implements OnModuleInit {
     constructor(

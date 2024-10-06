@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { SessionData } from "express-session";
 import { Controller, Query, Req, Res, Session } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { GoogleOAuthService } from "./google.service";
+import { DiscordOAuthService } from "./discord.service";
 import { User } from "../../users/interfaces/user.interface";
 import {
     OAuthController,
@@ -12,10 +12,10 @@ import {
     OAuthCredential
 } from "../oauth.interface";
 
-@ApiTags("Google OAuth")
-@Controller("oauth/google")
-export class GoogleOAuthController implements OAuthController {
-    constructor(private readonly googleOAuthService: GoogleOAuthService) {}
+@ApiTags("Discord OAuth")
+@Controller("oauth/discord")
+export class DiscordOAuthController implements OAuthController {
+    constructor(private readonly discordOAuthService: DiscordOAuthService) {}
 
     @OAuthController_getOAuthUrl()
     getOAuthUrl(
@@ -30,7 +30,7 @@ export class GoogleOAuthController implements OAuthController {
             redirectUri
         );
         return {
-            redirect_uri: this.googleOAuthService.getOAuthUrl(state, scope)
+            redirect_uri: this.discordOAuthService.getOAuthUrl(state, scope)
         };
     }
 
@@ -43,13 +43,13 @@ export class GoogleOAuthController implements OAuthController {
     ) {
         OAuthController.verifyState(session, state);
 
-        const tokens = await this.googleOAuthService.getCredentials(code);
+        const tokens = await this.discordOAuthService.getCredentials(code);
 
-        await this.googleOAuthService.saveCredential(
+        await this.discordOAuthService.saveCredential(
             session["user_id"],
             tokens,
-            this.googleOAuthService.OAUTH_TOKEN_URL,
-            this.googleOAuthService.OAUTH_REVOKE_URL
+            this.discordOAuthService.OAUTH_TOKEN_URL,
+            this.discordOAuthService.OAUTH_REVOKE_URL
         );
 
         return res.redirect(session["redirect_uri"] || "/");
@@ -58,10 +58,10 @@ export class GoogleOAuthController implements OAuthController {
     @OAuthController_credentials()
     async credentials(@Req() req: Request): Promise<OAuthCredential[]> {
         const { id } = req.user as Pick<User, "id">;
-        return await this.googleOAuthService.loadCredentialsByUserId(
+        return await this.discordOAuthService.loadCredentialsByUserId(
             id,
-            this.googleOAuthService.OAUTH_TOKEN_URL,
-            this.googleOAuthService.OAUTH_REVOKE_URL
+            this.discordOAuthService.OAUTH_TOKEN_URL,
+            this.discordOAuthService.OAUTH_REVOKE_URL
         );
     }
 }
