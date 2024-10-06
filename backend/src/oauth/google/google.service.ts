@@ -1,21 +1,22 @@
 import * as axios from "axios";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { OAuth, OAuthCredentials } from "../../oauth/oauth.interface";
+import { OAuthManager, OAuthCredential } from "../../oauth/oauth.interface";
+import { OAuthCredential as PrismaOAuthCredential } from "@prisma/client";
 import { User } from "../../users/interfaces/user.interface";
 import { PrismaService } from "../../prisma/prisma.service";
 
 @Injectable()
-export class GoogleOAuthService implements OAuth {
-    readonly clientID: string;
+export class GoogleOAuthService implements OAuthManager {
+    private readonly OAUTH_TOKEN_URL: string = `https://oauth2.googleapis.com/token`;
 
-    readonly clientSecret: string;
+    private readonly OAUTH_REVOKE_URL: string = `https://oauth2.googleapis.com/revoke`;
 
-    readonly redirectUri: string;
+    private readonly clientId: string;
 
-    readonly scope: string = encodeURIComponent(
-        ["https://www.googleapis.com/auth/youtube.readonly"].join(" ")
-    );
+    private readonly clientSecret: string;
+
+    private readonly redirectUri: string;
 
     constructor(
         private readonly configService: ConfigService,
@@ -27,7 +28,7 @@ export class GoogleOAuthService implements OAuth {
         );
         const baseURL = `http://localhost:${restAPIPort}`;
 
-        this.clientID = this.configService.get<string>("GOOGLE_CLIENT_ID");
+        this.clientId = this.configService.get<string>("GOOGLE_CLIENT_ID");
         this.clientSecret = this.configService.get<string>(
             "GOOGLE_CLIENT_SECRET"
         );
@@ -36,11 +37,11 @@ export class GoogleOAuthService implements OAuth {
         );
     }
 
-    getOAuthUrl(state: string): string {
+    getOAuthUrl(state: string, scope: string): string {
         const queries = {
-            client_id: this.clientID,
+            client_id: this.clientId,
             redirect_uri: this.redirectUri,
-            scope: this.scope,
+            scope,
             state,
             response_type: "code",
             access_type: "offline",
@@ -54,7 +55,7 @@ export class GoogleOAuthService implements OAuth {
             .join("&")}`;
     }
 
-    async getCredentials(code: string): Promise<OAuthCredentials> {
+    async getCredentials(code: string): Promise<OAuthCredential> {
         const response = (
             await axios.default.post<{
                 access_token: string;
@@ -63,10 +64,10 @@ export class GoogleOAuthService implements OAuth {
                 expires_in: number;
                 token_type: "Bearer";
             }>(
-                `https://oauth2.googleapis.com/token`,
+                this.OAUTH_TOKEN_URL,
                 {
                     code,
-                    client_id: this.clientID,
+                    client_id: this.clientId,
                     client_secret: this.clientSecret,
                     grant_type: "authorization_code",
                     redirect_uri: decodeURIComponent(this.redirectUri)
@@ -89,18 +90,20 @@ export class GoogleOAuthService implements OAuth {
         };
     }
 
-    async saveCredentials(
-        userId: Pick<User, "id">["id"],
-        credentials: OAuthCredentials
+    async saveCredential(
+        userId: User["id"],
+        credentials: OAuthCredential
     ): Promise<number> {
         return (
-            await this.prismaService.google_oauth.create({
+            await this.prismaService.oAuthCredential.create({
                 data: {
-                    access_token: credentials.access_token,
-                    refresh_token: credentials.refresh_token,
-                    expires_at: credentials.expires_at,
-                    scope: credentials.scope,
-                    usersId: userId
+                    accessToken: credentials.access_token,
+                    refreshToken: credentials.refresh_token,
+                    expiresAt: credentials.expires_at,
+                    scopes: credentials.scope.split(" "),
+                    tokenUrl: this.OAUTH_TOKEN_URL,
+                    revokeUrl: this.OAUTH_REVOKE_URL,
+                    userId
                 },
                 select: {
                     id: true
@@ -109,26 +112,83 @@ export class GoogleOAuthService implements OAuth {
         ).id;
     }
 
-    loadCredentials(
-        userId: Pick<User, "id">["id"]
-    ): Promise<OAuthCredentials[]> {
-        return this.prismaService.google_oauth.findMany({
+    private prismaCredentialToCredential({
+        id,
+        accessToken,
+        refreshToken,
+        expiresAt,
+        scopes
+    }: Partial<PrismaOAuthCredential>): OAuthCredential {
+        return {
+            id,
+            access_token: accessToken,
+            refresh_token: refreshToken,
+            expires_at: expiresAt,
+            scope: scopes.join(" ")
+        };
+    }
+
+    async loadCredentialsByUserId(
+        userId: User["id"]
+    ): Promise<OAuthCredential[]> {
+        return (
+            await this.prismaService.oAuthCredential.findMany({
+                where: {
+                    userId
+                },
+                select: {
+                    id: true,
+                    accessToken: true,
+                    refreshToken: true,
+                    expiresAt: true,
+                    scopes: true
+                }
+            })
+        ).map(this.prismaCredentialToCredential);
+    }
+
+    async loadCredentialsByScopes(
+        scopes: string[]
+    ): Promise<OAuthCredential[]> {
+        return (
+            await this.prismaService.oAuthCredential.findMany({
+                where: {
+                    scopes: { hasEvery: scopes }
+                },
+                select: {
+                    id: true,
+                    accessToken: true,
+                    refreshToken: true,
+                    expiresAt: true,
+                    scopes: true
+                }
+            })
+        ).map(this.prismaCredentialToCredential);
+    }
+
+    async loadCredentialById(
+        oauthCredentialId: OAuthCredential["id"]
+    ): Promise<OAuthCredential> {
+        const credential = await this.prismaService.oAuthCredential.findUnique({
             where: {
-                usersId: userId
+                id: oauthCredentialId
             },
             select: {
                 id: true,
-                access_token: true,
-                refresh_token: true,
-                expires_at: true,
-                scope: true
+                accessToken: true,
+                refreshToken: true,
+                expiresAt: true,
+                scopes: true
             }
         });
+
+        if (null === credential) throw new NotFoundException();
+        return this.prismaCredentialToCredential(credential);
     }
 
-    async refreshCredentials(
-        oauthCredentials: OAuthCredentials
-    ): Promise<OAuthCredentials> {
+    async refreshCredential(
+        oauthCredential: OAuthCredential
+    ): Promise<OAuthCredential> {
         const response = (
             await axios.default.post<{
                 access_token: string;
@@ -136,12 +196,12 @@ export class GoogleOAuthService implements OAuth {
                 expires_in: number;
                 token_type: "Bearer";
             }>(
-                `https://oauth2.googleapis.com/token`,
+                this.OAUTH_TOKEN_URL,
                 {
-                    client_id: this.clientID,
+                    client_id: this.clientId,
                     client_secret: this.clientSecret,
                     grant_type: "refresh_token",
-                    refresh_token: oauthCredentials.refresh_token
+                    refresh_token: oauthCredential.refresh_token
                 },
                 {
                     headers: {
@@ -152,8 +212,9 @@ export class GoogleOAuthService implements OAuth {
         ).data;
 
         return {
+            id: oauthCredential.id,
             access_token: response.access_token,
-            refresh_token: oauthCredentials.refresh_token,
+            refresh_token: oauthCredential.refresh_token,
             scope: response.scope,
             expires_at: new Date(
                 new Date().getTime() + response.expires_in * 1000
@@ -161,25 +222,25 @@ export class GoogleOAuthService implements OAuth {
         };
     }
 
-    updateCredentials(oauthCredentials: OAuthCredentials) {
-        return this.prismaService.google_oauth.update({
+    async updateCredential(oauthCredential: OAuthCredential): Promise<void> {
+        await this.prismaService.oAuthCredential.update({
             where: {
-                id: oauthCredentials.id
+                id: oauthCredential.id
             },
             data: {
-                access_token: oauthCredentials.access_token,
-                refresh_token: oauthCredentials.refresh_token,
-                expires_at: oauthCredentials.expires_at,
-                scope: oauthCredentials.scope
+                accessToken: oauthCredential.access_token,
+                refreshToken: oauthCredential.refresh_token,
+                expiresAt: oauthCredential.expires_at,
+                scopes: oauthCredential.scope.split(" ")
             }
         });
     }
 
-    async revokeCredentials(oauthCredentials: OAuthCredentials): Promise<void> {
+    async revokeCredential(oauthCredential: OAuthCredential): Promise<void> {
         await axios.default.post(
-            `https://oauth2.googleapis.com/revoke`,
+            this.OAUTH_REVOKE_URL,
             {
-                token: oauthCredentials.access_token
+                token: oauthCredential.access_token
             },
             {
                 headers: {
@@ -187,5 +248,11 @@ export class GoogleOAuthService implements OAuth {
                 }
             }
         );
+
+        await this.prismaService.oAuthCredential.delete({
+            where: {
+                id: oauthCredential.id
+            }
+        });
     }
 }
