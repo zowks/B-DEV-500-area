@@ -1,13 +1,33 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
     IsNotEmpty,
     IsNumber,
     IsObject,
+    IsPositive,
     IsString,
-    Matches
+    Matches,
+    MaxLength
 } from "class-validator";
 
 export class CreateAreaDto {
+    @ApiProperty({
+        description: "The name of the AREA being created.",
+        example: "LikeNotifier"
+    })
+    @IsString()
+    @IsNotEmpty()
+    @MaxLength(255)
+    readonly name: string;
+
+    @ApiProperty({
+        description: "The description of the AREA being created.",
+        example:
+            "This AREA will notify me every time I like a new video via a Discord webhook."
+    })
+    @IsString()
+    @IsNotEmpty()
+    readonly description: string;
+
     @ApiProperty({
         description:
             "The action ID. It must contain the service and the method separated by a dot.",
@@ -28,7 +48,7 @@ export class CreateAreaDto {
     @IsNotEmpty()
     readonly reactionId: string;
 
-    @ApiProperty({
+    @ApiPropertyOptional({
         description:
             "The object representing the reaction payload. It may contain variables from the action object.",
         example: {
@@ -51,7 +71,7 @@ export class CreateAreaDto {
         }
     })
     @IsObject()
-    readonly fields: object;
+    readonly reactionFields: object;
 
     @ApiProperty({
         description:
@@ -59,6 +79,6 @@ export class CreateAreaDto {
         example: 10
     })
     @IsNumber()
-    @IsNotEmpty()
+    @IsPositive()
     readonly delay: number;
 }

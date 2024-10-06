@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { User } from "../users/interfaces/user.interface";
 
-export class OAuthCredentials {
+export class OAuthCredential {
     @ApiProperty({ description: "The ID of the Google OAuth authorization." })
     readonly id?: number;
 
@@ -36,22 +36,26 @@ export abstract class OAuth {
 
     abstract getOAuthUrl(state: string): string;
 
-    abstract getCredentials(code: string): Promise<OAuthCredentials>;
+    abstract getCredentials(code: string): Promise<OAuthCredential>;
 
-    abstract saveCredentials(
+    abstract saveCredential(
         userId: Pick<User, "id">["id"],
-        credentials: OAuthCredentials
+        credential: OAuthCredential
     ): Promise<number>;
 
     abstract loadCredentials(
         userId: Pick<User, "id">["id"]
-    ): Promise<OAuthCredentials[]>;
+    ): Promise<OAuthCredential[]>;
 
-    abstract refreshCredentials(
-        oauthCredentials: OAuthCredentials
-    ): Promise<OAuthCredentials>;
+    abstract loadCredential(
+        oauthCredentialId: OAuthCredential["id"]
+    ): Promise<OAuthCredential>;
 
-    abstract revokeCredentials(
-        oauthCredentials: OAuthCredentials
-    ): Promise<void>;
+    abstract refreshCredential(
+        oauthCredential: OAuthCredential
+    ): Promise<OAuthCredential>;
+
+    abstract updateCredential(oauthCredential: OAuthCredential): Promise<void>;
+
+    abstract revokeCredential(oauthCredential: OAuthCredential): Promise<void>;
 }

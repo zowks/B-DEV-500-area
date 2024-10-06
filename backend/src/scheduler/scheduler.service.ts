@@ -1,98 +1,132 @@
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import {
+    ForbiddenException,
+    forwardRef,
     Inject,
     Injectable,
+    NotFoundException,
     OnModuleDestroy,
     OnModuleInit
 } from "@nestjs/common";
 import { Cache } from "cache-manager";
 import { hash } from "crypto";
 import { transformer } from "../area/generic_transformer";
-import { AreaConfig, AreaTask } from "../area/interfaces/cron.interface";
-import { OAuthCredentials } from "../oauth/oauth.interface";
+import { OAuthCredential } from "../oauth/oauth.interface";
+import { AreaStatus } from "@prisma/client";
+import { AreaTask } from "../area/interfaces/area.interface";
+import { AreaService } from "../area/area.service";
 
 @Injectable()
 export class SchedulerService implements OnModuleInit, OnModuleDestroy {
-    private intervalIds: NodeJS.Timeout[] = [];
+    private clockIds: { [task: string]: NodeJS.Timeout } = {};
 
-    constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
+    constructor(
+        @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+        @Inject(forwardRef(() => AreaService))
+        private readonly areaService: AreaService
+    ) {}
 
     async onModuleInit() {
         await this.cacheManager.reset();
     }
 
     async onModuleDestroy() {
-        this.intervalIds.forEach(clearInterval);
+        Object.values(this.clockIds).forEach(clearTimeout);
+        this.clockIds = {};
         await this.cacheManager.reset();
     }
 
     private async getLatestCredential(
-        cron: AreaTask
-    ): Promise<OAuthCredentials | null> {
-        const credentials = await cron.oauthManager.loadCredentials(
-            cron.userId
-        );
-
-        if (0 === credentials.length) return null;
-
-        if (credentials[0].expires_at > new Date()) return credentials[0];
-        return await cron.oauthManager.refreshCredentials(credentials[0]);
-    }
-
-    private buildCacheKey(
-        userId: string,
-        attributes: {
-            action: { service: string; method: string };
-            reaction: { service: string; method: string };
-        }
-    ) {
-        return `${attributes.action.service}.${attributes.action.method}/${attributes.reaction.service}.${attributes.reaction.method}/${userId}`;
-    }
-
-    private async getData(cron: AreaTask) {
-        const credential = await this.getLatestCredential(cron);
+        task: AreaTask
+    ): Promise<OAuthCredential | null> {
+        let credential: OAuthCredential;
 
         try {
-            return await cron.action(credential.access_token);
+            credential = await task.credentialsManager.loadCredential(
+                task.oauthCredentialId
+            );
         } catch (e) {
-            console.error(e);
-            return null;
+            if (e instanceof NotFoundException) return null;
+            throw e;
         }
+        if (credential.expires_at > new Date()) return credential;
+        return await task.credentialsManager.refreshCredential(credential);
+    }
+
+    private async getData(task: AreaTask) {
+        const credential = await this.getLatestCredential(task);
+        if (null === credential)
+            throw new ForbiddenException("Token was revoked.");
+
+        return await task.action.config.trigger(credential.access_token);
     }
 
     private async executeTask(
-        attributes: AreaConfig,
-        cron: AreaTask,
+        task: AreaTask,
         firstRun: boolean = false
-    ) {
-        const data = await this.getData(cron);
-        if (null === data) return;
-
-        const transformedData = transformer(data, { ...cron.reactionBody });
-
-        const key = this.buildCacheKey(cron.userId, attributes);
-        const oldCache = await this.cacheManager.get(key);
-
-        const newCache = hash("sha512", JSON.stringify(data), "hex").toString();
-        await this.cacheManager.set(key, newCache, (cron.delay + 5) * 1000);
-
-        if (firstRun || newCache === oldCache) return;
-
+    ): Promise<boolean> {
+        let data: object;
         try {
-            await cron.reaction(cron.fields, transformedData);
+            data = await this.getData(task);
         } catch (e) {
             console.error(e);
+            return false;
         }
+
+        const transformedData = transformer(data, { ...task.reactionBody });
+
+        const oldCache = await this.cacheManager.get(task.name);
+
+        const newCache = hash("sha512", JSON.stringify(data), "hex").toString();
+        await this.cacheManager.set(
+            task.name,
+            newCache,
+            (task.delay + 5) * 1000
+        );
+
+        if (firstRun || newCache === oldCache) return true;
+
+        try {
+            await task.reaction.config.produce(
+                task.reactionFields,
+                transformedData
+            );
+        } catch (e) {
+            console.error(e);
+            return false;
+        }
+        return true;
     }
 
-    async startPolling(attributes: AreaConfig, cron: AreaTask) {
-        await this.executeTask(attributes, cron, true);
+    scheduleTask(task: AreaTask) {
+        const clockId = setTimeout(async () => {
+            const keepTicking = await this.executeTask(task, false);
+            clearTimeout(clockId);
+            if (keepTicking && Object.keys(this.clockIds).includes(task.name))
+                return this.scheduleTask(task);
 
-        this.intervalIds.push(
-            setInterval(
-                () => this.executeTask(attributes, cron, false),
-                cron.delay * 1000
-            )
-        );
+            if (!keepTicking) {
+                delete this.clockIds[task.name];
+                await this.areaService.update(task.areaId, {
+                    status: AreaStatus.ERROR
+                });
+            }
+        }, task.delay * 1000);
+        this.clockIds[task.name] = clockId;
+    }
+
+    async startPolling(task: AreaTask) {
+        await this.executeTask(task, true);
+
+        this.scheduleTask(task);
+    }
+
+    isRunning(taskName: string): boolean {
+        return undefined !== this.clockIds[taskName];
+    }
+
+    stopPolling(taskName: string) {
+        clearTimeout(this.clockIds[taskName]);
+        delete this.clockIds[taskName];
     }
 }

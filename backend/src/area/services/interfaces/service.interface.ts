@@ -1,20 +1,34 @@
-import { AreaDiscordEmbed } from "../discord/interfaces/discord_embed.interface";
-import { AreaYouTubeVideo } from "../youtube/interfaces/youtube_video.interface";
+import { ApiProperty } from "@nestjs/swagger";
+import { AreaDiscordEmbed } from "../discord/interfaces/discordEmbed.interface";
+import { AreaYouTubeVideo } from "../youtube/interfaces/youtubeVideo.interface";
 
-export interface DescriptionParam {
-    name: string;
-    type: string;
-    description: string;
+export class ReactionField {
+    @ApiProperty({
+        description: "The name of the field.",
+        example: "webhook"
+    })
+    readonly name: string;
+
+    @ApiProperty({
+        description: "The type of the field.",
+        example: "string"
+    })
+    readonly type: string;
+
+    @ApiProperty({
+        description: "The name of the field.",
+        example: "The Discord webhook URL to execute on reaction."
+    })
+    readonly description: string;
 }
 
 export interface ActionDescription {
     description: string;
-    params: DescriptionParam[];
     trigger: (accessToken: string) => Promise<AreaYouTubeVideo>;
 }
 
 export interface ReactionDescription {
     description: string;
-    params: DescriptionParam[];
+    fields: ReactionField[];
     produce: (fields: object, data: AreaDiscordEmbed) => Promise<void>;
 }

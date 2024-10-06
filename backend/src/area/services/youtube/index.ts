@@ -3,10 +3,11 @@ import { YOUTUBE_REACTIONS } from "./youtube.reactions";
 
 export default {
     name: "youtube",
-    actions: Object.entries(YOUTUBE_ACTIONS).map(
-        ([name, { description, params }]) => ({ name, description, params })
-    ),
+    actions: Object.entries(YOUTUBE_ACTIONS).map(([name, { description }]) => ({
+        name,
+        description
+    })),
     reactions: Object.entries(YOUTUBE_REACTIONS).map(
-        ([name, { description, params }]) => ({ name, description, params })
+        ([name, { description, fields }]) => ({ name, description, fields })
     )
 };

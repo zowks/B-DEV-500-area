@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, OnModuleInit } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 
 import { PrismaModule } from "./prisma/prisma.module";
@@ -16,12 +16,13 @@ import { ScheduleModule } from "@nestjs/schedule";
 import { SchedulerModule } from "./scheduler/scheduler.module";
 import { RedisOptions } from "./app.config";
 import { AboutModule } from "./about/about.module";
+import { PrismaService } from "./prisma/prisma.service";
+import { AreaService } from "./area/area.service";
 
 @Module({
     imports: [
         CacheModule.registerAsync(RedisOptions),
         ConfigModule.forRoot({ isGlobal: true }),
-        ScheduleModule.forRoot(),
         AuthModule,
         Argon2Module,
         JwtModule,
@@ -29,9 +30,25 @@ import { AboutModule } from "./about/about.module";
         UsersModule,
         OAuthModule,
         AreaModule,
+        ScheduleModule.forRoot(),
         SchedulerModule,
         AboutModule
     ],
     providers: [JwtGuard]
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+    constructor(
+        private readonly prismaService: PrismaService,
+        private readonly areaService: AreaService
+    ) {}
+
+    async onModuleInit() {
+        const areas = await this.prismaService.area.findMany({
+            select: {
+                id: true
+            }
+        });
+
+        areas.forEach(({ id }) => this.areaService.schedule(id));
+    }
+}

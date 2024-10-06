@@ -1,6 +1,11 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+    forwardRef,
+    Inject,
+    Injectable,
+    NotFoundException
+} from "@nestjs/common";
 import { User } from "../users/interfaces/user.interface";
-import { CreateAreaDto } from "./dto/create_area.dto";
+import { CreateAreaDto } from "./dto/createArea.dto";
 import { OAuthService } from "../oauth/oauth.service";
 import { SchedulerService } from "../scheduler/scheduler.service";
 import { YOUTUBE_ACTIONS } from "./services/youtube/youtube.actions";
@@ -11,6 +16,10 @@ import {
     ActionDescription,
     ReactionDescription
 } from "./services/interfaces/service.interface";
+import { PrismaService } from "../prisma/prisma.service";
+import { Area, AreaAction, AreaReaction } from "./interfaces/area.interface";
+import { AreaStatus, Area as PrismaArea } from "@prisma/client";
+import { UpdateAreaDto } from "./dto/updateArea.dto";
 
 @Injectable()
 export class AreaService {
@@ -25,17 +34,14 @@ export class AreaService {
     };
 
     constructor(
+        private readonly prismaService: PrismaService,
+        @Inject(forwardRef(() => SchedulerService))
         private readonly schedulerService: SchedulerService,
         private readonly oauthService: OAuthService
     ) {}
 
-    private getAction(createAreaDto: CreateAreaDto): {
-        service: string;
-        method: string;
-        config: ActionDescription;
-    } {
-        const [actionService, actionMethod] =
-            createAreaDto.actionId.split(/\./);
+    getAction(actionId: string): AreaAction {
+        const [actionService, actionMethod] = actionId.split(/\./);
 
         if (!Object.keys(this.actions).includes(actionService))
             throw new NotFoundException(
@@ -53,13 +59,8 @@ export class AreaService {
         throw new NotFoundException(`Invalid action method : ${actionMethod}.`);
     }
 
-    private getReaction(createAreaDto: CreateAreaDto): {
-        service: string;
-        method: string;
-        config: ReactionDescription;
-    } {
-        const [reactionService, reactionMethod] =
-            createAreaDto.reactionId.split(/\./);
+    getReaction(reactionId: string): AreaReaction {
+        const [reactionService, reactionMethod] = reactionId.split(/\./);
 
         if (!Object.keys(this.reactions).includes(reactionService))
             throw new NotFoundException(
@@ -79,28 +80,177 @@ export class AreaService {
         );
     }
 
-    async create(userId: Pick<User, "id">["id"], createAreaDto: CreateAreaDto) {
-        const action = this.getAction(createAreaDto);
-        const reaction = this.getReaction(createAreaDto);
+    private prismaAreaToArea({
+        id,
+        name,
+        description,
+        actionId,
+        reactionId,
+        reactionBody,
+        reactionFields,
+        delay,
+        status
+    }: Partial<PrismaArea>): Area {
+        return {
+            id,
+            action_id: actionId,
+            reaction_id: reactionId,
+            delay,
+            description,
+            name,
+            reaction_body: reactionBody as object,
+            reaction_fields: reactionFields as object,
+            status
+        };
+    }
+
+    async findMany(userId: Pick<User, "id">["id"]): Promise<Area[]> {
+        const areas = await this.prismaService.area.findMany({
+            select: {
+                oauthCredential: {
+                    where: {
+                        userId
+                    }
+                },
+                id: true,
+                name: true,
+                description: true,
+                actionId: true,
+                reactionId: true,
+                reactionBody: true,
+                reactionFields: true,
+                delay: true,
+                oauthCredentialId: true,
+                status: true
+            }
+        });
+        return areas.map(this.prismaAreaToArea);
+    }
+
+    private async findUnique(
+        areaId: Pick<Area, "id">["id"]
+    ): Promise<PrismaArea> {
+        const area = await this.prismaService.area.findUnique({
+            where: {
+                id: areaId
+            },
+            select: {
+                oauthCredential: true,
+                id: true,
+                name: true,
+                description: true,
+                actionId: true,
+                reactionId: true,
+                reactionBody: true,
+                reactionFields: true,
+                delay: true,
+                oauthCredentialId: true,
+                status: true
+            }
+        });
+        if (null === area) throw new NotFoundException();
+        return area;
+    }
+
+    async schedule(areaId: PrismaArea["id"]) {
+        const area = await this.findUnique(areaId);
+        const action = this.getAction(area.actionId);
+        const reaction = this.getReaction(area.reactionId);
+        const taskName = `${area.id}|${action.service}.${action.method}|${reaction.service}.${reaction.method}`;
+
+        if (
+            AreaStatus.ERROR === area.status ||
+            AreaStatus.STOPPED === area.status
+        ) {
+            this.schedulerService.stopPolling(taskName);
+            return;
+        }
 
         const credentialsManager = this.oauthService.getOAuthCredentialsManager(
             action.service
         );
 
-        await this.schedulerService.startPolling(
-            {
-                action,
-                reaction
-            },
-            {
-                userId,
-                oauthManager: credentialsManager,
-                action: action.config.trigger,
-                reaction: reaction.config.produce,
-                fields: createAreaDto.fields,
-                reactionBody: createAreaDto.reactionBody,
-                delay: createAreaDto.delay
-            }
+        this.schedulerService.startPolling({
+            areaId,
+            name: taskName,
+            credentialsManager,
+            oauthCredentialId: area.oauthCredentialId,
+            action,
+            reaction,
+            reactionBody: area.reactionBody as object,
+            reactionFields: area.reactionFields as object,
+            delay: area.delay
+        });
+    }
+
+    async create(
+        userId: Pick<User, "id">["id"],
+        createAreaDto: CreateAreaDto
+    ): Promise<Area> {
+        const action = this.getAction(createAreaDto.actionId);
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const reaction = this.getReaction(createAreaDto.reactionId);
+
+        const credentialsManager = this.oauthService.getOAuthCredentialsManager(
+            action.service
         );
+
+        const oauthCredentialId = (
+            await credentialsManager.loadCredentials(userId)
+        )[0].id;
+
+        const area = await this.prismaService.area.create({
+            data: {
+                name: createAreaDto.name,
+                description: createAreaDto.description,
+                actionId: createAreaDto.actionId,
+                reactionId: createAreaDto.reactionId,
+                reactionFields: createAreaDto.reactionFields,
+                reactionBody: createAreaDto.reactionBody,
+                delay: createAreaDto.delay,
+                oauthCredentialId
+            },
+            select: {
+                id: true,
+                name: true,
+                description: true,
+                actionId: true,
+                reactionId: true,
+                reactionBody: true,
+                reactionFields: true,
+                delay: true,
+                status: true
+            }
+        });
+
+        return this.prismaAreaToArea(area);
+    }
+
+    async update(
+        areaId: Area["id"],
+        updateAreaDto: UpdateAreaDto
+    ): Promise<Area> {
+        const updated = await this.prismaService.area.update({
+            where: {
+                id: areaId
+            },
+            data: updateAreaDto,
+            select: {
+                id: true,
+                name: true,
+                description: true,
+                actionId: true,
+                reactionId: true,
+                reactionBody: true,
+                reactionFields: true,
+                delay: true,
+                status: true
+            }
+        });
+
+        await this.schedule(areaId);
+
+        return this.prismaAreaToArea(updated);
     }
 }

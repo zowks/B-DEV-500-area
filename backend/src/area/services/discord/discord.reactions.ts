@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AreaDiscordEmbed } from "./interfaces/discord_embed.interface";
+import { AreaDiscordEmbed } from "./interfaces/discordEmbed.interface";
 import { ReactionDescription } from "../interfaces/service.interface";
 import { transformAreaDiscordEmbedToRaw } from "./discord.transformers";
 
@@ -24,7 +24,7 @@ function sendEmbed(
 export const DISCORD_REACTIONS: { [name: string]: ReactionDescription } = {
     send_embed: {
         description: "Sends an embed message through a Discord webhook.",
-        params: [
+        fields: [
             {
                 name: "webhook",
                 type: "string",
