@@ -85,42 +85,42 @@ export class AreaService {
         name,
         description,
         actionId,
+        actionAuthId,
         reactionId,
         reactionBody,
-        reactionFields,
+        reactionAuthId,
         delay,
         status
     }: Partial<PrismaArea>): Area {
         return {
             id,
-            action_id: actionId,
-            reaction_id: reactionId,
-            delay,
-            description,
             name,
+            description,
+            action_id: actionId,
+            action_auth_id: actionAuthId,
+            reaction_id: reactionId,
             reaction_body: reactionBody as object,
-            reaction_fields: reactionFields as object,
+            reaction_auth_id: reactionAuthId,
+            delay,
             status
         };
     }
 
-    async findMany(userId: Pick<User, "id">["id"]): Promise<Area[]> {
+    async findMany(userId: User["id"]): Promise<Area[]> {
         const areas = await this.prismaService.area.findMany({
+            where: {
+                userId
+            },
             select: {
-                oauthCredential: {
-                    where: {
-                        userId
-                    }
-                },
                 id: true,
                 name: true,
                 description: true,
                 actionId: true,
+                actionAuthId: true,
                 reactionId: true,
                 reactionBody: true,
-                reactionFields: true,
+                reactionAuthId: true,
                 delay: true,
-                oauthCredentialId: true,
                 status: true
             }
         });
@@ -128,23 +128,22 @@ export class AreaService {
     }
 
     private async findUnique(
-        areaId: Pick<Area, "id">["id"]
-    ): Promise<PrismaArea> {
+        areaId: Area["id"]
+    ): Promise<Omit<PrismaArea, "userId">> {
         const area = await this.prismaService.area.findUnique({
             where: {
                 id: areaId
             },
             select: {
-                oauthCredential: true,
                 id: true,
                 name: true,
                 description: true,
                 actionId: true,
+                actionAuthId: true,
                 reactionId: true,
                 reactionBody: true,
-                reactionFields: true,
+                reactionAuthId: true,
                 delay: true,
-                oauthCredentialId: true,
                 status: true
             }
         });
@@ -166,25 +165,44 @@ export class AreaService {
             return;
         }
 
-        const credentialsManager = this.oauthService.getOAuthCredentialsManager(
-            action.service
-        );
+        const actionAuth =
+            await this.prismaService.areaServiceAuthentication.findUnique({
+                where: {
+                    id: area.actionAuthId
+                },
+                select: {
+                    apiKey: true,
+                    oauth: true,
+                    webhook: true
+                }
+            });
+
+        const reactionAuth =
+            await this.prismaService.areaServiceAuthentication.findUnique({
+                where: {
+                    id: area.reactionAuthId
+                },
+                select: {
+                    apiKey: true,
+                    oauth: true,
+                    webhook: true
+                }
+            });
 
         this.schedulerService.startPolling({
             areaId,
             name: taskName,
-            credentialsManager,
-            oauthCredentialId: area.oauthCredentialId,
             action,
+            actionAuth,
             reaction,
             reactionBody: area.reactionBody as object,
-            reactionFields: area.reactionFields as object,
+            reactionAuth,
             delay: area.delay
         });
     }
 
     async create(
-        userId: Pick<User, "id">["id"],
+        userId: User["id"],
         createAreaDto: CreateAreaDto
     ): Promise<Area> {
         const action = this.getAction(createAreaDto.actionId);
@@ -192,33 +210,58 @@ export class AreaService {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const reaction = this.getReaction(createAreaDto.reactionId);
 
-        const credentialsManager = this.oauthService.getOAuthCredentialsManager(
-            action.service
-        );
+        let actionServiceAuthId: number = null;
+        let reactionServiceAuthId: number = null;
+        console.log({
+            userId,
+            name: createAreaDto.name,
+            description: createAreaDto.description,
+            actionId: createAreaDto.actionId,
+            actionAuthId: actionServiceAuthId,
+            reactionId: createAreaDto.reactionId,
+            reactionAuthId: reactionServiceAuthId,
+            reactionBody: createAreaDto.reactionBody,
+            delay: createAreaDto.delay
+        });
+        if (createAreaDto.actionAuth) {
+            actionServiceAuthId = (
+                await this.prismaService.areaServiceAuthentication.create({
+                    data: createAreaDto.actionAuth,
+                    select: { id: true }
+                })
+            ).id;
+        }
 
-        const oauthCredentialId = (
-            await credentialsManager.loadCredentials(userId)
-        )[0].id;
+        if (createAreaDto.reactionAuth) {
+            reactionServiceAuthId = (
+                await this.prismaService.areaServiceAuthentication.create({
+                    data: createAreaDto.reactionAuth,
+                    select: { id: true }
+                })
+            ).id;
+        }
 
         const area = await this.prismaService.area.create({
             data: {
+                userId,
                 name: createAreaDto.name,
                 description: createAreaDto.description,
                 actionId: createAreaDto.actionId,
+                actionAuthId: actionServiceAuthId,
                 reactionId: createAreaDto.reactionId,
-                reactionFields: createAreaDto.reactionFields,
+                reactionAuthId: reactionServiceAuthId,
                 reactionBody: createAreaDto.reactionBody,
-                delay: createAreaDto.delay,
-                oauthCredentialId
+                delay: createAreaDto.delay
             },
             select: {
                 id: true,
                 name: true,
                 description: true,
                 actionId: true,
+                actionAuthId: true,
                 reactionId: true,
                 reactionBody: true,
-                reactionFields: true,
+                reactionAuthId: true,
                 delay: true,
                 status: true
             }
@@ -241,9 +284,10 @@ export class AreaService {
                 name: true,
                 description: true,
                 actionId: true,
+                actionAuthId: true,
                 reactionId: true,
                 reactionBody: true,
-                reactionFields: true,
+                reactionAuthId: true,
                 delay: true,
                 status: true
             }

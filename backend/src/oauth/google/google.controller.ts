@@ -51,8 +51,16 @@ export class GoogleOAuthController {
             "The URI to which the user will be redirected once the authentication flow is successful.",
         example: "http://localhost:5173/dashboard"
     })
+    @ApiQuery({
+        name: "scope",
+        description:
+            "The scopes required for the OAuth2.0 credential. It's a whitespace-joined string list.",
+        example:
+            "https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtubepartner https://www.googleapis.com/auth/youtube.force-ssl"
+    })
     oauthService(
         @Query("redirect_uri") redirect_uri: string,
+        @Query("scope") scope: string,
         @Req() req: Request
     ) {
         const { id } = req.user as Pick<User, "id">;
@@ -69,7 +77,7 @@ export class GoogleOAuthController {
         });
 
         return {
-            redirect_uri: this.googleOAuthService.getOAuthUrl(state)
+            redirect_uri: this.googleOAuthService.getOAuthUrl(state, scope)
         };
     }
 
@@ -121,6 +129,6 @@ export class GoogleOAuthController {
     })
     async credentials(@Req() req: Request): Promise<OAuthCredential[]> {
         const { id } = req.user as Pick<User, "id">;
-        return await this.googleOAuthService.loadCredentials(id);
+        return await this.googleOAuthService.loadCredentialsByUserId(id);
     }
 }

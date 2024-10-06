@@ -28,26 +28,24 @@ export class OAuthCredential {
 }
 
 export abstract class OAuth {
-    abstract readonly clientID: string;
-
-    abstract readonly clientSecret: string;
-
-    abstract readonly redirectUri: string;
-
-    abstract getOAuthUrl(state: string): string;
+    abstract getOAuthUrl(state: string, scope: string): string;
 
     abstract getCredentials(code: string): Promise<OAuthCredential>;
 
     abstract saveCredential(
-        userId: Pick<User, "id">["id"],
+        userId: User["id"],
         credential: OAuthCredential
     ): Promise<number>;
 
-    abstract loadCredentials(
-        userId: Pick<User, "id">["id"]
+    abstract loadCredentialsByUserId(
+        userId: User["id"]
     ): Promise<OAuthCredential[]>;
 
-    abstract loadCredential(
+    abstract loadCredentialsByScopes(
+        scopes: string[]
+    ): Promise<OAuthCredential[]>;
+
+    abstract loadCredentialById(
         oauthCredentialId: OAuthCredential["id"]
     ): Promise<OAuthCredential>;
 

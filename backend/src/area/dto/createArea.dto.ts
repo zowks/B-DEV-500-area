@@ -3,11 +3,13 @@ import {
     IsNotEmpty,
     IsNumber,
     IsObject,
+    IsOptional,
     IsPositive,
     IsString,
     Matches,
     MaxLength
 } from "class-validator";
+import { AreaServiceAuthDto } from "./areaServiceAuth.dto";
 
 export class CreateAreaDto {
     @ApiProperty({
@@ -38,6 +40,20 @@ export class CreateAreaDto {
     @IsNotEmpty()
     readonly actionId: string;
 
+    @ApiPropertyOptional({
+        description:
+            "The action service authentication method used to receive data.",
+        type: AreaServiceAuthDto,
+        examples: [
+            { apiKey: "<API_KEY_HERE>" },
+            { oauth: 1 },
+            { webhook: "https://example.com/webhookId/webhookSecret" }
+        ]
+    })
+    @IsObject()
+    @IsOptional()
+    readonly actionAuth: AreaServiceAuthDto;
+
     @ApiProperty({
         description:
             "The reaction ID. It must contain the service and the method separated by a dot.",
@@ -62,16 +78,19 @@ export class CreateAreaDto {
     @IsObject()
     readonly reactionBody: object;
 
-    @ApiProperty({
+    @ApiPropertyOptional({
         description:
-            "The fields represent the required elements to make the reaction possible. For instance, it may contain a webhook URL.",
-        example: {
-            webhook:
-                "https://discord.com/api/webhooks/XXXXXXXXXXXXXXXX/XXXXXXXXXXXXXXXX"
-        }
+            "The reaction service authentication method used to post data.",
+        type: AreaServiceAuthDto,
+        examples: [
+            { apiKey: "<API_KEY_HERE>" },
+            { oauth: 1 },
+            { webhook: "https://example.com/webhookId/webhookSecret" }
+        ]
     })
     @IsObject()
-    readonly reactionFields: object;
+    @IsOptional()
+    readonly reactionAuth: AreaServiceAuthDto;
 
     @ApiProperty({
         description:

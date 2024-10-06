@@ -4,17 +4,18 @@ import {
     forwardRef,
     Inject,
     Injectable,
-    NotFoundException,
     OnModuleDestroy,
     OnModuleInit
 } from "@nestjs/common";
 import { Cache } from "cache-manager";
 import { hash } from "crypto";
 import { transformer } from "../area/generic_transformer";
-import { OAuthCredential } from "../oauth/oauth.interface";
+import { OAuth, OAuthCredential } from "../oauth/oauth.interface";
 import { AreaStatus } from "@prisma/client";
 import { AreaTask } from "../area/interfaces/area.interface";
 import { AreaService } from "../area/area.service";
+import { OAuthService } from "../oauth/oauth.service";
+import { AreaServiceAuth } from "../area/services/interfaces/service.interface";
 
 @Injectable()
 export class SchedulerService implements OnModuleInit, OnModuleDestroy {
@@ -23,7 +24,8 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
     constructor(
         @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
         @Inject(forwardRef(() => AreaService))
-        private readonly areaService: AreaService
+        private readonly areaService: AreaService,
+        private readonly oauthService: OAuthService
     ) {}
 
     async onModuleInit() {
@@ -36,29 +38,90 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         await this.cacheManager.reset();
     }
 
-    private async getLatestCredential(
-        task: AreaTask
+    private async getOAuthCredential(
+        scopes: string[],
+        credentialsManager: OAuth
     ): Promise<OAuthCredential | null> {
-        let credential: OAuthCredential;
+        const credentials: OAuthCredential[] =
+            await credentialsManager.loadCredentialsByScopes(scopes);
+        if (0 === credentials.length) return null;
 
-        try {
-            credential = await task.credentialsManager.loadCredential(
-                task.oauthCredentialId
-            );
-        } catch (e) {
-            if (e instanceof NotFoundException) return null;
-            throw e;
-        }
+        const credential = credentials[0];
         if (credential.expires_at > new Date()) return credential;
-        return await task.credentialsManager.refreshCredential(credential);
+        return await credentialsManager.refreshCredential(credential);
+    }
+
+    private async getActionServiceAuth(
+        task: AreaTask
+    ): Promise<AreaServiceAuth> {
+        if (0 < task.action.config.oauthScopes.length) {
+            const credentialsManager =
+                this.oauthService.getOAuthCredentialsManager(
+                    task.action.service
+                );
+            const credential = await this.getOAuthCredential(
+                task.action.config.oauthScopes,
+                credentialsManager
+            );
+            if (null === credential)
+                throw new ForbiddenException("Token was revoked.");
+            return { oauth: credential.access_token };
+        }
+
+        if (task.actionAuth.apiKey) return { apiKey: task.actionAuth.apiKey };
+
+        if (task.actionAuth.webhook)
+            return { webhook: task.actionAuth.webhook };
+    }
+
+    private async getReactionServiceAuth(
+        task: AreaTask
+    ): Promise<AreaServiceAuth> {
+        if (0 < task.reaction.config.oauthScopes.length) {
+            const credentialsManager =
+                this.oauthService.getOAuthCredentialsManager(
+                    task.reaction.service
+                );
+            const credential = await this.getOAuthCredential(
+                task.reaction.config.oauthScopes,
+                credentialsManager
+            );
+            if (null === credential)
+                throw new ForbiddenException("Token was revoked.");
+            return { oauth: credential.access_token };
+        }
+
+        if (task.reactionAuth.apiKey)
+            return { apiKey: task.reactionAuth.apiKey };
+
+        if (task.reactionAuth.webhook)
+            return { webhook: task.reactionAuth.webhook };
     }
 
     private async getData(task: AreaTask) {
-        const credential = await this.getLatestCredential(task);
-        if (null === credential)
-            throw new ForbiddenException("Token was revoked.");
+        const auth = await this.getActionServiceAuth(task);
 
-        return await task.action.config.trigger(credential.access_token);
+        return await task.action.config.trigger(auth);
+    }
+
+    private async postData(
+        task: AreaTask,
+        transformedData: object
+    ): Promise<boolean> {
+        let auth: AreaServiceAuth;
+        try {
+            auth = await this.getReactionServiceAuth(task);
+        } catch (e) {
+            return false;
+        }
+
+        try {
+            await task.reaction.config.produce(auth, transformedData);
+        } catch (e) {
+            console.error(e);
+            return false;
+        }
+        return true;
     }
 
     private async executeTask(
@@ -78,6 +141,9 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         const oldCache = await this.cacheManager.get(task.name);
 
         const newCache = hash("sha512", JSON.stringify(data), "hex").toString();
+
+        console.log(oldCache, newCache);
+
         await this.cacheManager.set(
             task.name,
             newCache,
@@ -86,16 +152,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
 
         if (firstRun || newCache === oldCache) return true;
 
-        try {
-            await task.reaction.config.produce(
-                task.reactionFields,
-                transformedData
-            );
-        } catch (e) {
-            console.error(e);
-            return false;
-        }
-        return true;
+        return await this.postData(task, transformedData);
     }
 
     scheduleTask(task: AreaTask) {

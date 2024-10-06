@@ -1,5 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { ReactionField } from "../../area/services/interfaces/service.interface";
+import {
+    ActionField,
+    ReactionField
+} from "../../area/services/interfaces/service.interface";
 
 class AboutJsonClient {
     @ApiProperty({ description: "The host (IP address) of the client." })
@@ -16,6 +19,13 @@ class AboutJsonServerServiceAction {
         description: "The description of the action."
     })
     readonly description: string;
+
+    @ApiProperty({
+        description: "The fields required to watch the action.",
+        type: ActionField,
+        isArray: true
+    })
+    readonly fields: ActionField[];
 }
 
 class AboutJsonServerServiceReaction {
@@ -82,18 +92,4 @@ export class AboutJson {
             "Some informations about the server, including the supported AREAs."
     })
     readonly server: AboutJsonServer;
-    // current_time: number;
-    // services: {
-    //     name: string;
-    //     actions: {
-    //         name: string;
-    //         description: string;
-    //         params: DescriptionParam[];
-    //     }[];
-    //     reactions: {
-    //         name: string;
-    //         description: string;
-    //         params: DescriptionParam[];
-    //     }[];
-    // }[];
 }

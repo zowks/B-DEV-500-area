@@ -7,14 +7,12 @@ export declare class OAuthCredential {
     readonly scope: string;
 }
 export declare abstract class OAuth {
-    abstract readonly clientID: string;
-    abstract readonly clientSecret: string;
-    abstract readonly redirectUri: string;
-    abstract getOAuthUrl(state: string): string;
+    abstract getOAuthUrl(state: string, scope: string): string;
     abstract getCredentials(code: string): Promise<OAuthCredential>;
-    abstract saveCredential(userId: Pick<User, "id">["id"], credential: OAuthCredential): Promise<number>;
-    abstract loadCredentials(userId: Pick<User, "id">["id"]): Promise<OAuthCredential[]>;
-    abstract loadCredential(oauthCredentialId: OAuthCredential["id"]): Promise<OAuthCredential>;
+    abstract saveCredential(userId: User["id"], credential: OAuthCredential): Promise<number>;
+    abstract loadCredentialsByUserId(userId: User["id"]): Promise<OAuthCredential[]>;
+    abstract loadCredentialsByScopes(scopes: string[]): Promise<OAuthCredential[]>;
+    abstract loadCredentialById(oauthCredentialId: OAuthCredential["id"]): Promise<OAuthCredential>;
     abstract refreshCredential(oauthCredential: OAuthCredential): Promise<OAuthCredential>;
     abstract updateCredential(oauthCredential: OAuthCredential): Promise<void>;
     abstract revokeCredential(oauthCredential: OAuthCredential): Promise<void>;
