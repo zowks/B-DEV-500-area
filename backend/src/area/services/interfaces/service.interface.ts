@@ -41,13 +41,13 @@ export interface AreaServiceAuth {
 export interface ActionDescription {
     description: string;
     oauthScopes: string[];
-    fields: { name: keyof AreaServiceAuth, description: string }[];
+    fields: { name: keyof AreaServiceAuth; description: string }[];
     trigger: (auth: AreaServiceAuth) => Promise<AreaYouTubeVideo>;
 }
 
 export interface ReactionDescription {
     description: string;
     oauthScopes: string[];
-    fields: { name: keyof AreaServiceAuth, description: string }[];
+    fields: { name: keyof AreaServiceAuth; description: string }[];
     produce: (auth: AreaServiceAuth, data: AreaDiscordEmbed) => Promise<void>;
 }

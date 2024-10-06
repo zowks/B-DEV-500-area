@@ -205,6 +205,7 @@ export class AreaService {
         userId: User["id"],
         createAreaDto: CreateAreaDto
     ): Promise<Area> {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const action = this.getAction(createAreaDto.actionId);
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

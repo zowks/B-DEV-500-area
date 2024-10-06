@@ -112,6 +112,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         try {
             auth = await this.getReactionServiceAuth(task);
         } catch (e) {
+            console.error(e);
             return false;
         }
 

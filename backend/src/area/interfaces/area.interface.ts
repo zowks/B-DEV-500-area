@@ -1,7 +1,4 @@
-import {
-    AreaServiceAuthentication,
-    AreaStatus,
-} from "@prisma/client";
+import { AreaServiceAuthentication, AreaStatus } from "@prisma/client";
 import {
     ActionDescription,
     ReactionDescription
