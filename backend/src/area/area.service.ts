@@ -7,7 +7,6 @@ import {
 } from "@nestjs/common";
 import { User } from "../users/interfaces/user.interface";
 import { CreateAreaDto } from "./dto/createArea.dto";
-import { OAuthService } from "../oauth/oauth.service";
 import { SchedulerService } from "../scheduler/scheduler.service";
 import { YOUTUBE_ACTIONS } from "./services/youtube/youtube.actions";
 import { YOUTUBE_REACTIONS } from "./services/youtube/youtube.reactions";
