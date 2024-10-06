@@ -15,9 +15,9 @@ export default async function signIn(apiUrl: string, payload: LoginDto): Promise
         case 200:
             return { status: 200, success: true, body: await response.json() };
         case 400:
-            return { status: 400, success: false, errorKey: "incorrectFields" }; // Some of the fields are incorrect.
+            return { status: 400, success: false }; // Some of the fields are incorrect.
         case 403:
-            return { status: 403, success: false, errorKey: "invalidCredentials" }; // Either the email or password or both are invalid.
+            return { status: 403, success: false }; // Either the email or password or both are invalid.
         default:
             return { status: 500, success: false };
         }
