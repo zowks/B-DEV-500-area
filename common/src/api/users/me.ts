@@ -3,12 +3,9 @@ import type { UserInfo } from "../../types/users/interfaces/user.interface";
 
 export default async function me(apiUrl: string, _: unknown, accessToken: string): Promise<RequestResponse<UserInfo, 200 | 401>> {
     try {
-        const response = await fetch(`${apiUrl}/auth/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`
-            }
+        const response = await fetch(`${apiUrl}/users/me`, {
+            method: "GET",
+            headers: { Authorization: `Bearer ${accessToken}` }
         });
 
         switch (response.status) {
