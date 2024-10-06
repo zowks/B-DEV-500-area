@@ -1,6 +1,7 @@
 import { redirect, type Handle, type RequestEvent } from "@sveltejs/kit";
 import { initAcceptLanguageHeaderDetector } from "typesafe-i18n/detectors";
 import isPublicPath from "$lib/utils/isPublicPath";
+import getClient from "$lib/utils/getClient";
 import type { Locales } from "$i18n/i18n-types.js";
 import { detectLocale, i18n, isLocale } from "$i18n/i18n-util";
 import { loadAllLocales } from "$i18n/i18n-util.sync";
@@ -45,13 +46,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 
     const locale = isLocale(currentLocale) ? (currentLocale as Locales) : getPreferredLocale(event);
     const accessToken = event.cookies.get("accessToken");
+    const client = await getClient(accessToken);
 
-    if (!isPublicPath(event.url.pathname, locale) && !accessToken)
+    if (!isPublicPath(event.url.pathname, locale) && !client)
         return redirect(302, `/${locale}/auth/sign-in`);
 
     event.locals.locale = locale;
     event.locals.LL = L[locale];
-    event.locals.accessToken = accessToken ?? null; // TODO: Make a request to the backend to validate the token
+    event.locals.client = client;
 
     return resolve(event, { transformPageChunk: ({ html }) => html.replace("%lang%", locale) });
 };
