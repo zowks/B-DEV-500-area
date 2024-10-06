@@ -10,6 +10,8 @@ export declare class OAuthCredential {
     readonly scope: string;
 }
 export declare abstract class OAuthManager extends OAuthDBService {
+    readonly OAUTH_TOKEN_URL: string;
+    readonly OAUTH_REVOKE_URL: string;
     abstract getOAuthUrl(state: string, scope: string): string;
     abstract getCredentials(code: string): Promise<OAuthCredential>;
     abstract refreshCredential(oauthCredential: OAuthCredential): Promise<OAuthCredential>;
@@ -25,5 +27,4 @@ export declare abstract class OAuthController {
         redirect_uri: string;
     };
     abstract callback(session: SessionData, code: string, state: string, res: Response): Promise<void>;
-    abstract credentials(req: Request): Promise<OAuthCredential[]>;
 }
