@@ -33,4 +33,4 @@ RUN npm run build
 
 FROM build AS serve
 
-ENTRYPOINT [ "npm", "start" ]
+ENTRYPOINT [ "npm", "run", "container" ]

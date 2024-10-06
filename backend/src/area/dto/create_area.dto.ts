@@ -1,11 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsObject, IsString, Matches } from "class-validator";
+import {
+    IsNotEmpty,
+    IsNumber,
+    IsObject,
+    IsString,
+    Matches
+} from "class-validator";
 
 export class CreateAreaDto {
     @ApiProperty({
         description:
             "The action ID. It must contain the service and the method separated by a dot.",
-        example: "youtube.last_liked_video"
+        example: "youtube.on_liked_video"
     })
     @IsString()
     @Matches(/[a-z_]+\.[a-z_]+/)
@@ -15,7 +21,7 @@ export class CreateAreaDto {
     @ApiProperty({
         description:
             "The reaction ID. It must contain the service and the method separated by a dot.",
-        example: "discord.send_message"
+        example: "discord.send_embed"
     })
     @IsString()
     @Matches(/[a-z_]+\.[a-z_]+/)
@@ -46,4 +52,13 @@ export class CreateAreaDto {
     })
     @IsObject()
     readonly fields: object;
+
+    @ApiProperty({
+        description:
+            "The delay in seconds to which the poll-based event should be triggered.",
+        example: 10
+    })
+    @IsNumber()
+    @IsNotEmpty()
+    readonly delay: number;
 }
