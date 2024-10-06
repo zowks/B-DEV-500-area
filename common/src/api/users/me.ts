@@ -15,7 +15,7 @@ export default async function me(apiUrl: string, _: unknown, accessToken: string
         case 200:
             return { status: 200, success: true, body: await response.json() };
         case 401:
-            return { status: 401, success: false, errorKey: "unauthorized" }; // Either the JWT is expired or invalid or the user has been deleted.
+            return { status: 401, success: false }; // Either the JWT is expired or invalid or the user has been deleted.
         default:
             return { status: 500, success: false };
         }
