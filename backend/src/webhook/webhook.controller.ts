@@ -3,7 +3,7 @@ import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { WebhookService } from "./webhook.service";
 import { Area } from "src/area/interfaces/area.interface";
 
-@ApiTags("webhook")
+@ApiTags("Webhooks")
 @Controller("webhooks")
 export class WebhookController {
     constructor(private readonly webhookService: WebhookService) {}

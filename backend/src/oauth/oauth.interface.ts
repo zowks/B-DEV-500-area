@@ -20,7 +20,8 @@ import {
 } from "@nestjs/common";
 import { SessionData } from "express-session";
 import { Request, Response } from "express";
-import { getRandomValues } from "crypto";
+import { OAuthDBService } from "./oauthDb.service";
+import { hash } from "node:crypto";
 
 export class OAuthCredential {
     @ApiProperty({ description: "The ID of the Google OAuth authorization." })
@@ -48,33 +49,18 @@ export class OAuthCredential {
     readonly scope: string;
 }
 
-export abstract class OAuthManager {
+export abstract class OAuthManager extends OAuthDBService {
+    readonly OAUTH_TOKEN_URL: string;
+
+    readonly OAUTH_REVOKE_URL: string;
+
     abstract getOAuthUrl(state: string, scope: string): string;
 
     abstract getCredentials(code: string): Promise<OAuthCredential>;
 
-    abstract saveCredential(
-        userId: User["id"],
-        credential: OAuthCredential
-    ): Promise<number>;
-
-    abstract loadCredentialsByUserId(
-        userId: User["id"]
-    ): Promise<OAuthCredential[]>;
-
-    abstract loadCredentialsByScopes(
-        scopes: string[]
-    ): Promise<OAuthCredential[]>;
-
-    abstract loadCredentialById(
-        oauthCredentialId: OAuthCredential["id"]
-    ): Promise<OAuthCredential>;
-
     abstract refreshCredential(
         oauthCredential: OAuthCredential
     ): Promise<OAuthCredential>;
-
-    abstract updateCredential(oauthCredential: OAuthCredential): Promise<void>;
 
     abstract revokeCredential(oauthCredential: OAuthCredential): Promise<void>;
 }
@@ -152,12 +138,12 @@ export abstract class OAuthController {
         userId: User["id"],
         redirectUri: string
     ): string {
-        const stateArrayView = new Uint32Array(16);
-        getRandomValues(stateArrayView);
-        const state = Buffer.from(stateArrayView.buffer).toString("hex");
+        session["created_at"] = Date.now();
+        session["user_id"] = userId;
+        const stateData = `${session["user_id"]}:${session["created_at"]}`;
+        const state = hash("SHA-512", stateData, "hex");
 
         session["state"] = state;
-        session["user_id"] = userId;
         session["redirect_uri"] = redirectUri;
         session.save((err) => {
             if (err) console.error(err);
@@ -167,7 +153,14 @@ export abstract class OAuthController {
     }
 
     static verifyState(session: SessionData, state: string): void {
-        if (state !== session["state"])
+        if (
+            undefined === session["user_id"] ||
+            undefined === session["created_at"]
+        )
+            throw new ForbiddenException("Session expired.");
+        const stateData = `${session["user_id"]}:${session["created_at"]}`;
+        const currentState = hash("SHA-512", stateData, "hex");
+        if (state !== currentState)
             throw new ForbiddenException(
                 "Invalid state. Possibly due to a CSRF attack attempt."
             );
@@ -185,6 +178,4 @@ export abstract class OAuthController {
         state: string,
         res: Response
     ): Promise<void>;
-
-    abstract credentials(req: Request): Promise<OAuthCredential[]>;
 }

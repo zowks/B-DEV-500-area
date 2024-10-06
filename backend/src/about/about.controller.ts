@@ -16,13 +16,13 @@ export class AboutController {
     })
     about(@Ip() host: string): AboutJson {
         const _services = Object.values(services).map(({ default: d }) => d);
-        const now = new Date().getTime();
+
         return {
             client: {
                 host
             },
             server: {
-                current_time: now,
+                current_time: Date.now(),
                 services: _services
             }
         };
