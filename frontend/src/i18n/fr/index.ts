@@ -2,7 +2,15 @@ import type { Translation } from "../i18n-types";
 
 const fr = {
     error: {
-        goHome: "Aller à la page d'accueil"
+        goHome: "Aller à la page d'accueil",
+        api: {
+            unknown: "Une erreur inconnue est survenue",
+            unauthorized: "Vous n'êtes pas autorisé à effectuer cette action",
+            incorrectFields: "Un ou plusieurs champs sont incorrects",
+            emailAlreadyTaken: "L'adresse mail est déjà utilisée",
+            termsDenied: "Vous devez accepter les conditions d'utilisation",
+            invalidCredentials: "Identifiants incorrects"
+        }
     },
     header: {
         selectLanguage: "Sélectionner la langue",

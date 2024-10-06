@@ -7,10 +7,17 @@ import {
     UseGuards
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
-import { JwtGuard } from "src/auth/guards/jwt.guard";
+import { JwtGuard } from "../auth/guards/jwt.guard";
 import { Request } from "express";
 import { User, UserInfo } from "./interfaces/user.interface";
-import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import {
+    ApiBearerAuth,
+    ApiExtraModels,
+    ApiOkResponse,
+    ApiTags,
+    ApiUnauthorizedResponse,
+    getSchemaPath
+} from "@nestjs/swagger";
 
 @ApiTags("Users")
 @Controller("users")
@@ -20,10 +27,15 @@ export class UsersController {
     @UseGuards(JwtGuard)
     @Get("/me")
     @HttpCode(HttpStatus.OK)
+    @ApiExtraModels(UserInfo)
+    @ApiBearerAuth("bearer")
     @ApiOkResponse({
-        description: "Retrieves a user based on the JWT Bearer token."
+        description: "Retrieves a user based on the JWT Bearer token.",
+        schema: {
+            $ref: getSchemaPath(UserInfo)
+        }
     })
-    @ApiNotFoundResponse({
+    @ApiUnauthorizedResponse({
         description:
             "Either the JWT is expired or invalid or the user has been deleted."
     })

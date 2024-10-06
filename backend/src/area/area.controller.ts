@@ -14,9 +14,9 @@ import {
     ApiTags,
     ApiUnauthorizedResponse
 } from "@nestjs/swagger";
-import { JwtGuard } from "src/auth/guards/jwt.guard";
+import { JwtGuard } from "../auth/guards/jwt.guard";
 import { CreateAreaDto } from "./dto/create_area.dto";
-import { User } from "src/users/interfaces/user.interface";
+import { User } from "../users/interfaces/user.interface";
 import { Request } from "express";
 import { AreaService } from "./area.service";
 
