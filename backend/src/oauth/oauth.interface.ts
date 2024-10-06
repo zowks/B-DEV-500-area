@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { User } from "src/users/interfaces/user.interface";
+import { User } from "../users/interfaces/user.interface";
 
 export class OAuthCredentials {
     @ApiProperty({ description: "The ID of the Google OAuth authorization." })

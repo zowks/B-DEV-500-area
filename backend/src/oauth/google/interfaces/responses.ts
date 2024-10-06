@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { OAuthCredentials } from "src/oauth/oauth.interface";
+import { OAuthCredentials } from "../../../oauth/oauth.interface";
 
 export class GoogleOAuthCredentials {
     @ApiProperty({

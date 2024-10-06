@@ -7,9 +7,9 @@ import {
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { RegisterDto } from "./dto/register.dto";
 import { LoginDto } from "./dto/login.dto";
-import { PrismaService } from "src/prisma/prisma.service";
-import { Argon2Service } from "src/argon2/argon2.service";
-import { JwtService } from "src/jwt/jwt.service";
+import { PrismaService } from "../prisma/prisma.service";
+import { Argon2Service } from "../argon2/argon2.service";
+import { JwtService } from "../jwt/jwt.service";
 
 @Injectable()
 export class AuthService {
