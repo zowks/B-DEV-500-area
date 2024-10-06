@@ -57,7 +57,7 @@ export const actions: Actions = {
         return fail(
             response.status,
             {
-                errorMessage: LL.error.api[ERROR_KEYS[response.status] || "unauthorized"]
+                errorMessage: LL.error.api[ERROR_KEYS[response.status] || "unauthorized"]()
             }
         );
     }
