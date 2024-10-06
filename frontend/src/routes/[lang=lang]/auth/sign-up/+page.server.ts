@@ -4,6 +4,7 @@ import api from "@common/api/api";
 import type { Actions } from "./$types";
 import validateCredentials from "$lib/utils/auth/validateCredentials";
 import type { TranslationFunctions } from "$i18n/i18n-types";
+import type { ApiError } from "$i18n/types";
 import type { RegisterDto } from "@common/types/auth/dto/register.dto";
 
 type Payload = (RegisterDto & { error: false; }) | {
@@ -11,6 +12,12 @@ type Payload = (RegisterDto & { error: false; }) | {
     emailError?: string;
     passwordError?: string;
     errorMessage?: string;
+};
+
+const ERROR_KEYS: Record<number, ApiError> = {
+    400: "incorrectFields",
+    409: "emailAlreadyTaken",
+    422: "termsDenied"
 };
 
 function validatePayload(data: FormData, LL: TranslationFunctions): Payload {
@@ -47,10 +54,11 @@ export const actions: Actions = {
 
         if (response.success)
             return redirect(303, "sign-in");
-
-        const errorKey = response.errorKey || "unknown";
-        const errorMessage = LL.error.api[errorKey];
-
-        return fail(response.status, { errorMessage });
+        return fail(
+            response.status,
+            {
+                errorMessage: LL.error.api[ERROR_KEYS[response.status] || "unauthorized"]
+            }
+        );
     }
 };
