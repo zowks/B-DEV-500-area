@@ -52,13 +52,11 @@ export const actions: Actions = {
 
         const response = await api.auth.signUp(VITE_API_URL, payload);
 
-        if (response.success)
-            return redirect(303, "sign-in");
-        return fail(
-            response.status,
-            {
-                errorMessage: LL.error.api[ERROR_KEYS[response.status] || "unauthorized"]()
-            }
-        );
+        if (!response.success)
+            return fail(
+                response.status,
+                { errorMessage: LL.error.api[ERROR_KEYS[response.status] || "unauthorized"]() }
+            );
+        return redirect(303, "sign-in");
     }
 };

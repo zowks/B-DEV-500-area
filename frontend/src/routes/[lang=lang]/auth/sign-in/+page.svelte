@@ -1,11 +1,12 @@
 <script lang="ts">
-    import { enhance } from "$app/forms";
+    import { applyAction, enhance } from "$app/forms";
     import * as AlertDialog from "$lib/components/ui/alert-dialog";
     import { Button } from "$lib/components/ui/button";
     import EmailInput from "$lib/components/auth/inputs/Email.svelte";
     import PasswordInput from "$lib/components/auth/inputs/Password.svelte";
     import LL from "$i18n/i18n-svelte";
     import type { ActionData } from "./$types";
+    import hashPassword from "@common/hash/hashPassword";
 
     export let form: ActionData;
 </script>
@@ -18,7 +19,14 @@
                 {$LL.auth.signIn.subtitle()}
             </p>
         </div>
-        <form method="POST" use:enhance class="grid gap-4">
+        <form
+            method="POST"
+            use:enhance={async ({ formData }) => {
+                formData.set("password", await hashPassword(formData.get("password")));
+                return async ({ result }) => {await applyAction(result);};
+            }}
+            class="grid gap-4"
+        >
             <EmailInput emailError={form?.emailError} />
             <PasswordInput passwordError={form?.passwordError}>
                 <!-- TODO: Forgot password -->
@@ -41,6 +49,9 @@
                 </AlertDialog.Root>
             </PasswordInput>
             <Button type="submit" class="w-full">{$LL.auth.signIn.action()}</Button>
+            {#if form?.errorMessage}
+                <p class="text-center text-sm text-red-500">{form?.errorMessage}</p>
+            {/if}
             <!-- TODO: OAuth buttons -->
         </form>
         <div class="mt-4 text-center text-sm">
