@@ -1,7 +1,16 @@
 describe("authentication", () => {
-    it("sign-up", function() {
-        const email = `email-${Date.now()}@example.com`;
+    const email = `email-${Date.now()}@example.com`;
 
+    function signIn() {
+        cy.location("pathname", { timeout: 60000 }).should("eq", "/en/auth/sign-in");
+        cy.get("h1").contains("Sign in").should("be.visible");
+        cy.get("input#email").clear().type(email);
+        cy.get("input#password").clear().type("password");
+        cy.get("button").contains("Sign in").click();
+        cy.location("pathname", { timeout: 60000 }).should("eq", "/en");
+    }
+
+    it("sign-up", () => {
         cy.visit(Cypress.env("CYPRESS_HOST"));
         cy.location("pathname", { timeout: 60000 }).should("eq", "/en/auth/sign-in");
         cy.get("h1").contains("Sign in").should("be.visible");
@@ -14,13 +23,11 @@ describe("authentication", () => {
         cy.get("input#password").type("password");
         cy.contains("Accept terms and conditions").click();
         cy.get("button").contains("Sign up").click();
-        cy.location("pathname", { timeout: 60000 }).should("eq", "/en/auth/sign-in");
-        cy.get("h1").contains("Sign in").should("be.visible");
-        cy.get("#email").clear();
-        cy.get("#email").type(email);
-        cy.get("#password").clear();
-        cy.get("#password").type("password");
-        cy.get("button").contains("Sign in").click();
-        cy.location("pathname", { timeout: 60000 }).should("eq", "/en");
+        signIn();
+    });
+
+    it("sign-in", () => {
+        cy.visit(Cypress.env("CYPRESS_HOST"));
+        signIn();
     });
 });
