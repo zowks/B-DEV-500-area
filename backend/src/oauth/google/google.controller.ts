@@ -8,7 +8,7 @@ import {
     OAuthController,
     OAuthController_callback,
     OAuthController_credentials,
-    OAuthController_oauthService,
+    OAuthController_getOAuthUrl,
     OAuthCredential
 } from "../oauth.interface";
 
@@ -17,7 +17,7 @@ import {
 export class GoogleOAuthController implements OAuthController {
     constructor(private readonly googleOAuthService: GoogleOAuthService) {}
 
-    @OAuthController_oauthService()
+    @OAuthController_getOAuthUrl()
     getOAuthUrl(
         @Req() req: Request,
         @Query("redirect_uri") redirectUri: string,

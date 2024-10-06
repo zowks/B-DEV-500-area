@@ -79,7 +79,8 @@ export abstract class OAuthManager {
     abstract revokeCredential(oauthCredential: OAuthCredential): Promise<void>;
 }
 
-export function OAuthController_oauthService() {
+// @typescript-eslint/no-unsafe-function-type
+export function OAuthController_getOAuthUrl() {
     return applyDecorators(
         UseGuards(JwtGuard),
         Get("/"),
@@ -109,6 +110,7 @@ export function OAuthController_oauthService() {
     );
 }
 
+// @typescript-eslint/no-unsafe-function-type
 export function OAuthController_callback() {
     return applyDecorators(
         Get("/callback"),
@@ -124,6 +126,7 @@ export function OAuthController_callback() {
     );
 }
 
+// @typescript-eslint/no-unsafe-function-type
 export function OAuthController_credentials() {
     return applyDecorators(
         UseGuards(JwtGuard),

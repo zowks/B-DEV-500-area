@@ -19,11 +19,13 @@ export declare abstract class OAuthManager {
     abstract updateCredential(oauthCredential: OAuthCredential): Promise<void>;
     abstract revokeCredential(oauthCredential: OAuthCredential): Promise<void>;
 }
-export declare function OAuthController_oauthService(): <TFunction extends Function, Y>(target: TFunction | object, propertyKey?: string | symbol, descriptor?: TypedPropertyDescriptor<Y>) => void;
+export declare function OAuthController_getOAuthUrl(): <TFunction extends Function, Y>(target: TFunction | object, propertyKey?: string | symbol, descriptor?: TypedPropertyDescriptor<Y>) => void;
 export declare function OAuthController_callback(): <TFunction extends Function, Y>(target: TFunction | object, propertyKey?: string | symbol, descriptor?: TypedPropertyDescriptor<Y>) => void;
 export declare function OAuthController_credentials(): <TFunction extends Function, Y>(target: TFunction | object, propertyKey?: string | symbol, descriptor?: TypedPropertyDescriptor<Y>) => void;
 export declare abstract class OAuthController {
-    abstract getOAuthUrl(redirect_uri: string, scope: string, req: Request): {
+    static prepareOAuthSession(session: Request["session"], userId: User["id"], redirectUri: string): string;
+    static verifyState(session: SessionData, state: string): void;
+    abstract getOAuthUrl(req: Request, redirectUri: string, scope: string): {
         redirect_uri: string;
     };
     abstract callback(session: SessionData, code: string, state: string, res: Response): Promise<void>;
