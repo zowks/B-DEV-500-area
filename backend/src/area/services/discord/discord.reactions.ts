@@ -27,12 +27,7 @@ function sendEmbed(
 export const DISCORD_REACTIONS: { [name: string]: ReactionDescription } = {
     send_embed: {
         description: "Sends an embed message through a Discord webhook.",
-        fields: [
-            {
-                name: "webhook",
-                description: "The Discord webhook to execute."
-            }
-        ],
+        auth: "webhook",
         produce: sendEmbed
     }
 };

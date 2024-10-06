@@ -1,13 +1,13 @@
 import * as axios from "axios";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { OAuth, OAuthCredential } from "../../oauth/oauth.interface";
+import { OAuthManager, OAuthCredential } from "../../oauth/oauth.interface";
 import { OAuthCredential as PrismaOAuthCredential } from "@prisma/client";
 import { User } from "../../users/interfaces/user.interface";
 import { PrismaService } from "../../prisma/prisma.service";
 
 @Injectable()
-export class GoogleOAuthService implements OAuth {
+export class GoogleOAuthService implements OAuthManager {
     private readonly OAUTH_TOKEN_URL: string = `https://oauth2.googleapis.com/token`;
 
     private readonly OAUTH_REVOKE_URL: string = `https://oauth2.googleapis.com/revoke`;

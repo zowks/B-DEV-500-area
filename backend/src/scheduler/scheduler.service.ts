@@ -10,7 +10,7 @@ import {
 import { Cache } from "cache-manager";
 import { hash } from "crypto";
 import { transformer } from "../area/generic_transformer";
-import { OAuth, OAuthCredential } from "../oauth/oauth.interface";
+import { OAuthManager, OAuthCredential } from "../oauth/oauth.interface";
 import { AreaStatus } from "@prisma/client";
 import { AreaTask } from "../area/interfaces/area.interface";
 import { AreaService } from "../area/area.service";
@@ -40,7 +40,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
 
     private async getOAuthCredential(
         scopes: string[],
-        credentialsManager: OAuth
+        credentialsManager: OAuthManager
     ): Promise<OAuthCredential | null> {
         const credentials: OAuthCredential[] =
             await credentialsManager.loadCredentialsByScopes(scopes);

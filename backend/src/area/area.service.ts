@@ -7,7 +7,6 @@ import {
 } from "@nestjs/common";
 import { User } from "../users/interfaces/user.interface";
 import { CreateAreaDto } from "./dto/createArea.dto";
-import { OAuthService } from "../oauth/oauth.service";
 import { SchedulerService } from "../scheduler/scheduler.service";
 import { YOUTUBE_ACTIONS } from "./services/youtube/youtube.actions";
 import { YOUTUBE_REACTIONS } from "./services/youtube/youtube.reactions";
@@ -39,8 +38,7 @@ export class AreaService {
     constructor(
         private readonly prismaService: PrismaService,
         @Inject(forwardRef(() => SchedulerService))
-        private readonly schedulerService: SchedulerService,
-        private readonly oauthService: OAuthService
+        private readonly schedulerService: SchedulerService
     ) {}
 
     getAction(actionId: string): AreaAction {
@@ -219,25 +217,17 @@ export class AreaService {
         reactionAuth: AreaServiceAuthDto,
         reaction: AreaReaction
     ): boolean {
-        const actionRequirements = action.config.fields
-            .map(({ name }) => name)
-            .sort();
-        const reactionRequirements = reaction.config.fields
-            .map(({ name }) => name)
-            .sort();
-        const fieldsFilter = (key: string, o: AreaServiceAuthDto) =>
-            "id" !== (key as string) && null !== o[key] && undefined !== o[key];
-        const actionField = Object.keys(actionAuth).filter((key) =>
-            fieldsFilter(key, actionAuth)
+        const actionField = Object.keys(actionAuth).filter(
+            (key) => key === action.config.auth
         )[0] as keyof AreaServiceAuth;
-        const reactionField = Object.keys(reactionAuth).filter((key) =>
-            fieldsFilter(key, reactionAuth)
+
+        const reactionField = Object.keys(reactionAuth).filter(
+            (key) => key === reaction.config.auth
         )[0] as keyof AreaServiceAuth;
+
         return (
-            (0 === actionRequirements.length ||
-                actionRequirements.includes(actionField)) &&
-            (0 === reactionRequirements.length ||
-                reactionRequirements.includes(reactionField))
+            (undefined === action.config.auth || 1 === actionField.length) &&
+            (undefined === reaction.config.auth || 1 === reactionField.length)
         );
     }
 
