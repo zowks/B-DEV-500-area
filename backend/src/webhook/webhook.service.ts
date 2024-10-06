@@ -1,0 +1,89 @@
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { AreaStatus, Area as PrismaArea } from "@prisma/client";
+import { AreaService } from "src/area/area.service";
+import { transformer } from "src/area/generic_transformer";
+import { Area } from "src/area/interfaces/area.interface";
+import { PrismaService } from "src/prisma/prisma.service";
+import { SchedulerService } from "src/scheduler/scheduler.service";
+
+@Injectable()
+export class WebhookService {
+    constructor(
+        private readonly prismaService: PrismaService,
+        private readonly areaService: AreaService,
+        private readonly schedulerService: SchedulerService
+    ) {}
+
+    private prismaAreaToArea({
+        id,
+        name,
+        description,
+        actionId,
+        reactionId,
+        status
+    }: PrismaArea): Partial<Area> {
+        return {
+            id,
+            name,
+            description,
+            action_id: actionId,
+            reaction_id: reactionId,
+            status
+        };
+    }
+
+    async findUnique(areaId: string): Promise<Partial<Area>> {
+        const area = await this.prismaService.area.findUnique({
+            where: {
+                id: areaId,
+                actionAuth: {
+                    apiKey: null,
+                    oauth: null
+                }
+            },
+            select: {
+                id: true,
+                name: true,
+                description: true,
+                actionId: true,
+                reactionId: true,
+                status: true
+            }
+        });
+
+        if (null === area) throw new NotFoundException();
+
+        return area;
+    }
+
+    async execute(areaId: string, data: object) {
+        const area = await this.prismaService.area.findUnique({
+            where: {
+                id: areaId,
+                status: AreaStatus.RUNNING
+            },
+            select: {
+                id: true,
+                name: true,
+                description: true,
+                actionId: true,
+                actionAuthId: true,
+                reactionId: true,
+                reactionBody: true,
+                reactionAuthId: true,
+                delay: true,
+                status: true
+            }
+        });
+
+        if (null === area) throw new NotFoundException();
+
+        const task = await this.areaService.getAreaTask(area);
+
+        const transformedData = transformer(data, {
+            ...task.reactionBody
+        });
+
+        return await this.schedulerService.postData(task, transformedData);
+    }
+}

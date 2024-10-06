@@ -7,9 +7,37 @@ import {
     IsPositive,
     IsString,
     Matches,
-    MaxLength
+    MaxLength,
+    Validate,
+    ValidationArguments,
+    ValidatorConstraint,
+    ValidatorConstraintInterface
 } from "class-validator";
 import { AreaServiceAuthDto } from "./areaServiceAuth.dto";
+import { Optional } from "@nestjs/common";
+import { AreaStatus } from "@prisma/client";
+
+@ValidatorConstraint({ name: "CreateAreaDto", async: false })
+class CreateAreaDtoConstraint implements ValidatorConstraintInterface {
+    validate(_prop: object, clazz: ValidationArguments) {
+        const dto = clazz.object as CreateAreaDto;
+
+        if (
+            undefined !== dto.actionAuth.webhook &&
+            "local" !== dto.actionAuth.webhook
+        )
+            return false;
+
+        if (undefined === dto.actionAuth.webhook && null === dto.delay)
+            return false;
+
+        return true;
+    }
+
+    defaultMessage(args: ValidationArguments) {
+        return `Invalid value for ${args.property} : ${args.value}.`;
+    }
+}
 
 export class CreateAreaDto {
     @ApiProperty({
@@ -40,18 +68,22 @@ export class CreateAreaDto {
     @IsNotEmpty()
     readonly actionId: string;
 
-    @ApiPropertyOptional({
+    @ApiProperty({
         description:
-            "The action service authentication method used to receive data.",
+            "The action service authentication method used to receive data. The webhook value for this attribute MUST BE 'local'. 'oauth' is the ID of the OAuth credential stored in database.",
         type: AreaServiceAuthDto,
         examples: [
             { apiKey: "<API_KEY_HERE>" },
             { oauth: 1 },
-            { webhook: "https://example.com/webhookId/webhookSecret" }
+            { webhook: "local" }
         ]
     })
     @IsObject()
-    @IsOptional()
+    @Validate(CreateAreaDtoConstraint, {
+        message(validationArguments) {
+            return `Invalid value for ${validationArguments.property} : ${JSON.stringify(validationArguments.object)}`;
+        }
+    })
     readonly actionAuth: AreaServiceAuthDto;
 
     @ApiProperty({
@@ -78,26 +110,32 @@ export class CreateAreaDto {
     @IsObject()
     readonly reactionBody: object;
 
-    @ApiPropertyOptional({
+    @ApiProperty({
         description:
-            "The reaction service authentication method used to post data.",
+            "The reaction service authentication method used to post data. 'oauth' is the ID of the OAuth credential stored in database.",
         type: AreaServiceAuthDto,
         examples: [
             { apiKey: "<API_KEY_HERE>" },
             { oauth: 1 },
-            { webhook: "https://example.com/webhookId/webhookSecret" }
+            { webhook: "https://discord.com/webhooks/webhookId/webhookSecret" }
         ]
     })
     @IsObject()
-    @IsOptional()
+    @Validate(CreateAreaDtoConstraint, {
+        message(validationArguments) {
+            return `Invalid value for ${validationArguments.property} : ${JSON.stringify(validationArguments.object)}`;
+        }
+    })
     readonly reactionAuth: AreaServiceAuthDto;
 
-    @ApiProperty({
+    @ApiPropertyOptional({
         description:
-            "The delay in seconds to which the poll-based event should be triggered.",
+            "The delay in seconds to which the poll-based event should be triggered. If the 'actionAuth' is a webhook, this value is ignored.",
         example: 10
     })
     @IsNumber()
+    @Optional()
     @IsPositive()
+    @Validate(CreateAreaDtoConstraint)
     readonly delay: number;
 }

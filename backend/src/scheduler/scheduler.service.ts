@@ -104,10 +104,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         return await task.action.config.trigger(auth);
     }
 
-    private async postData(
-        task: AreaTask,
-        transformedData: object
-    ): Promise<boolean> {
+    async postData(task: AreaTask, transformedData: object): Promise<boolean> {
         let auth: AreaServiceAuth;
         try {
             auth = await this.getReactionServiceAuth(task);
@@ -143,8 +140,6 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
 
         const newCache = hash("sha512", JSON.stringify(data), "hex").toString();
 
-        console.log(oldCache, newCache);
-
         await this.cacheManager.set(
             task.name,
             newCache,
@@ -176,7 +171,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
     async startPolling(task: AreaTask) {
         await this.executeTask(task, true);
 
-        this.scheduleTask(task);
+        if (null === task.actionAuth.webhook) this.scheduleTask(task);
     }
 
     isRunning(taskName: string): boolean {

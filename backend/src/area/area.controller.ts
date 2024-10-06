@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Get,
     HttpCode,
     HttpStatus,
     Param,
@@ -29,6 +30,27 @@ import { UpdateAreaDto } from "./dto/updateArea.dto";
 @Controller("area")
 export class AreaController {
     constructor(private readonly areaService: AreaService) {}
+
+    @UseGuards(JwtGuard)
+    @Get("/")
+    @HttpCode(HttpStatus.CREATED)
+    @ApiBearerAuth("bearer")
+    @ApiExtraModels(Area)
+    @ApiCreatedResponse({
+        description: "Returns the list of all AREAs for the current user",
+        schema: {
+            $ref: getSchemaPath(Area)
+        },
+        isArray: true
+    })
+    @ApiUnauthorizedResponse({
+        description:
+            "This route is protected. The client must supply a Bearer token."
+    })
+    async findMany(@Req() req: Request): Promise<Area[]> {
+        const { id } = req.user as Pick<User, "id">;
+        return this.areaService.findMany(id);
+    }
 
     @UseGuards(JwtGuard)
     @Post("/")
