@@ -84,9 +84,7 @@ export class GoogleOAuthService extends OAuthDBService implements OAuthManager {
             access_token: response.access_token,
             refresh_token: response.refresh_token,
             scope: response.scope,
-            expires_at: new Date(
-                new Date().getTime() + response.expires_in * 1000
-            )
+            expires_at: new Date(Date.now() + response.expires_in * 1000)
         };
     }
 
@@ -120,9 +118,7 @@ export class GoogleOAuthService extends OAuthDBService implements OAuthManager {
             access_token: response.access_token,
             refresh_token: oauthCredential.refresh_token,
             scope: response.scope,
-            expires_at: new Date(
-                new Date().getTime() + response.expires_in * 1000
-            )
+            expires_at: new Date(Date.now() + response.expires_in * 1000)
         };
     }
 

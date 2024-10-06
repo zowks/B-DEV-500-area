@@ -20,9 +20,8 @@ import {
 } from "@nestjs/common";
 import { SessionData } from "express-session";
 import { Request, Response } from "express";
-import { getRandomValues } from "crypto";
 import { OAuthDBService } from "./oauthDb.service";
-import { hash } from "crypto";
+import { hash } from "node:crypto";
 
 export class OAuthCredential {
     @ApiProperty({ description: "The ID of the Google OAuth authorization." })
@@ -139,8 +138,10 @@ export abstract class OAuthController {
         userId: User["id"],
         redirectUri: string
     ): string {
+        session["created_at"] = Date.now();
         session["user_id"] = userId;
-        const state = hash("SHA-512", session["user_id"], "hex");
+        const stateData = `${session["user_id"]}:${session["created_at"]}`;
+        const state = hash("SHA-512", stateData, "hex");
 
         session["state"] = state;
         session["redirect_uri"] = redirectUri;
@@ -152,12 +153,13 @@ export abstract class OAuthController {
     }
 
     static verifyState(session: SessionData, state: string): void {
-        if (undefined === session["user_id"])
-            throw new ForbiddenException(
-                "Session expired."
-            );
-
-        const currentState = hash("SHA-512", session["user_id"], "hex");
+        if (
+            undefined === session["user_id"] ||
+            undefined === session["created_at"]
+        )
+            throw new ForbiddenException("Session expired.");
+        const stateData = `${session["user_id"]}:${session["created_at"]}`;
+        const currentState = hash("SHA-512", stateData, "hex");
         if (state !== currentState)
             throw new ForbiddenException(
                 "Invalid state. Possibly due to a CSRF attack attempt."
