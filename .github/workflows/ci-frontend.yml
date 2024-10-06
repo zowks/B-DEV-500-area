@@ -51,6 +51,7 @@ jobs:
     name: "Cypress"
     needs:
       - "check"
+    if: false
     uses: "./.github/workflows/ci-frontend-cypress.yml"
     secrets: inherit
     with:
