@@ -1,15 +1,18 @@
 import axios from "axios";
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { PrismaService } from "../../prisma/prisma.service";
+import { PrismaService } from "src/prisma/prisma.service";
 import { OAuthDBService } from "../oauthDb.service";
-import { OAuthManager, OAuthCredential } from "../../oauth/oauth.interface";
+import { OAuthCredential, OAuthManager } from "../oauth.interface";
 
 @Injectable()
-export class GoogleOAuthService extends OAuthDBService implements OAuthManager {
-    readonly OAUTH_TOKEN_URL: string = `https://oauth2.googleapis.com/token`;
+export class DiscordOAuthService
+    extends OAuthDBService
+    implements OAuthManager
+{
+    readonly OAUTH_TOKEN_URL: string = `https://discord.com/api/oauth2/token`;
 
-    readonly OAUTH_REVOKE_URL: string = `https://oauth2.googleapis.com/revoke`;
+    readonly OAUTH_REVOKE_URL: string = `https://discord.com/api/oauth2/token/revoke`;
 
     private readonly clientId: string;
 
@@ -28,12 +31,12 @@ export class GoogleOAuthService extends OAuthDBService implements OAuthManager {
         );
         const baseURL = `http://localhost:${restAPIPort}`;
 
-        this.clientId = this.configService.get<string>("GOOGLE_CLIENT_ID");
+        this.clientId = this.configService.get<string>("DISCORD_CLIENT_ID");
         this.clientSecret = this.configService.get<string>(
-            "GOOGLE_CLIENT_SECRET"
+            "DISCORD_CLIENT_SECRET"
         );
         this.redirectUri = encodeURIComponent(
-            `${baseURL}/oauth/google/callback`
+            `${baseURL}/oauth/discord/callback`
         );
     }
 
@@ -41,21 +44,19 @@ export class GoogleOAuthService extends OAuthDBService implements OAuthManager {
         const queries = {
             client_id: this.clientId,
             redirect_uri: this.redirectUri,
-            scope,
+            scope: scope,
             state,
-            response_type: "code",
-            access_type: "offline",
-            include_granted_scopes: true
+            response_type: "code"
         };
 
-        return `https://accounts.google.com/o/oauth2/v2/auth?${Object.entries(
-            queries
-        )
+        return `https://discord.com/oauth2/authorize?${Object.entries(queries)
             .map(([k, v]) => `${k}=${v}`)
             .join("&")}`;
     }
 
     async getCredentials(code: string): Promise<OAuthCredential> {
+        if (undefined === code)
+            throw new ForbiddenException("The scope were invalid.");
         const response = (
             await axios.post<{
                 access_token: string;
@@ -67,14 +68,16 @@ export class GoogleOAuthService extends OAuthDBService implements OAuthManager {
                 this.OAUTH_TOKEN_URL,
                 {
                     code,
-                    client_id: this.clientId,
-                    client_secret: this.clientSecret,
                     grant_type: "authorization_code",
                     redirect_uri: decodeURIComponent(this.redirectUri)
                 },
                 {
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    auth: {
+                        username: this.clientId,
+                        password: this.clientSecret
                     }
                 }
             )

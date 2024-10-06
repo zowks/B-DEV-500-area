@@ -1,6 +1,7 @@
 import { User } from "../users/interfaces/user.interface";
 import { SessionData } from "express-session";
 import { Request, Response } from "express";
+import { OAuthDBService } from "./oauthDb.service";
 export declare class OAuthCredential {
     readonly id?: number;
     readonly access_token: string;
@@ -8,15 +9,10 @@ export declare class OAuthCredential {
     readonly expires_at: Date;
     readonly scope: string;
 }
-export declare abstract class OAuthManager {
+export declare abstract class OAuthManager extends OAuthDBService {
     abstract getOAuthUrl(state: string, scope: string): string;
     abstract getCredentials(code: string): Promise<OAuthCredential>;
-    abstract saveCredential(userId: User["id"], credential: OAuthCredential): Promise<number>;
-    abstract loadCredentialsByUserId(userId: User["id"]): Promise<OAuthCredential[]>;
-    abstract loadCredentialsByScopes(scopes: string[]): Promise<OAuthCredential[]>;
-    abstract loadCredentialById(oauthCredentialId: OAuthCredential["id"]): Promise<OAuthCredential>;
     abstract refreshCredential(oauthCredential: OAuthCredential): Promise<OAuthCredential>;
-    abstract updateCredential(oauthCredential: OAuthCredential): Promise<void>;
     abstract revokeCredential(oauthCredential: OAuthCredential): Promise<void>;
 }
 export declare function OAuthController_getOAuthUrl(): MethodDecorator & ClassDecorator;
