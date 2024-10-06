@@ -14,6 +14,7 @@ const config = {
         adapter: adapter(),
 
         alias: {
+            "~/*": "./src/*",
             "$i18n/*": "./src/i18n/*",
             "@common/*": "../common/src/*"
         }

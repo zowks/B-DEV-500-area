@@ -27,6 +27,9 @@ const fr = {
     auth: {
         email: "Adresse mail",
         password: "Mot de passe",
+        firstname: "Prénom",
+        lastname: "Nom",
+        acceptTerms: "Accepter les conditions d'utilisation",
         signIn: {
             title: "Se connecter",
             subtitle: "Entrez vos identifiants ci-dessous pour vous connecter à votre compte",
@@ -57,7 +60,8 @@ const fr = {
             missingEmail: "L'adresse mail est requise",
             incorrectEmail: "L'adresse mail est incorrecte",
             missingPassword: "Le mot de passe est requis",
-            incorrectPassword: "Le mot de passe est incorrect (doit contenir au moins 8 caractères)"
+            incorrectPassword: "Le mot de passe est incorrect (doit contenir au moins 8 caractères)",
+            missingField: "Un ou plusieurs champs sont manquants"
         }
     }
 } satisfies Translation;

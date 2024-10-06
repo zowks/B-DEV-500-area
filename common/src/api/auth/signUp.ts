@@ -11,7 +11,6 @@ export default async function signUp(apiUrl: string, payload: RegisterDto): Prom
             body: JSON.stringify(payload)
         });
 
-        console.log(response);
         switch (response.status) {
         case 201:
             return { status: 201, success: true, body: {} };
