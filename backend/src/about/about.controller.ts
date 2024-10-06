@@ -1,7 +1,6 @@
 import { Controller, Get, Ip } from "@nestjs/common";
 import { AboutJson } from "./interfaces/about.interface";
-import discord from "../area/services/discord";
-import youtube from "../area/services/youtube";
+import * as services from "../area/services/index";
 import { ApiExtraModels, ApiOkResponse, getSchemaPath } from "@nestjs/swagger";
 
 @Controller()
@@ -16,6 +15,7 @@ export class AboutController {
         }
     })
     about(@Ip() host: string): AboutJson {
+        const _services = Object.values(services).map(({ default: d }) => d);
         const now = new Date().getTime();
         return {
             client: {
@@ -23,7 +23,7 @@ export class AboutController {
             },
             server: {
                 current_time: now,
-                services: [discord, youtube]
+                services: _services
             }
         };
     }

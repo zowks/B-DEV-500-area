@@ -1,8 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import {
-    ActionField,
-    ReactionField
-} from "../../area/services/interfaces/service.interface";
+import { AreaServiceAuth } from "../../area/services/interfaces/service.interface";
 
 class AboutJsonClient {
     @ApiProperty({ description: "The host (IP address) of the client." })
@@ -20,12 +17,12 @@ class AboutJsonServerServiceAction {
     })
     readonly description: string;
 
-    @ApiProperty({
-        description: "The fields required to watch the action.",
-        type: ActionField,
-        isArray: true
+    @ApiPropertyOptional({
+        description: "The name of the field.",
+        type: String,
+        examples: ["apiKey", "oauth", "webhook"]
     })
-    readonly fields: ActionField[];
+    readonly auth?: keyof AreaServiceAuth;
 
     @ApiPropertyOptional({
         description:
@@ -48,12 +45,12 @@ class AboutJsonServerServiceReaction {
     })
     readonly description: string;
 
-    @ApiProperty({
-        description: "The fields required to execute the reaction.",
-        type: ReactionField,
-        isArray: true
+    @ApiPropertyOptional({
+        description: "The name of the field.",
+        type: String,
+        examples: ["apiKey", "oauth", "webhook"]
     })
-    readonly fields: ReactionField[];
+    readonly auth?: keyof AreaServiceAuth;
 
     @ApiPropertyOptional({
         description:

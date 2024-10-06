@@ -44,13 +44,7 @@ export const YOUTUBE_ACTIONS: { [name: string]: ActionDescription } = {
     on_liked_video: {
         description: "This event is triggered once a video has been liked.",
         oauthScopes: ["https://www.googleapis.com/auth/youtube.readonly"],
-        fields: [
-            {
-                name: "oauth",
-                description:
-                    "The OAuth credential ID used to get data from the YouTube API"
-            }
-        ],
+        auth: "oauth",
         trigger: onLikedVideo
     }
 };
