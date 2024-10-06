@@ -1,4 +1,4 @@
-import { VITE_API_URL } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 import { fail, redirect } from "@sveltejs/kit";
 import api from "@common/api/api";
 import type { Actions } from "./$types";
@@ -50,7 +50,7 @@ export const actions: Actions = {
         if (payload.error)
             return fail(400, payload);
 
-        const response = await api.auth.signUp(VITE_API_URL, payload);
+        const response = await api.auth.signUp(env.API_URL, payload);
 
         if (!response.success)
             return fail(
