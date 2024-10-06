@@ -79,7 +79,8 @@ export abstract class OAuthManager {
     abstract revokeCredential(oauthCredential: OAuthCredential): Promise<void>;
 }
 
-export function OAuthController_getOAuthUrl(): MethodDecorator & ClassDecorator {
+export function OAuthController_getOAuthUrl(): MethodDecorator &
+    ClassDecorator {
     return applyDecorators(
         UseGuards(JwtGuard),
         Get("/"),
@@ -124,7 +125,8 @@ export function OAuthController_callback(): MethodDecorator & ClassDecorator {
     );
 }
 
-export function OAuthController_credentials(): MethodDecorator & ClassDecorator {
+export function OAuthController_credentials(): MethodDecorator &
+    ClassDecorator {
     return applyDecorators(
         UseGuards(JwtGuard),
         Get("/credentials"),
