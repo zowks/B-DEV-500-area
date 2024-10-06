@@ -91,7 +91,7 @@ export class AreaYouTubeVideo {
     @ApiProperty({
         description: "The date to which the YouTube video was pulished."
     })
-    readonly published_at: Date;
+    readonly publishedAt: Date;
 
     @ApiProperty({ description: "The list of tags." })
     readonly tags: string[];

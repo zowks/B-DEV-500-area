@@ -38,9 +38,7 @@ export class AreaController {
     @ApiExtraModels(Area)
     @ApiCreatedResponse({
         description: "Returns the list of all AREAs for the current user",
-        schema: {
-            $ref: getSchemaPath(Area)
-        },
+        type: Area,
         isArray: true
     })
     @ApiUnauthorizedResponse({

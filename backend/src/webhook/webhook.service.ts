@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { AreaStatus, Area as PrismaArea } from "@prisma/client";
+import { AreaStatus } from "@prisma/client";
 import { AreaService } from "src/area/area.service";
 import { transformer } from "src/area/generic_transformer";
 import { Area } from "src/area/interfaces/area.interface";
@@ -13,24 +13,6 @@ export class WebhookService {
         private readonly areaService: AreaService,
         private readonly schedulerService: SchedulerService
     ) {}
-
-    private prismaAreaToArea({
-        id,
-        name,
-        description,
-        actionId,
-        reactionId,
-        status
-    }: PrismaArea): Partial<Area> {
-        return {
-            id,
-            name,
-            description,
-            action_id: actionId,
-            reaction_id: reactionId,
-            status
-        };
-    }
 
     async findUnique(areaId: string): Promise<Partial<Area>> {
         const area = await this.prismaService.area.findUnique({

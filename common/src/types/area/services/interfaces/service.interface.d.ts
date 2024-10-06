@@ -15,7 +15,7 @@ export interface AreaServiceAuth {
 }
 export interface ActionDescription {
     description: string;
-    oauthScopes: string[];
+    oauthScopes?: string[];
     fields: {
         name: keyof AreaServiceAuth;
         description: string;
@@ -24,7 +24,7 @@ export interface ActionDescription {
 }
 export interface ReactionDescription {
     description: string;
-    oauthScopes: string[];
+    oauthScopes?: string[];
     fields: {
         name: keyof AreaServiceAuth;
         description: string;

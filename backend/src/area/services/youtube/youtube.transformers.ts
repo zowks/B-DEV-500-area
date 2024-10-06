@@ -22,7 +22,7 @@ export function transformYouTubeVideoToArea(
         channelId: raw.snippet.channelId,
         likes: +raw.statistics.likeCount,
         views: +raw.statistics.viewCount,
-        published_at: new Date(raw.snippet.publishedAt),
+        publishedAt: new Date(raw.snippet.publishedAt),
         tags: raw.snippet.tags ?? [],
         thumbnail: (maxres ?? standard ?? high ?? medium ?? low).url
     };

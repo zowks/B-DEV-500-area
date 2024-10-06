@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
     ActionField,
     ReactionField
@@ -26,6 +26,15 @@ class AboutJsonServerServiceAction {
         isArray: true
     })
     readonly fields: ActionField[];
+
+    @ApiPropertyOptional({
+        description:
+            "The required OAuth scopes. Only set when the 'name' property is set to 'oauth'.",
+        type: String,
+        isArray: true,
+        examples: ["https://www.googleapis.com/auth/youtube.readonly"]
+    })
+    readonly oauthScopes?: string[];
 }
 
 class AboutJsonServerServiceReaction {
@@ -45,6 +54,15 @@ class AboutJsonServerServiceReaction {
         isArray: true
     })
     readonly fields: ReactionField[];
+
+    @ApiPropertyOptional({
+        description:
+            "The required OAuth scopes. Only set when the 'name' property is set to 'oauth'.",
+        type: String,
+        isArray: true,
+        examples: ["https://www.googleapis.com/auth/youtube.readonly"]
+    })
+    readonly oauthScopes?: string[];
 }
 
 class AboutJsonServerService {
