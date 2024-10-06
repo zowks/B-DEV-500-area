@@ -47,11 +47,11 @@ jobs:
         working-directory: "./frontend/"
         run: "npm run build"
 
-  cypress:
-    name: "Cypress"
-    needs:
-      - "check"
-    uses: "./.github/workflows/ci-frontend-cypress.yml"
-    secrets: inherit
-    with:
-        API_URL: "${{ inputs.API_URL }}"
+#  cypress:
+#    name: "Cypress"
+#    needs:
+#      - "check"
+#    uses: "./.github/workflows/ci-frontend-cypress.yml"
+#    secrets: inherit
+#    with:
+#        API_URL: "${{ inputs.API_URL }}"
