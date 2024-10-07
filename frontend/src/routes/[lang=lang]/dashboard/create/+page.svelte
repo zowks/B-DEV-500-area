@@ -56,7 +56,7 @@
                         method="POST"
                         use:enhance={async ({ formData }) => {
                             if (actions[action] && actions[action].oauthScopes)
-                                formData.set("scope", actions[action]?.oauthScopes?.join(" "));
+                                formData.set("scope", actions[action]?.oauthScopes?.join(" ") || "");
                             return async ({ result }) => await applyAction(result);
                         }}
                         action="?/oauth"
