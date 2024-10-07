@@ -4,9 +4,9 @@ import "~/src/i18n/i18n";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { type Theme, ThemeProvider } from "@react-navigation/native";
-import { SplashScreen, Stack } from "expo-router";
+import { SplashScreen, Stack, useRouter, usePathname } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import useMount from "react-use/lib/useMount";
 import { Platform } from "react-native";
 import { useTranslation } from "react-i18next";
@@ -38,6 +38,9 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
     const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
     const [isColorSchemeLoaded, setIsColorSchemeLoaded] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const router = useRouter();
+    const pathName = usePathname();
 
     const { i18n, t } = useTranslation();
 
@@ -50,6 +53,7 @@ export default function RootLayout() {
     useMount(() => {
         (async () => {
             const theme = await AsyncStorage.getItem("theme");
+            const token = await AsyncStorage.getItem("@access_token");
 
             if (Platform.OS === "web") {
                 // Adds the background color to the html element to prevent white background on overscroll.
@@ -71,10 +75,19 @@ export default function RootLayout() {
             }
             setAndroidNavigationBar(colorTheme);
             setIsColorSchemeLoaded(true);
+
+            if (token)
+                setIsAuthenticated(true);
         })().finally(() => {
             SplashScreen.hideAsync();
         });
     });
+
+    useEffect(() => {
+        if (isAuthenticated && pathName === "/login" || pathName === "/signup") {
+            router.replace("/dashboard");
+        }
+    }, [isAuthenticated, pathName, router]);
 
     if (!isColorSchemeLoaded) return null;
 
@@ -102,6 +115,12 @@ export default function RootLayout() {
                     name="(auth)/signup"
                     options={{
                         title: "Signup"
+                    }}
+                />
+                <Stack.Screen
+                    name="(tabs)/dashboard"
+                    options={{
+                        title: "Home"
                     }}
                 />
             </Stack>
