@@ -2,6 +2,7 @@ import signUp from "./auth/signUp";
 import signIn from "./auth/signIn";
 
 import me from "./users/me";
+import about from "./about/about";
 
 import getById from "./area/getById";
 
@@ -40,7 +41,8 @@ const api = {
     },
     area: {
         getById
-    }
+    },
+    about
 };
 
 export default api;
