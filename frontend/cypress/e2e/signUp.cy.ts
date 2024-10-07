@@ -1,4 +1,3 @@
-/* TODO: find why the test failed (why the email field is cleared) and fix it
 describe("authentication", () => {
     it("sign-up", function() {
         cy.visit(Cypress.env("CYPRESS_HOST"));
@@ -7,8 +6,11 @@ describe("authentication", () => {
         cy.get("a").contains("Sign up").click();
         cy.location("pathname", { timeout: 60000 }).should("include", "/auth/sign-up");
         cy.get("h1").contains("Sign up").should("be.visible");
-        cy.get("input#email").type("email@example.com"); // TODO: find why it's clear
+        cy.get("input#email").type(`email-${Date.now()}@example.com`);
+        cy.get("input#firstname").type("John");
+        cy.get("input#lastname").type("Doe");
         cy.get("input#password").type("password");
+        cy.contains("Accept terms and conditions").click();
         cy.get("button").contains("Sign up").click();
         cy.location("pathname", { timeout: 60000 }).should("include", "/auth/sign-in");
         cy.get("h1").contains("Sign in").should("be.visible");
@@ -19,4 +21,3 @@ describe("authentication", () => {
         cy.get("button").contains("Sign in").click();
     });
 });
-*/
