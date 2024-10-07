@@ -2,11 +2,14 @@ import signUp from "./auth/signUp";
 import signIn from "./auth/signIn";
 
 import me from "./users/me";
-import about from "./about/about";
 
 import getById from "./area/getById";
 import getAll from "./area/getAll";
 import patchById from "./area/patchById";
+
+import google from "./oauth/google";
+
+import about from "./about/about";
 
 
 type RequestResponseStatus<T> = {
@@ -45,6 +48,9 @@ const api = {
         getById,
         getAll,
         patchById
+    },
+    oauth: {
+        google
     },
     about
 };
