@@ -68,9 +68,8 @@ async function bootstrap() {
     );
     app.enableCors({
         origin: "*",
-        methods: "GET,HEAD,PATCH,POST,DELETE",
-        credentials: true,
-        allowedHeaders: "Content-Type, Authorization"
+        methods: "GET,HEAD,PATCH,POST,DELETE,OPTIONS",
+        credentials: true
     });
 
     const configService = app.get(ConfigService);
@@ -90,13 +89,12 @@ async function bootstrap() {
     app.use(
         session({
             secret: configService.getOrThrow("EXPRESS_SESSION_SECRET"),
-            resave: false,
-            saveUninitialized: false,
+            resave: true,
+            saveUninitialized: true,
             store: redisStore,
             cookie: {
                 secure: false, // Set true if using HTTPS
                 httpOnly: true,
-                sameSite: "none",
                 maxAge: 1000 * 60 * 10 // Session expiration time (e.g., 10 minutes)
             }
         })
