@@ -11,7 +11,7 @@ on:
         type: string
 
 env:
-  VITE_API_URL: "${{ inputs.API_URL }}"
+  API_URL: "${{ inputs.API_URL }}"
 
 permissions: read-all
 

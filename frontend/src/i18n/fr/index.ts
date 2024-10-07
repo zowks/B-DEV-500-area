@@ -63,6 +63,15 @@ const fr = {
             incorrectPassword: "Le mot de passe est incorrect (doit contenir au moins 8 caractères)",
             missingField: "Un ou plusieurs champs sont manquants"
         }
+    },
+    area: {
+        createArea: "Créer une AREA",
+        createAreaDescription: "Reliez une Action et une REAction pour créer une AREA",
+        combobox: {
+            select: "Sélectionner une {element}",
+            search: "Rechercher une {element}",
+            no: "Aucune {element} trouvée"
+        }
     }
 } satisfies Translation;
 

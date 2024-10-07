@@ -50,6 +50,7 @@
 	"dependencies": {
 		"bits-ui": "^0.21.16",
 		"clsx": "^2.1.1",
+		"cmdk-sv": "^0.0.18",
 		"lucide-svelte": "^0.446.0",
 		"mode-watcher": "^0.4.1",
 		"qrcode": "^1.5.4",

@@ -64,6 +64,15 @@ const en = {
             incorrectPassword: "Password is incorrect (must be at least 8 characters)",
             missingField: "One or more fields are missing"
         }
+    },
+    area: {
+        createArea: "Create an AREA",
+        createAreaDescription: "Link an Action and a REAction to create an AREA",
+        combobox: {
+            select: "Select an {element}",
+            search: "Search an {element}",
+            no: "No {element} found"
+        }
     }
 } satisfies BaseTranslation;
 
