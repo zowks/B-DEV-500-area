@@ -154,6 +154,7 @@ export abstract class OAuthController {
     }
 
     static verifyState(req: Request, state: string): void {
+        console.log(JSON.stringify(req.session));
         if (
             undefined === req.session["user_id"] ||
             undefined === req.session["created_at"]
