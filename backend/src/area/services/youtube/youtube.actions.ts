@@ -6,11 +6,14 @@ import {
 import { ForbiddenException } from "@nestjs/common";
 import {
     ActionDescription,
+    ActionResource,
     AreaServiceAuth
 } from "../interfaces/service.interface";
 import { transformYouTubeVideoToArea } from "./youtube.transformers";
 
-function onLikedVideo(auth: AreaServiceAuth): Promise<AreaYouTubeVideo> {
+function onLikedVideo(
+    auth: AreaServiceAuth
+): Promise<ActionResource> {
     const url = "https://www.googleapis.com/youtube/v3/videos";
     const config: AxiosRequestConfig = {
         params: {
@@ -28,7 +31,10 @@ function onLikedVideo(auth: AreaServiceAuth): Promise<AreaYouTubeVideo> {
             .then(({ data }) => {
                 if (1 !== data.items.length) return null;
                 const youtubeVideo = data.items[0];
-                return resolve(transformYouTubeVideoToArea(youtubeVideo));
+                return resolve({
+                    data: transformYouTubeVideoToArea(youtubeVideo),
+                    cacheValue: youtubeVideo.id
+                });
             })
             .catch((e) => {
                 if (403 === e.status)

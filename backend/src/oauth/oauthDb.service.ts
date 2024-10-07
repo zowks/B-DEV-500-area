@@ -94,11 +94,13 @@ export class OAuthDBService {
     }
 
     async loadCredentialById(
+        userId: User["id"],
         oauthCredentialId: OAuthCredential["id"]
     ): Promise<OAuthCredential> {
         const credential = await this.prismaService.oAuthCredential.findUnique({
             where: {
-                id: oauthCredentialId
+                id: oauthCredentialId,
+                userId
             },
             select: {
                 id: true,

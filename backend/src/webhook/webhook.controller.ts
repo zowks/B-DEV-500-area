@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { WebhookService } from "./webhook.service";
 import { Area } from "src/area/interfaces/area.interface";
+import { ActionResource } from "src/area/services/interfaces/service.interface";
 
 @ApiTags("Webhooks")
 @Controller("webhooks")
@@ -27,7 +28,10 @@ export class WebhookController {
     @ApiNotFoundResponse({
         description: "The webhook ID is invalid."
     })
-    execute(@Param("areaId") areaId: string, @Body() data: object) {
+    execute(
+        @Param("areaId") areaId: string,
+        @Body() data: ActionResource["data"]
+    ) {
         return this.webhookService.execute(areaId, data);
     }
 }

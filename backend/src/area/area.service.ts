@@ -230,7 +230,7 @@ export class AreaService {
         const actionField = Object.keys(actionAuth).filter(
             (key) => key === action.config.auth
         )[0] as keyof string;
-        console.log(actionField);
+
         const reactionField = Object.keys(reactionAuth).filter(
             (key) => key === reaction.config.auth
         )[0] as keyof string;
@@ -309,7 +309,7 @@ export class AreaService {
         });
         const action = this.getAction(area.actionId);
         const reaction = this.getReaction(area.reactionId);
-        console.log(updateAreaDto, area);
+
         if (
             !this.checkServiceAuthRequirements(
                 updateAreaDto.actionAuth ?? area.actionAuth,

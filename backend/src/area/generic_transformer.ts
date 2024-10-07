@@ -1,4 +1,6 @@
-export function transformer(input: object, output: object): object {
+import { ActionResource } from "./services/interfaces/service.interface";
+
+export function transformer(input: ActionResource["data"], output: object): object {
     const inputKeys = Object.keys(input);
     const outputKeys = Object.keys(output);
 
