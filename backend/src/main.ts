@@ -67,8 +67,7 @@ async function bootstrap() {
         })
     );
     app.enableCors({
-        origin: "*",
-        methods: "GET,HEAD,PATCH,POST,DELETE,OPTIONS",
+        origin: "http://localhost:5371 http://localhost:8081",
         credentials: true
     });
 
