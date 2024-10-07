@@ -4,9 +4,9 @@ import "~/src/i18n/i18n";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { type Theme, ThemeProvider } from "@react-navigation/native";
-import { SplashScreen, Stack } from "expo-router";
+import { SplashScreen, Stack, useRouter, usePathname, Slot } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import useMount from "react-use/lib/useMount";
 import { Platform } from "react-native";
 import { useTranslation } from "react-i18next";
@@ -15,6 +15,8 @@ import { useColorScheme } from "~/lib/useColorScheme";
 import { PortalHost } from "@rn-primitives/portal";
 import { ThemeToggle } from "~/components/ThemeToggle";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
+import { Button } from "~/components/ui/button";
+import { Text } from "~/components/ui/text";
 
 const LIGHT_THEME: Theme = {
     dark: false,
@@ -36,8 +38,16 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
     const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
     const [isColorSchemeLoaded, setIsColorSchemeLoaded] = useState(false);
+    const router = useRouter();
+    const pathName = usePathname();
 
-    const { t } = useTranslation();
+    const { i18n, t } = useTranslation();
+
+    const changeLanguage = useCallback(() =>   {
+        const newLanguage = i18n.language === "en" ? "fr" : "en";
+
+        i18n.changeLanguage(newLanguage).then(() => AsyncStorage.setItem("@language", newLanguage));
+    }, [i18n]);
 
     useMount(() => {
         (async () => {
@@ -68,19 +78,58 @@ export default function RootLayout() {
         });
     });
 
+    useEffect(() => {
+        const updateAuth = async () => {
+            const token = await AsyncStorage.getItem("@access_token");
+
+            if (isColorSchemeLoaded) {
+                if (token && (pathName === "/login" || pathName === "/signup")) {
+                    router.replace("/dashboard");
+                } else if (!token && pathName !== "/login" && pathName !== "/signup") {
+                    router.replace("/(auth)/login");
+                }
+            }
+        };
+
+        updateAuth();
+    }, [pathName, router, isColorSchemeLoaded]);
+
     if (!isColorSchemeLoaded) return null;
 
     return (
         <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
             <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-            <Stack>
+            <Stack screenOptions={{
+                headerLeft: () => (
+                    <Button
+                        className="m-2"
+                        variant="ghost"
+                        onPress={changeLanguage}
+                    >
+                        <Text>{t("language")}</Text>
+                    </Button>
+                ),
+                headerRight: () => <ThemeToggle />,
+            }}>
                 <Stack.Screen
-                    name="index"
+                    name="(auth)/login"
                     options={{
-                        title: t("Welcome to React"),
-                        headerRight: () => <ThemeToggle />
+                        title: t("login")
                     }}
                 />
+                <Stack.Screen
+                    name="(auth)/signup"
+                    options={{
+                        title: t("signup")
+                    }}
+                />
+                <Stack.Screen
+                    name="(tabs)/dashboard"
+                    options={{
+                        title: t("home")
+                    }}
+                />
+                <Slot />
             </Stack>
             <PortalHost />
         </ThemeProvider>

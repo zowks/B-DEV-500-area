@@ -25,10 +25,9 @@ export class GoogleOAuthController implements OAuthController {
     ) {
         const { id } = req.user as Pick<User, "id">;
         const state = OAuthController.prepareOAuthSession(req, id, redirectUri);
-        res.redirect(this.googleOAuthService.getOAuthUrl(state, scope));
-        // return {
-        //     redirect_uri: this.googleOAuthService.getOAuthUrl(state, scope)
-        // };
+        return {
+            redirect_uri: this.googleOAuthService.getOAuthUrl(state, scope)
+        };
     }
 
     @OAuthController_callback()

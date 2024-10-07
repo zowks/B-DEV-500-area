@@ -81,7 +81,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
     private async getReactionServiceAuth(
         task: AreaTask
     ): Promise<AreaServiceAuth> {
-        if (0 < task.reaction.config.oauthScopes.length) {
+        if (0 < task.reaction.config.oauthScopes?.length) {
             const credentialsManager =
                 this.oauthService.getOAuthCredentialsManager(
                     task.reaction.service
