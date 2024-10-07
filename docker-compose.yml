@@ -9,7 +9,7 @@ services:
     volumes:
       - area-postgres-volume:/var/lib/postgresql/data:rw
     ports:
-      - 5433:5432
+      - 5432:5432
     networks:
       - area_network
 
