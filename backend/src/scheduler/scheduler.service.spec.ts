@@ -1,6 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { SchedulerService } from "./scheduler.service";
 import { Cache, CACHE_MANAGER } from "@nestjs/cache-manager";
+import { AreaService } from "src/area/area.service";
+import { OAuthService } from "src/oauth/oauth.service";
 
 describe("SchedulerService", () => {
     let service: SchedulerService;
@@ -16,7 +18,9 @@ describe("SchedulerService", () => {
                         get: jest.fn(),
                         set: jest.fn()
                     }
-                }
+                },
+                { provide: AreaService, useValue: {} },
+                { provide: OAuthService, useValue: {} }
             ]
         }).compile();
 

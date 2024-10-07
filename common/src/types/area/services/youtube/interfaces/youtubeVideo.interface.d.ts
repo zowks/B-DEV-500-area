@@ -59,7 +59,7 @@ export declare class AreaYouTubeVideo {
     readonly channelId: string;
     readonly likes: number;
     readonly views: number;
-    readonly published_at: Date;
+    readonly publishedAt: Date;
     readonly tags: string[];
     readonly thumbnail: string;
 }

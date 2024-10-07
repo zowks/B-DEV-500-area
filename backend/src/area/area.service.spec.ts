@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { AreaService } from "./area.service";
 import { SchedulerService } from "src/scheduler/scheduler.service";
-import { OAuthService } from "src/oauth/oauth.service";
+import { PrismaService } from "src/prisma/prisma.service";
 
 describe("AreaService", () => {
     let service: AreaService;
@@ -10,8 +10,8 @@ describe("AreaService", () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 AreaService,
-                { provide: SchedulerService, useValue: {} },
-                { provide: OAuthService, useValue: {} }
+                { provide: PrismaService, useValue: {} },
+                { provide: SchedulerService, useValue: {} }
             ]
         }).compile();
 

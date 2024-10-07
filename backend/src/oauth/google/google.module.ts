@@ -1,11 +1,10 @@
 import { Module } from "@nestjs/common";
 import { GoogleOAuthService } from "./google.service";
-import { ConfigModule } from "@nestjs/config";
 import { PrismaModule } from "../../prisma/prisma.module";
 import { GoogleOAuthController } from "./google.controller";
 
 @Module({
-    imports: [ConfigModule, PrismaModule],
+    imports: [PrismaModule],
     providers: [GoogleOAuthService],
     exports: [GoogleOAuthService],
     controllers: [GoogleOAuthController]
