@@ -4,6 +4,14 @@ name: "AREA Mobile CI"
 
 on:
   workflow_call:
+    inputs:
+      API_URL:
+        description: "The API URL"
+        required: true
+        type: string
+
+env:
+  EXPO_PUBLIC_API_URL: "${{ inputs.API_URL }}"
 
 jobs:
   run-tests:

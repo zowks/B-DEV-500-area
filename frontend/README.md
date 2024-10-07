@@ -1,38 +1,31 @@
-# create-svelte
+# SvelteKit Frontend
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+## How to start in dev mode 🚀
 
-## Creating a project
+### Requirements:
+- **Node.js** & **npm** installed on your machine
+- Install the packages using `npm install`
+- Create a `.env` using the `.env.example` as a template
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
+When everything is ready, you can start the development server by running the following command:
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
-
-To create a production version of your app:
-
+## How to build the project 📦
 ```bash
 npm run build
 ```
+Then you can preview the production build with:
+```bash
+npm run preview
+```
 
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## Use the Linter 🧹
+```bash
+npm run lint
+```
+You can also fix the linting errors with:
+```bash
+npm run lint:fix
+```

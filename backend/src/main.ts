@@ -95,6 +95,7 @@ async function bootstrap() {
             cookie: {
                 secure: false, // Set true if using HTTPS
                 httpOnly: true,
+                sameSite: 'none',
                 maxAge: 1000 * 60 * 10 // Session expiration time (e.g., 10 minutes)
             }
         })
