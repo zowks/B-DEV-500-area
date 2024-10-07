@@ -58,7 +58,7 @@ export class AreaController {
     @ApiExtraModels(Area)
     @ApiParam({ name: "areaId", description: "The AREA ID." })
     @ApiCreatedResponse({
-        description: "Returns the list of all AREAs for the current user",
+        description: "Returns the action based on it's ID.",
         type: Area
     })
     @ApiUnauthorizedResponse({

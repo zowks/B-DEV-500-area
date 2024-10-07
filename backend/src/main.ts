@@ -53,7 +53,24 @@ async function bootstrap() {
 
     app.useGlobalPipes(new ValidationPipe());
 
-    app.use(helmet());
+    app.use(
+        helmet({
+            contentSecurityPolicy: {
+                directives: {
+                    defaultSrc: ["*"],
+                    scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+                    imgSrc: ["'self'", "data:", "blob:"],
+                    styleSrc: ["'self'", "'unsafe-inline'"],
+                    upgradeInsecureRequests: null
+                }
+            }
+        })
+    );
+    app.enableCors({
+        origin: "*",
+        methods: "GET,HEAD,PATCH,POST,DELETE,OPTIONS",
+        credentials: true
+    });
 
     const configService = app.get(ConfigService);
 
@@ -72,8 +89,8 @@ async function bootstrap() {
     app.use(
         session({
             secret: configService.getOrThrow("EXPRESS_SESSION_SECRET"),
-            resave: false,
-            saveUninitialized: false,
+            resave: true,
+            saveUninitialized: true,
             store: redisStore,
             cookie: {
                 secure: false, // Set true if using HTTPS
@@ -94,6 +111,9 @@ async function bootstrap() {
     };
     SwaggerModule.setup("/", app, document, swaggerConfig);
 
-    await app.listen(configService.get<number>("REST_API_PORT", 8080));
+    await app.listen(
+        configService.get<number>("REST_API_PORT", 8080),
+        "0.0.0.0"
+    );
 }
 bootstrap();
