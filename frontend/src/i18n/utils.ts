@@ -10,7 +10,7 @@ import { base } from "$app/paths";
  * @param cookies The cookies object.
  */
 export function setLocaleCookie(locale: string, cookies: Cookies) {
-    cookies.set("locale", locale, { path: "/", expires: new Date("9999-12-31") });
+    cookies.set("locale", locale, { path: "/", expires: new Date("9999-12-31"), secure: false });
 }
 
 /**
