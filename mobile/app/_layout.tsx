@@ -108,19 +108,19 @@ export default function RootLayout() {
                 <Stack.Screen
                     name="(auth)/login"
                     options={{
-                        title: "Login"
+                        title: t("login")
                     }}
                 />
                 <Stack.Screen
                     name="(auth)/signup"
                     options={{
-                        title: "Signup"
+                        title: t("signup")
                     }}
                 />
                 <Stack.Screen
                     name="(tabs)/dashboard"
                     options={{
-                        title: "Home"
+                        title: t("home")
                     }}
                 />
             </Stack>
