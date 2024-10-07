@@ -4,7 +4,7 @@ import "~/src/i18n/i18n";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { type Theme, ThemeProvider } from "@react-navigation/native";
-import { SplashScreen, Stack, useRouter, usePathname } from "expo-router";
+import { SplashScreen, Stack, useRouter, usePathname, Slot } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useCallback, useEffect } from "react";
 import useMount from "react-use/lib/useMount";
@@ -38,7 +38,6 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
     const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
     const [isColorSchemeLoaded, setIsColorSchemeLoaded] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const router = useRouter();
     const pathName = usePathname();
 
@@ -53,7 +52,6 @@ export default function RootLayout() {
     useMount(() => {
         (async () => {
             const theme = await AsyncStorage.getItem("theme");
-            const token = await AsyncStorage.getItem("@access_token");
 
             if (Platform.OS === "web") {
                 // Adds the background color to the html element to prevent white background on overscroll.
@@ -75,19 +73,26 @@ export default function RootLayout() {
             }
             setAndroidNavigationBar(colorTheme);
             setIsColorSchemeLoaded(true);
-
-            if (token)
-                setIsAuthenticated(true);
         })().finally(() => {
             SplashScreen.hideAsync();
         });
     });
 
     useEffect(() => {
-        if (isAuthenticated && pathName === "/login" || pathName === "/signup") {
-            router.replace("/dashboard");
-        }
-    }, [isAuthenticated, pathName, router]);
+        const updateAuth = async () => {
+            const token = await AsyncStorage.getItem("@access_token");
+
+            if (isColorSchemeLoaded) {
+                if (token && (pathName === "/login" || pathName === "/signup")) {
+                    router.replace("/dashboard");
+                } else if (!token && pathName !== "/login" && pathName !== "/signup") {
+                    router.replace("/(auth)/login");
+                }
+            }
+        };
+
+        updateAuth();
+    }, [pathName, router, isColorSchemeLoaded]);
 
     if (!isColorSchemeLoaded) return null;
 
@@ -97,6 +102,7 @@ export default function RootLayout() {
             <Stack screenOptions={{
                 headerLeft: () => (
                     <Button
+                        className="m-2"
                         variant="ghost"
                         onPress={changeLanguage}
                     >
@@ -123,6 +129,7 @@ export default function RootLayout() {
                         title: t("home")
                     }}
                 />
+                <Slot />
             </Stack>
             <PortalHost />
         </ThemeProvider>

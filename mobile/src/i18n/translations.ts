@@ -1,6 +1,7 @@
 const englishTranslations = {
     "login": "Log in",
     "signup": "Sign up",
+    "logout": "Log out",
     "password": "Password",
     "language": "En",
     "newUser": "Don't have an account ?",
@@ -34,6 +35,7 @@ const translations: Record<string, Translation> = {
         translation: {
             "login": "Se connecter",
             "signup": "Créer un compte",
+            "logout": "Se déconnecter",
             "password": "Mot de passe",
             "language": "Fr",
             "newUser": "Vous n'avez pas de compte ?",

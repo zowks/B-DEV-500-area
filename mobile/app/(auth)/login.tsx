@@ -29,7 +29,6 @@ export default function LoginPage() {
         };
         const res = await api.auth.signIn(process.env.EXPO_PUBLIC_API_URL as string, form);
 
-        console.log(res);
         if (!res.success) {
             setDisplayLoginError(true);
             switch (res.status) {
