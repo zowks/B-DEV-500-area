@@ -53,7 +53,19 @@ async function bootstrap() {
 
     app.useGlobalPipes(new ValidationPipe());
 
-    app.use(helmet());
+    app.use(
+        helmet({
+            contentSecurityPolicy: {
+                directives: {
+                    defaultSrc: ["*"],
+                    scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+                    imgSrc: ["'self'", "data:", "blob:"],
+                    styleSrc: ["'self'", "'unsafe-inline'"],
+                    upgradeInsecureRequests: null
+                }
+            }
+        })
+    );
 
     const configService = app.get(ConfigService);
 
@@ -94,6 +106,9 @@ async function bootstrap() {
     };
     SwaggerModule.setup("/", app, document, swaggerConfig);
 
-    await app.listen(configService.get<number>("REST_API_PORT", 8080));
+    await app.listen(
+        configService.get<number>("REST_API_PORT", 8080),
+        "0.0.0.0"
+    );
 }
 bootstrap();
