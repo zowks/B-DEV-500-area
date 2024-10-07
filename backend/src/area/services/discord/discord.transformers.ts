@@ -1,4 +1,4 @@
-import { AreaDiscordEmbed } from "./interfaces/discord_embed.interface";
+import { AreaDiscordEmbed } from "./interfaces/discordEmbed.interface";
 
 export function transformAreaDiscordEmbedToRaw(
     embed: AreaDiscordEmbed

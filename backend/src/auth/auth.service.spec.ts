@@ -17,66 +17,66 @@ const users = [
     {
         id: "30613b7a-11a4-4864-a05b-2d7854b00e6e",
         email: "Vivianne.Blanda@gmail.com",
-        hashed_password: "MygfvmlwZi3agN6X-hashed",
+        hashedPassword: "MygfvmlwZi3agN6X-hashed",
         firstname: "Vivianne",
         lastname: "Blanda",
-        is_admin: false
+        isAdmin: false
     },
     {
         id: "4efa9c4a-49da-432a-b806-b4d52b6fc765",
         email: "Enola.Sipes97@hotmail.com",
-        hashed_password: "Ti7E99bVxlXxmIiy-hashed",
+        hashedPassword: "Ti7E99bVxlXxmIiy-hashed",
         firstname: "Enola",
         lastname: "Sipes",
-        is_admin: false
+        isAdmin: false
     },
     {
         id: "6104ad42-14c9-4a6b-a12b-7562f49ab4d0",
         email: "Shayne_Dare@hotmail.com",
-        hashed_password: "liNBKOFz19SAcAeJ-hashed",
+        hashedPassword: "liNBKOFz19SAcAeJ-hashed",
         firstname: "Shayne",
         lastname: "Dare",
-        is_admin: false
+        isAdmin: false
     },
     {
         id: "dd9f2e0e-9eaf-442e-9c38-038af26ad2fc",
         email: "Gretchen.Emard46@gmail.com",
-        hashed_password: "d4NpYSZXtFkSmPsv-hashed",
+        hashedPassword: "d4NpYSZXtFkSmPsv-hashed",
         firstname: "Gretchen",
         lastname: "Emard",
-        is_admin: true
+        isAdmin: true
     },
     {
         id: "9553b48a-6983-4783-ab44-14411bd4ed57",
         email: "Orlo.Feest@hotmail.com",
-        hashed_password: "J5Vy6IrNLI9buRgS-hashed",
+        hashedPassword: "J5Vy6IrNLI9buRgS-hashed",
         firstname: "Orlo",
         lastname: "Feest",
-        is_admin: true
+        isAdmin: true
     },
     {
         id: "d234318f-8f9e-4a15-af3d-f752f7e04b27",
         email: "Zachary_Feil@gmail.com",
-        hashed_password: "FguCWpHgIzleQuhn-hashed",
+        hashedPassword: "FguCWpHgIzleQuhn-hashed",
         firstname: "Zachary",
         lastname: "Feil",
-        is_admin: true
+        isAdmin: true
     },
     {
         id: "43820a4e-77af-491f-84e3-94808395015b",
         email: "Mason_Runte@hotmail.com",
-        hashed_password: "RdaOvJff2uWAetfP-hashed",
+        hashedPassword: "RdaOvJff2uWAetfP-hashed",
         firstname: "Mason",
         lastname: "Runte",
-        is_admin: true
+        isAdmin: true
     },
     {
         id: "e72af15a-3d6b-4a04-8855-d06ced48e94b",
         email: "Ken_Kuhic@gmail.com",
-        hashed_password: "yWHGF97ljT5Kgx4X-hashed",
+        hashedPassword: "yWHGF97ljT5Kgx4X-hashed",
         firstname: "Ken",
         lastname: "Kuhic",
-        is_admin: true
+        isAdmin: true
     }
 ];
 
@@ -128,7 +128,7 @@ describe("AuthService", () => {
                 has_accepted_terms_and_conditions: true
             };
 
-            prismaService.users.create.mockResolvedValueOnce({
+            prismaService.user.create.mockResolvedValueOnce({
                 id: randomUUID()
             } as any);
 
@@ -137,10 +137,10 @@ describe("AuthService", () => {
                 registerDto.password
             );
 
-            expect(prismaService.users.create).toHaveBeenCalledWith({
+            expect(prismaService.user.create).toHaveBeenCalledWith({
                 data: {
                     email: registerDto.email,
-                    hashed_password: `${registerDto.password}-hashed`,
+                    hashedPassword: `${registerDto.password}-hashed`,
                     firstname: registerDto.firstname,
                     lastname: registerDto.lastname
                 },
@@ -154,13 +154,13 @@ describe("AuthService", () => {
             const user = users[0];
             const registerDto: RegisterDto = {
                 email: user.email,
-                password: user.hashed_password.replace(/\-hashed$/, ""),
+                password: user.hashedPassword.replace(/\-hashed$/, ""),
                 firstname: user.firstname,
                 lastname: user.lastname,
                 has_accepted_terms_and_conditions: true
             };
 
-            prismaService.users.create.mockResolvedValueOnce({
+            prismaService.user.create.mockResolvedValueOnce({
                 id: user.id
             } as any);
 
@@ -174,10 +174,10 @@ describe("AuthService", () => {
             expect(argon2Service.hashPassword).toHaveBeenCalledWith(
                 registerDto.password
             );
-            expect(prismaService.users.create).toHaveBeenCalledWith({
+            expect(prismaService.user.create).toHaveBeenCalledWith({
                 data: {
                     email: registerDto.email,
-                    hashed_password: `${registerDto.password}-hashed`,
+                    hashedPassword: `${registerDto.password}-hashed`,
                     firstname: registerDto.firstname,
                     lastname: registerDto.lastname
                 },
@@ -201,7 +201,7 @@ describe("AuthService", () => {
             }
 
             expect(argon2Service.hashPassword).not.toHaveBeenCalled();
-            expect(prismaService.users.create).not.toHaveBeenCalled();
+            expect(prismaService.user.create).not.toHaveBeenCalled();
         });
     });
 
@@ -210,28 +210,28 @@ describe("AuthService", () => {
             const user = users[0];
             const loginDto: LoginDto = {
                 email: user.email,
-                password: user.hashed_password.replace("-hashed", "")
+                password: user.hashedPassword.replace("-hashed", "")
             };
 
-            prismaService.users.findUnique.mockResolvedValueOnce(user);
+            prismaService.user.findUnique.mockResolvedValueOnce(user);
 
             expect(await authService.login(loginDto)).toStrictEqual({
                 id: expect.stringMatching(
                     /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/
                 )
             });
-            expect(prismaService.users.findUnique).toHaveBeenCalledWith({
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
                 where: {
                     email: loginDto.email
                 },
                 select: {
                     id: true,
-                    hashed_password: true
+                    hashedPassword: true
                 }
             });
 
             expect(argon2Service.verifyPassword).toHaveBeenCalledWith(
-                user.hashed_password,
+                user.hashedPassword,
                 loginDto.password
             );
         });
@@ -242,16 +242,16 @@ describe("AuthService", () => {
                 password: "password"
             };
 
-            prismaService.users.findUnique.mockResolvedValueOnce(null);
+            prismaService.user.findUnique.mockResolvedValueOnce(null);
 
             try {
                 await authService.login(loginDto);
             } catch (e) {
                 expect(e).toBeInstanceOf(ForbiddenException);
             }
-            expect(prismaService.users.findUnique).toHaveBeenCalledWith({
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
                 where: { email: loginDto.email },
-                select: { id: true, hashed_password: true }
+                select: { id: true, hashedPassword: true }
             });
             expect(argon2Service.verifyPassword).not.toHaveBeenCalled();
         });
@@ -262,9 +262,9 @@ describe("AuthService", () => {
                 email: user.email,
                 password: "invalid password"
             };
-            prismaService.users.findUnique.mockResolvedValueOnce({
+            prismaService.user.findUnique.mockResolvedValueOnce({
                 email: user.email,
-                hashed_password: user.hashed_password
+                hashedPassword: user.hashedPassword
             } as any);
 
             try {
@@ -272,12 +272,12 @@ describe("AuthService", () => {
             } catch (e) {
                 expect(e).toBeInstanceOf(ForbiddenException);
             }
-            expect(prismaService.users.findUnique).toHaveBeenCalledWith({
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
                 where: { email: loginDto.email },
-                select: { id: true, hashed_password: true }
+                select: { id: true, hashedPassword: true }
             });
             expect(argon2Service.verifyPassword).toHaveBeenCalledWith(
-                user.hashed_password,
+                user.hashedPassword,
                 loginDto.password
             );
         });

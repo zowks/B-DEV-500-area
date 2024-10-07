@@ -28,12 +28,12 @@ export class AuthService {
         );
 
         try {
-            const createdUser = await this.prismaService.users.create({
+            const createdUser = await this.prismaService.user.create({
                 data: {
                     email: registerDto.email,
                     firstname: registerDto.firstname,
                     lastname: registerDto.lastname,
-                    hashed_password: hashedPassword
+                    hashedPassword
                 },
                 select: {
                     id: true
@@ -52,20 +52,20 @@ export class AuthService {
     }
 
     async login(loginDto: LoginDto): Promise<string> {
-        const user = await this.prismaService.users.findUnique({
+        const user = await this.prismaService.user.findUnique({
             where: {
                 email: loginDto.email
             },
             select: {
                 id: true,
-                hashed_password: true
+                hashedPassword: true
             }
         });
 
         if (null === user) throw new ForbiddenException();
 
         const isPasswordValid = await this.argon2Service.verifyPassword(
-            user.hashed_password,
+            user.hashedPassword,
             loginDto.password
         );
         if (!isPasswordValid) throw new ForbiddenException();

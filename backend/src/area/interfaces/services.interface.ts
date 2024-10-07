@@ -1,5 +1,5 @@
-import { AreaDiscordEmbed } from "../services/discord/interfaces/discord_embed.interface";
-import { AreaYouTubeVideo } from "../services/youtube/interfaces/youtube_video.interface";
+import { AreaDiscordEmbed } from "../services/discord/interfaces/discordEmbed.interface";
+import { AreaYouTubeVideo } from "../services/youtube/interfaces/youtubeVideo.interface";
 
 export type ActionTrigger = (accessToken: string) => Promise<AreaYouTubeVideo>;
 
