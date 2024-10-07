@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { SessionData } from "express-session";
-import { Controller, Query, Req, Res, Session } from "@nestjs/common";
+import { Controller, Query, Req, Res } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { GoogleOAuthService } from "./google.service";
 import { User } from "../../users/interfaces/user.interface";
@@ -24,11 +23,7 @@ export class GoogleOAuthController implements OAuthController {
         @Query("scope") scope: string
     ) {
         const { id } = req.user as Pick<User, "id">;
-        const state = OAuthController.prepareOAuthSession(
-            req.session,
-            id,
-            redirectUri
-        );
+        const state = OAuthController.prepareOAuthSession(req, id, redirectUri);
         return {
             redirect_uri: this.googleOAuthService.getOAuthUrl(state, scope)
         };
@@ -36,23 +31,23 @@ export class GoogleOAuthController implements OAuthController {
 
     @OAuthController_callback()
     async callback(
-        @Session() session: SessionData,
+        @Req() req: Request,
         @Query("code") code: string,
         @Query("state") state: string,
         @Res() res: Response
     ) {
-        OAuthController.verifyState(session, state);
+        OAuthController.verifyState(req, state);
 
         const tokens = await this.googleOAuthService.getCredentials(code);
 
         await this.googleOAuthService.saveCredential(
-            session["user_id"],
+            req.session["user_id"],
             tokens,
             this.googleOAuthService.OAUTH_TOKEN_URL,
             this.googleOAuthService.OAUTH_REVOKE_URL
         );
 
-        return res.redirect(session["redirect_uri"] || "/");
+        return res.redirect(req.session["redirect_uri"] || "/");
     }
 
     @OAuthController_credentials()
