@@ -1,7 +1,5 @@
-import { Module } from "@nestjs/common";
+import { Module, OnModuleInit } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-
-import { AppController } from "./app.controller";
 
 import { PrismaModule } from "./prisma/prisma.module";
 import { AuthModule } from "./auth/auth.module";
@@ -17,12 +15,16 @@ import { OAuthModule } from "./oauth/oauth.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { SchedulerModule } from "./scheduler/scheduler.module";
 import { RedisOptions } from "./app.config";
+import { AboutModule } from "./about/about.module";
+import { PrismaService } from "./prisma/prisma.service";
+import { AreaService } from "./area/area.service";
+import { WebhookModule } from "./webhook/webhook.module";
+import { OAuthDBService } from "./oauth/oauthDb.service";
 
 @Module({
     imports: [
         CacheModule.registerAsync(RedisOptions),
         ConfigModule.forRoot({ isGlobal: true }),
-        ScheduleModule.forRoot(),
         AuthModule,
         Argon2Module,
         JwtModule,
@@ -30,9 +32,27 @@ import { RedisOptions } from "./app.config";
         UsersModule,
         OAuthModule,
         AreaModule,
-        SchedulerModule
+        ScheduleModule.forRoot(),
+        SchedulerModule,
+        AboutModule,
+        WebhookModule
     ],
-    providers: [JwtGuard],
-    controllers: [AppController]
+    providers: [JwtGuard, OAuthDBService],
+    controllers: []
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+    constructor(
+        private readonly prismaService: PrismaService,
+        private readonly areaService: AreaService
+    ) {}
+
+    async onModuleInit() {
+        const areas = await this.prismaService.area.findMany({
+            select: {
+                id: true
+            }
+        });
+
+        areas.forEach(({ id }) => this.areaService.schedule(id));
+    }
+}

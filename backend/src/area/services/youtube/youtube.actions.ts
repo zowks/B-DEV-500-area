@@ -2,12 +2,15 @@ import axios, { AxiosRequestConfig } from "axios";
 import {
     AreaYouTubeVideo,
     YouTubeVideoListResponse
-} from "./interfaces/youtube_video.interface";
+} from "./interfaces/youtubeVideo.interface";
 import { ForbiddenException } from "@nestjs/common";
-import { ActionDescription } from "../interfaces/service.interface";
+import {
+    ActionDescription,
+    AreaServiceAuth
+} from "../interfaces/service.interface";
 import { transformYouTubeVideoToArea } from "./youtube.transformers";
 
-function onLikedVideo(accessToken: string): Promise<AreaYouTubeVideo> {
+function onLikedVideo(auth: AreaServiceAuth): Promise<AreaYouTubeVideo> {
     const url = "https://www.googleapis.com/youtube/v3/videos";
     const config: AxiosRequestConfig = {
         params: {
@@ -16,7 +19,7 @@ function onLikedVideo(accessToken: string): Promise<AreaYouTubeVideo> {
             maxResults: 1
         },
         headers: {
-            Authorization: `Bearer ${accessToken}`
+            Authorization: `Bearer ${auth.oauth}`
         }
     };
     return new Promise((resolve, reject) => {
@@ -40,14 +43,8 @@ function onLikedVideo(accessToken: string): Promise<AreaYouTubeVideo> {
 export const YOUTUBE_ACTIONS: { [name: string]: ActionDescription } = {
     on_liked_video: {
         description: "This event is triggered once a video has been liked.",
-        params: [
-            {
-                name: "accessToken",
-                type: "string",
-                description:
-                    "The 'access_token' returned by the Google OAuth2.0 API."
-            }
-        ],
+        oauthScopes: ["https://www.googleapis.com/auth/youtube.readonly"],
+        auth: "oauth",
         trigger: onLikedVideo
     }
 };

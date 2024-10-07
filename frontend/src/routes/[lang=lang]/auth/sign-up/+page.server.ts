@@ -55,7 +55,7 @@ export const actions: Actions = {
         if (!response.success)
             return fail(
                 response.status,
-                { errorMessage: LL.error.api[ERROR_KEYS[response.status] || "unauthorized"]() }
+                { errorMessage: LL.error.api[ERROR_KEYS[response.status] || "unknown"]() }
             );
         return redirect(303, "sign-in");
     }

@@ -1,6 +1,6 @@
 import { hash, argon2id, verify } from "argon2";
 import { Injectable } from "@nestjs/common";
-import { randomBytes } from "crypto";
+import { randomBytes } from "node:crypto";
 
 /* https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#argon2id */
 const OWASP_CONFIGS = [
