@@ -230,15 +230,14 @@ export class AreaService {
     ): boolean {
         const actionField = Object.keys(actionAuth).filter(
             (key) => key === action.config.auth
-        )[0] as keyof AreaServiceAuth;
-
+        )[0] as keyof string;
+        console.log(actionField);
         const reactionField = Object.keys(reactionAuth).filter(
             (key) => key === reaction.config.auth
-        )[0] as keyof AreaServiceAuth;
-
+        )[0] as keyof string;
         return (
-            (undefined === action.config.auth || 1 === actionField.length) &&
-            (undefined === reaction.config.auth || 1 === reactionField.length)
+            (action.config.auth as string) === actionField &&
+            (reaction.config.auth as string) === reactionField
         );
     }
 
@@ -311,7 +310,7 @@ export class AreaService {
         });
         const action = this.getAction(area.actionId);
         const reaction = this.getReaction(area.reactionId);
-
+        console.log(updateAreaDto, area);
         if (
             !this.checkServiceAuthRequirements(
                 updateAreaDto.actionAuth ?? area.actionAuth,
