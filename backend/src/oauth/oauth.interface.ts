@@ -18,7 +18,6 @@ import {
     HttpStatus,
     UseGuards
 } from "@nestjs/common";
-import { SessionData } from "express-session";
 import { Request, Response } from "express";
 import { OAuthDBService } from "./oauthDb.service";
 import { hash } from "node:crypto";
