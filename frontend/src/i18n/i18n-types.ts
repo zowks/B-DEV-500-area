@@ -19,6 +19,32 @@ type RootTranslation = {
 		 * G​o​ ​t​o​ ​h​o​m​e​p​a​g​e
 		 */
 		goHome: string
+		api: {
+			/**
+			 * A​n​ ​u​n​k​n​o​w​n​ ​e​r​r​o​r​ ​o​c​c​u​r​r​e​d
+			 */
+			unknown: string
+			/**
+			 * Y​o​u​ ​a​r​e​ ​n​o​t​ ​a​u​t​h​o​r​i​z​e​d​ ​t​o​ ​p​e​r​f​o​r​m​ ​t​h​i​s​ ​a​c​t​i​o​n
+			 */
+			unauthorized: string
+			/**
+			 * O​n​e​ ​o​r​ ​m​o​r​e​ ​f​i​e​l​d​s​ ​a​r​e​ ​i​n​c​o​r​r​e​c​t
+			 */
+			incorrectFields: string
+			/**
+			 * T​h​e​ ​e​m​a​i​l​ ​i​s​ ​a​l​r​e​a​d​y​ ​t​a​k​e​n
+			 */
+			emailAlreadyTaken: string
+			/**
+			 * Y​o​u​ ​m​u​s​t​ ​a​c​c​e​p​t​ ​t​h​e​ ​t​e​r​m​s​ ​a​n​d​ ​c​o​n​d​i​t​i​o​n​s
+			 */
+			termsDenied: string
+			/**
+			 * I​n​v​a​l​i​d​ ​c​r​e​d​e​n​t​i​a​l​s
+			 */
+			invalidCredentials: string
+		}
 	}
 	header: {
 		/**
@@ -65,6 +91,18 @@ type RootTranslation = {
 		 * P​a​s​s​w​o​r​d
 		 */
 		password: string
+		/**
+		 * F​i​r​s​t​n​a​m​e
+		 */
+		firstname: string
+		/**
+		 * L​a​s​t​n​a​m​e
+		 */
+		lastname: string
+		/**
+		 * A​c​c​e​p​t​ ​t​e​r​m​s​ ​a​n​d​ ​c​o​n​d​i​t​i​o​n​s
+		 */
+		acceptTerms: string
 		signIn: {
 			/**
 			 * S​i​g​n​ ​i​n
@@ -156,6 +194,10 @@ type RootTranslation = {
 			 * P​a​s​s​w​o​r​d​ ​i​s​ ​i​n​c​o​r​r​e​c​t​ ​(​m​u​s​t​ ​b​e​ ​a​t​ ​l​e​a​s​t​ ​8​ ​c​h​a​r​a​c​t​e​r​s​)
 			 */
 			incorrectPassword: string
+			/**
+			 * O​n​e​ ​o​r​ ​m​o​r​e​ ​f​i​e​l​d​s​ ​a​r​e​ ​m​i​s​s​i​n​g
+			 */
+			missingField: string
 		}
 	}
 }
@@ -166,6 +208,32 @@ export type TranslationFunctions = {
 		 * Go to homepage
 		 */
 		goHome: () => LocalizedString
+		api: {
+			/**
+			 * An unknown error occurred
+			 */
+			unknown: () => LocalizedString
+			/**
+			 * You are not authorized to perform this action
+			 */
+			unauthorized: () => LocalizedString
+			/**
+			 * One or more fields are incorrect
+			 */
+			incorrectFields: () => LocalizedString
+			/**
+			 * The email is already taken
+			 */
+			emailAlreadyTaken: () => LocalizedString
+			/**
+			 * You must accept the terms and conditions
+			 */
+			termsDenied: () => LocalizedString
+			/**
+			 * Invalid credentials
+			 */
+			invalidCredentials: () => LocalizedString
+		}
 	}
 	header: {
 		/**
@@ -212,6 +280,18 @@ export type TranslationFunctions = {
 		 * Password
 		 */
 		password: () => LocalizedString
+		/**
+		 * Firstname
+		 */
+		firstname: () => LocalizedString
+		/**
+		 * Lastname
+		 */
+		lastname: () => LocalizedString
+		/**
+		 * Accept terms and conditions
+		 */
+		acceptTerms: () => LocalizedString
 		signIn: {
 			/**
 			 * Sign in
@@ -303,6 +383,10 @@ export type TranslationFunctions = {
 			 * Password is incorrect (must be at least 8 characters)
 			 */
 			incorrectPassword: () => LocalizedString
+			/**
+			 * One or more fields are missing
+			 */
+			missingField: () => LocalizedString
 		}
 	}
 }

@@ -1,3 +1,6 @@
+import { AreaDiscordEmbed } from "../discord/interfaces/discord_embed.interface";
+import { AreaYouTubeVideo } from "../youtube/interfaces/youtube_video.interface";
+
 export interface DescriptionParam {
     name: string;
     type: string;
@@ -7,11 +10,11 @@ export interface DescriptionParam {
 export interface ActionDescription {
     description: string;
     params: DescriptionParam[];
-    trigger: (...args: any[]) => Promise<any>;
+    trigger: (accessToken: string) => Promise<AreaYouTubeVideo>;
 }
 
 export interface ReactionDescription {
     description: string;
     params: DescriptionParam[];
-    produce: (...args: any[]) => Promise<any>;
+    produce: (fields: object, data: AreaDiscordEmbed) => Promise<void>;
 }

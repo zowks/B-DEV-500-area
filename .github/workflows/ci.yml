@@ -29,6 +29,8 @@ jobs:
     uses: "./.github/workflows/ci-frontend.yml"
     permissions: read-all
     secrets: inherit
+    with:
+        API_URL: "https://api-area.zowks.fr"
 
   mobile:
     name: "Mobile"
