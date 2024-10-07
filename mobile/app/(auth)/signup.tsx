@@ -7,25 +7,71 @@ import { useRouter } from "expo-router";
 import { Input } from "~/components/ui/input";
 import { Checkbox } from "~/components/ui/checkbox";
 import React, { useState } from "react";
+import api from "../../common/src/api/api";
+import { RegisterDto } from "../../common/src/types/auth/dto/register.dto";
+import hashPassword from "~/lib/auth/hashPassword";
 
 export default function SignupPage() {
     const { t } = useTranslation();
     const router = useRouter();
 
-    const [name, setName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [tosValidated, setTosValidated] = useState(false);
+    const [formData, setFormData] = useState<RegisterDto>({
+        firstname: "",
+        lastname: "",
+        email: "",
+        password: "",
+        has_accepted_terms_and_conditions: false
+    });
+    const [displayRegisterError, setDisplayRegisterError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
-    const enableLoginButton = () => !name || !lastName || !email || !password || !tosValidated || password.length < 8;
+    const enablesignUpButton = () =>
+        !formData.firstname ||
+        !formData.lastname ||
+        !formData.email ||
+        !formData.password ||
+        !formData.has_accepted_terms_and_conditions ||
+        formData.password.length < 8;
 
-    const loginUser = () => {
-        console.log(name, lastName, email, password);
+    const signUpUser = async () => {
+        const formDataCopy = {
+            ...formData,
+            ["password"]: hashPassword(formData.password)
+        };
+        const res = await api.auth.signUp(process.env.EXPO_PUBLIC_API_URL as string, formDataCopy);
+
+        console.log(res);
+        if (!res.success) {
+            setDisplayRegisterError(true);
+            switch (res.status) {
+            case 400:
+                setErrorMessage(t("registerError.400"));
+                break;
+            case 409:
+                setErrorMessage(t("registerError.409"));
+                break;
+            case 422:
+                setErrorMessage(t("registerError.422"));
+                break;
+            case 500:
+                setErrorMessage(t("registerError.500"));
+                break;
+            }
+            return;
+        }
+        setDisplayRegisterError(false);
+        router.navigate("/(auth)/login");
     };
 
     const handleLoginPress = () => {
         router.navigate("/(auth)/login");
+    };
+
+    const handleChange = (field: keyof RegisterDto, value: string | boolean) => {
+        setFormData((prevState: RegisterDto) => ({
+            ...prevState,
+            [field]: value
+        }));
     };
 
     return (
@@ -52,7 +98,7 @@ export default function SignupPage() {
                                         clearButtonMode="always"
                                         inputMode="text"
                                         multiline={false}
-                                        onChange={(e) => setName(e.nativeEvent.text)}
+                                        onChange={(e) => handleChange("firstname", e.nativeEvent.text)}
                                     />
                                 </View>
                                 <View className="mb-4">
@@ -63,7 +109,7 @@ export default function SignupPage() {
                                         clearButtonMode="always"
                                         inputMode="text"
                                         multiline={false}
-                                        onChange={(e) => setLastName(e.nativeEvent.text)}
+                                        onChange={(e) => handleChange("lastname", e.nativeEvent.text)}
                                     />
                                 </View>
                                 <View className="mb-4">
@@ -75,7 +121,7 @@ export default function SignupPage() {
                                         inputMode="email"
                                         keyboardType="email-address"
                                         multiline={false}
-                                        onChange={(e) => setEmail(e.nativeEvent.text)}
+                                        onChange={(e) => handleChange("email", e.nativeEvent.text)}
                                     />
                                 </View>
                                 <View className="mb-4">
@@ -85,20 +131,25 @@ export default function SignupPage() {
                                         clearButtonMode="always"
                                         secureTextEntry={true}
                                         multiline={false}
-                                        onChange={(e) => setPassword(e.nativeEvent.text)}
+                                        onChange={(e) => handleChange("password", e.nativeEvent.text)}
                                     />
                                 </View>
                                 <View className="flex flex-row">
-                                    <Checkbox className="mr-2" checked={tosValidated} onCheckedChange={setTosValidated}></Checkbox>
+                                    <Checkbox
+                                        className="mr-2"
+                                        checked={formData.has_accepted_terms_and_conditions}
+                                        onCheckedChange={(value) => handleChange("has_accepted_terms_and_conditions", value)}
+                                    />
                                     <Text>{t("tos")}</Text>
                                 </View>
                             </View>
                         </CardContent>
-                        <CardFooter>
+                        <CardFooter className="flex flex-col">
+                            { displayRegisterError && <Text className="text-sm text-red-600"> {errorMessage} </Text> }
                             <Button
                                 className="w-full"
-                                disabled={enableLoginButton()}
-                                onPress={loginUser}
+                                disabled={enablesignUpButton()}
+                                onPress={signUpUser}
                             >
                                 <Text>
                                     {t("signup")}

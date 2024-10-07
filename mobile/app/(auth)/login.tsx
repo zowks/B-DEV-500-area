@@ -6,6 +6,10 @@ import { Button } from "~/components/ui/button";
 import { useRouter } from "expo-router";
 import { Input } from "~/components/ui/input";
 import React, { useState } from "react";
+import api from "~/common/src/api/api";
+import { LoginDto } from "~/common/src/types/auth/dto/login.dto";
+import hashPassword from "~/lib/auth/hashPassword";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginPage() {
     const { t } = useTranslation();
@@ -15,9 +19,35 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
 
     const enableLoginButton = () => !email || !password || password.length < 8;
+    const [displayRegisterError, setDisplayLoginError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
-    const loginUser = () => {
-        console.log(email, password);
+    const loginUser = async () => {
+        const form: LoginDto = {
+            email: email,
+            password: hashPassword(password)
+        };
+        const res = await api.auth.signIn(process.env.EXPO_PUBLIC_API_URL as string, form);
+
+        console.log(res);
+        if (!res.success) {
+            setDisplayLoginError(true);
+            switch (res.status) {
+            case 400:
+                setErrorMessage(t("loginError.400"));
+                break;
+            case 403:
+                setErrorMessage(t("loginError.403"));
+                break;
+            case 500:
+                setErrorMessage(t("loginError.500"));
+                break;
+            }
+            return;
+        }
+        setDisplayLoginError(false);
+        AsyncStorage.setItem("@access_token", res.body.access_token);
+        router.navigate("/(tabs)/dashboard");
     };
 
     const handleSignupPress = () => {
@@ -64,7 +94,8 @@ export default function LoginPage() {
                                 </View>
                             </View>
                         </CardContent>
-                        <CardFooter>
+                        <CardFooter className="flex flex-col">
+                            { displayRegisterError && <Text className="text-sm text-red-600"> {errorMessage} </Text> }
                             <Button
                                 className="w-full"
                                 disabled={enableLoginButton()}
