@@ -1,6 +1,10 @@
 import signUp from "./auth/signUp";
 import signIn from "./auth/signIn";
+
 import me from "./users/me";
+
+import getById from "./area/getById";
+
 
 type RequestResponseStatus<T> = {
     status: T;
@@ -33,6 +37,9 @@ const api = {
     },
     users: {
         me
+    },
+    area: {
+        getById
     }
 };
 
