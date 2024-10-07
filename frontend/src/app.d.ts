@@ -1,4 +1,5 @@
 import type { UserInfo } from "@common/types/users/interfaces/user.interface";
+import { AboutJson } from "@common/types/about/interfaces/about.interface";
 import type { Locales, TranslationFunctions } from "$i18n/i18n-types";
 
 // See https://kit.svelte.dev/docs/types#app
@@ -8,6 +9,8 @@ export type Client = UserInfo & {
     accessToken: string;
 };
 
+export type Services = AboutJson["server"]["services"];
+
 declare global {
     namespace App {
         // interface Error {}
@@ -15,6 +18,7 @@ declare global {
             locale: Locales;
             LL: TranslationFunctions;
             client: Client | null;
+            services: Services | null;
         }
 
         // interface PageData {}
