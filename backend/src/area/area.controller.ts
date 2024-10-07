@@ -14,6 +14,7 @@ import {
     ApiBearerAuth,
     ApiCreatedResponse,
     ApiExtraModels,
+    ApiParam,
     ApiTags,
     ApiUnauthorizedResponse,
     getSchemaPath
@@ -48,6 +49,28 @@ export class AreaController {
     async findMany(@Req() req: Request): Promise<Area[]> {
         const { id } = req.user as Pick<User, "id">;
         return this.areaService.findMany(id);
+    }
+
+    @UseGuards(JwtGuard)
+    @Get("/:areaId")
+    @HttpCode(HttpStatus.CREATED)
+    @ApiBearerAuth("bearer")
+    @ApiExtraModels(Area)
+    @ApiParam({ name: "areaId", description: "The AREA ID." })
+    @ApiCreatedResponse({
+        description: "Returns the list of all AREAs for the current user",
+        type: Area
+    })
+    @ApiUnauthorizedResponse({
+        description:
+            "This route is protected. The client must supply a Bearer token."
+    })
+    async findUnique(
+        @Req() req: Request,
+        @Param("areaId") areaId: Area["id"]
+    ): Promise<Area> {
+        const { id } = req.user as Pick<User, "id">;
+        return this.areaService.findUnique(id, areaId);
     }
 
     @UseGuards(JwtGuard)

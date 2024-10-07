@@ -128,13 +128,19 @@ export class AreaService {
         return areas.map(this.prismaAreaToArea);
     }
 
-    private async findUnique(
-        areaId: Area["id"]
-    ): Promise<Omit<PrismaArea, "userId">> {
+    private async _findUnique(
+        areaId: Area["id"],
+        userId?: User["id"]
+    ): Promise<PrismaArea> {
         const area = await this.prismaService.area.findUnique({
-            where: {
-                id: areaId
-            },
+            where: userId
+                ? {
+                      id: areaId,
+                      userId
+                  }
+                : {
+                      id: areaId
+                  },
             select: {
                 id: true,
                 name: true,
@@ -145,11 +151,16 @@ export class AreaService {
                 reactionBody: true,
                 reactionAuthId: true,
                 delay: true,
-                status: true
+                status: true,
+                userId: true
             }
         });
         if (null === area) throw new NotFoundException();
         return area;
+    }
+
+    async findUnique(userId: User["id"], areaId: Area["id"]): Promise<Area> {
+        return this.prismaAreaToArea(await this._findUnique(areaId, userId));
     }
 
     async getAreaTask(area: Omit<PrismaArea, "userId">) {
@@ -201,7 +212,7 @@ export class AreaService {
     }
 
     async schedule(areaId: PrismaArea["id"], _area: PrismaArea = null) {
-        const area = null !== _area ? _area : await this.findUnique(areaId);
+        const area = null !== _area ? _area : await this._findUnique(areaId);
         const task = await this.getAreaTask(area);
 
         if (null !== task) {
