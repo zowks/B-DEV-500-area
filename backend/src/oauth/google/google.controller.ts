@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { SessionData } from "express-session";
-import { Controller, Query, Req, Res, Session } from "@nestjs/common";
+import { Controller, Query, Req, Res } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { GoogleOAuthService } from "./google.service";
 import { User } from "../../users/interfaces/user.interface";
