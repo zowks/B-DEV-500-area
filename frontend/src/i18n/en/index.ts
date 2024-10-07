@@ -72,6 +72,9 @@ const en = {
             select: "Select an {element}",
             search: "Search an {element}",
             no: "No {element} found"
+        },
+        oauth: {
+            action: "Sign in with Google"
         }
     }
 } satisfies BaseTranslation;

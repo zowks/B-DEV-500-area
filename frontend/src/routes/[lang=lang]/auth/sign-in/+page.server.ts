@@ -39,7 +39,7 @@ export const actions: Actions = {
         if (!client)
             return signInFail(500, locals.LL);
         locals.client = client;
-        cookies.set("accessToken", response.body.access_token, { path: "/" });
+        cookies.set("accessToken", response.body.access_token, { path: "/", secure: false });
         return redirect(303, "/");
     }
 };

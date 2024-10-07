@@ -7,12 +7,13 @@ import * as i18nUtils from "$i18n/utils";
  *
  * @param locale The locale to load.
  * @param services The available services to make AREAs.
+ * @param client The client information.
  * @param cookies The cookies object.
  *
  * @returns The locale.
  */
-export const load: LayoutServerLoad = ({ locals: { locale, services }, cookies }) => {
+export const load: LayoutServerLoad = ({ locals: { locale, services, client }, cookies }) => {
     i18nUtils.setLocaleCookie(locale, cookies);
 
-    return { locale, services };
+    return { locale, services, client };
 };

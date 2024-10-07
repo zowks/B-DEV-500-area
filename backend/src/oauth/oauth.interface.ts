@@ -18,7 +18,6 @@ import {
     HttpStatus,
     UseGuards
 } from "@nestjs/common";
-import { SessionData } from "express-session";
 import { Request, Response } from "express";
 import { OAuthDBService } from "./oauthDb.service";
 import { hash } from "node:crypto";
@@ -134,31 +133,33 @@ export function OAuthController_credentials(): MethodDecorator &
 
 export abstract class OAuthController {
     static prepareOAuthSession(
-        session: Request["session"],
+        req: Request,
         userId: User["id"],
         redirectUri: string
     ): string {
-        session["created_at"] = Date.now();
-        session["user_id"] = userId;
-        const stateData = `${session["user_id"]}:${session["created_at"]}`;
+        req.session["created_at"] = Date.now();
+        req.session["user_id"] = userId;
+        const stateData = `${req.session["user_id"]}:${req.session["created_at"]}`;
         const state = hash("SHA-512", stateData, "hex");
 
-        session["state"] = state;
-        session["redirect_uri"] = redirectUri;
-        session.save((err) => {
+        req.session["state"] = state;
+        req.session["redirect_uri"] = redirectUri;
+        req.session.save((err) => {
             if (err) console.error(err);
         });
+        console.log(JSON.stringify(req.session));
 
         return state;
     }
 
-    static verifyState(session: SessionData, state: string): void {
+    static verifyState(req: Request, state: string): void {
+        console.log(JSON.stringify(req.session));
         if (
-            undefined === session["user_id"] ||
-            undefined === session["created_at"]
+            undefined === req.session["user_id"] ||
+            undefined === req.session["created_at"]
         )
             throw new ForbiddenException("Session expired.");
-        const stateData = `${session["user_id"]}:${session["created_at"]}`;
+        const stateData = `${req.session["user_id"]}:${req.session["created_at"]}`;
         const currentState = hash("SHA-512", stateData, "hex");
         if (state !== currentState)
             throw new ForbiddenException(
@@ -169,11 +170,12 @@ export abstract class OAuthController {
     abstract getOAuthUrl(
         req: Request,
         redirectUri: string,
-        scope: string
-    ): { redirect_uri: string };
+        scope: string,
+        res: Response
+    );
 
     abstract callback(
-        session: SessionData,
+        req: Request,
         code: string,
         state: string,
         res: Response

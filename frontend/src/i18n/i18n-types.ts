@@ -226,6 +226,12 @@ type RootTranslation = {
 			 */
 			no: RequiredParams<'element'>
 		}
+		oauth: {
+			/**
+			 * S​i​g​n​ ​i​n​ ​w​i​t​h​ ​G​o​o​g​l​e
+			 */
+			action: string
+		}
 	}
 }
 
@@ -438,6 +444,12 @@ export type TranslationFunctions = {
 			 * No {element} found
 			 */
 			no: (arg: { element: unknown }) => LocalizedString
+		}
+		oauth: {
+			/**
+			 * Sign in with Google
+			 */
+			action: () => LocalizedString
 		}
 	}
 }
