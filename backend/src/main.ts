@@ -66,6 +66,12 @@ async function bootstrap() {
             }
         })
     );
+    app.enableCors({
+        origin: "*",
+        methods: "GET,HEAD,PATCH,POST,DELETE",
+        credentials: true,
+        allowedHeaders: "Content-Type, Authorization"
+    });
 
     const configService = app.get(ConfigService);
 
