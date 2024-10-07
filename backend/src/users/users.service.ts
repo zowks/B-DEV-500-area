@@ -7,7 +7,7 @@ export class UsersService {
     constructor(private readonly prismaService: PrismaService) {}
 
     async getUser(id: string): Promise<UserInfo> {
-        const user = await this.prismaService.users.findUnique({
+        const user = await this.prismaService.user.findUnique({
             where: { id },
             select: { email: true, firstname: true, lastname: true }
         });
