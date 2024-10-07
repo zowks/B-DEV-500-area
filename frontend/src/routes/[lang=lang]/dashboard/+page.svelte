@@ -1,7 +1,8 @@
 <script lang="ts">
+    import { applyAction, enhance } from "$app/forms";
     import type { PageServerData } from "./$types";
     import type { Services } from "~/app";
-    import { buttonVariants } from "$lib/components/ui/button";
+    import { Button, buttonVariants } from "$lib/components/ui/button";
     import * as Dialog from "$lib/components/ui/dialog";
     import Combobox from "$lib/components/dashboard/area/Combobox/Combobox.svelte";
     import type { Choice } from "$lib/components/dashboard/area/Combobox/Combobox";
@@ -51,9 +52,22 @@
             <div class="grid gap-4 py-4">
                 <Combobox title="Action" choices={actionsList} value={action} setValue={(value) => action = value} />
                 <Combobox title="REAction" choices={reactionsList} value={reaction} setValue={(value) => reaction = value} />
-                {#if action}
+                {#if action && reaction}
                     {#if actions[action].auth === "oauth"}
-                        <p>OAuth</p>
+                        <form
+                            method="POST"
+                            use:enhance={async ({ formData }) => {
+                                if (actions[action].oauthScopes)
+                                    formData.set("scope", actions[action].oauthScopes.join(" "));
+                                return async ({ result }) => {await applyAction(result);};
+                            }}
+                            action="?/oauth"
+                        >
+                            <Button type="submit">
+                                <img src="/icons/services/google.png" alt="google service" class="mr-2 h-4 w-4" />
+                                {$LL.area.oauth.action()}
+                            </Button>
+                        </form>
                     {:else if actions[action].auth === "apiKey"}
                         <p>API Key</p>
                     {:else if actions[action].auth === "webhook"}

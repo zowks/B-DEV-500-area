@@ -71,6 +71,9 @@ const fr = {
             select: "Sélectionner une {element}",
             search: "Rechercher une {element}",
             no: "Aucune {element} trouvée"
+        },
+        oauth: {
+            action: "Connexion avec Google"
         }
     }
 } satisfies Translation;
