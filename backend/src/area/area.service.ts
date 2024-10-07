@@ -14,7 +14,6 @@ import { DISCORD_ACTIONS } from "./services/discord/discord.actions";
 import { DISCORD_REACTIONS } from "./services/discord/discord.reactions";
 import {
     ActionDescription,
-    AreaServiceAuth,
     ReactionDescription
 } from "./services/interfaces/service.interface";
 import { PrismaService } from "../prisma/prisma.service";
