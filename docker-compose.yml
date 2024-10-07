@@ -9,7 +9,7 @@ services:
     volumes:
       - area-postgres-volume:/var/lib/postgresql/data:rw
     ports:
-      - 5432:5432
+      - 5433:5432
     networks:
       - area_network
 
@@ -27,7 +27,7 @@ services:
       - area_network
     command: redis-server --save 60 1 --loglevel warning
 
-  backend:
+  server:
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -46,25 +46,38 @@ services:
     networks:
       - area_network
 
-  frontend:
+  client_mobile: # TODO
     build:
-      context: .
+      context: ./
+      dockerfile: ./mobile/Dockerfile
+    image: area-mobile:latest
+    volumes:
+      - area-client:/usr/app/mobile
+
+  client_web:
+    build:
+      context: ./
       dockerfile: ./frontend/Dockerfile
     depends_on:
-      - backend
+      - server
+#      - client_mobile
     image: area-frontend:latest
     environment:
-      - API_URL=http://backend:${REST_API_PORT}
+      - PORT=8081
+      - API_URL=http://server:${REST_API_PORT}
     env_file:
       - .env
     ports:
-      - 8081:3000
+      - 8081:8081
+#    volumes:
+#      - area-client:/usr/app/frontend
     networks:
       - area_network
 
 volumes:
   area-postgres-volume:
   area-redis-volume:
+  area-client:
 
 networks:
   area_network:
