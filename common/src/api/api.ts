@@ -5,6 +5,7 @@ import me from "./users/me";
 import about from "./about/about";
 
 import getById from "./area/getById";
+import getAll from "./area/getAll";
 
 
 type RequestResponseStatus<T> = {
@@ -40,7 +41,8 @@ const api = {
         me
     },
     area: {
-        getById
+        getById,
+        getAll
     },
     about
 };
