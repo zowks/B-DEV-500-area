@@ -6,7 +6,7 @@
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
     import { Button, buttonVariants } from "$lib/components/ui/button";
     import { Separator } from "$lib/components/ui/separator";
-    import { cn } from "$lib/utils.js";
+    import { cn } from "$lib/utils";
     import { invalidateAll } from "$app/navigation";
     import { browser } from "$app/environment";
     import { page } from "$app/stores";

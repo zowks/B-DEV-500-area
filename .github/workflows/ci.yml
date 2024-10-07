@@ -29,6 +29,8 @@ jobs:
     uses: "./.github/workflows/ci-frontend.yml"
     permissions: read-all
     secrets: inherit
+    with:
+        API_URL: "https://api-area.zowks.fr"
 
   mobile:
     name: "Mobile"
@@ -37,6 +39,8 @@ jobs:
     if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || startsWith(github.ref_name, 'mobile/') }}"
     uses: "./.github/workflows/ci-mobile.yml"
     secrets: inherit
+    with:
+        API_URL: "https://api-area.zowks.fr"
 
   mirror:
     name: "Mirror the refs to the Epitech repository"

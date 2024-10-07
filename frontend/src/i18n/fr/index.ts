@@ -2,7 +2,15 @@ import type { Translation } from "../i18n-types";
 
 const fr = {
     error: {
-        goHome: "Aller à la page d'accueil"
+        goHome: "Aller à la page d'accueil",
+        api: {
+            unknown: "Une erreur inconnue est survenue",
+            unauthorized: "Vous n'êtes pas autorisé à effectuer cette action",
+            incorrectFields: "Un ou plusieurs champs sont incorrects",
+            emailAlreadyTaken: "L'adresse mail est déjà utilisée",
+            termsDenied: "Vous devez accepter les conditions d'utilisation",
+            invalidCredentials: "Identifiants incorrects"
+        }
     },
     header: {
         selectLanguage: "Sélectionner la langue",
@@ -19,6 +27,9 @@ const fr = {
     auth: {
         email: "Adresse mail",
         password: "Mot de passe",
+        firstname: "Prénom",
+        lastname: "Nom",
+        acceptTerms: "Accepter les conditions d'utilisation",
         signIn: {
             title: "Se connecter",
             subtitle: "Entrez vos identifiants ci-dessous pour vous connecter à votre compte",
@@ -49,7 +60,20 @@ const fr = {
             missingEmail: "L'adresse mail est requise",
             incorrectEmail: "L'adresse mail est incorrecte",
             missingPassword: "Le mot de passe est requis",
-            incorrectPassword: "Le mot de passe est incorrect (doit contenir au moins 8 caractères)"
+            incorrectPassword: "Le mot de passe est incorrect (doit contenir au moins 8 caractères)",
+            missingField: "Un ou plusieurs champs sont manquants"
+        }
+    },
+    area: {
+        createArea: "Créer une AREA",
+        createAreaDescription: "Reliez une Action et une REAction pour créer une AREA",
+        combobox: {
+            select: "Sélectionner une {element}",
+            search: "Rechercher une {element}",
+            no: "Aucune {element} trouvée"
+        },
+        oauth: {
+            action: "Connexion avec Google"
         }
     }
 } satisfies Translation;

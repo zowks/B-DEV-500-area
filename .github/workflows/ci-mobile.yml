@@ -4,6 +4,14 @@ name: "AREA Mobile CI"
 
 on:
   workflow_call:
+    inputs:
+      API_URL:
+        description: "The API URL"
+        required: true
+        type: string
+
+env:
+  EXPO_PUBLIC_API_URL: "${{ inputs.API_URL }}"
 
 jobs:
   run-tests:
@@ -16,6 +24,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
+
+      - name: "Install common NPM packages" # TODO: find a way to use real common/
+        working-directory: "./mobile/common/"
+        run: "npm ci"
 
       - name: "Install NPM packages"
         working-directory: "./mobile/"
@@ -50,6 +62,10 @@ jobs:
           eas-cache: true
           packager: "npm"
           token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: "Install common NPM packages" # TODO: find a way to use real common/
+        working-directory: "./mobile/common/"
+        run: "npm ci"
 
       - name: "Install NPM packages"
         working-directory: "./mobile/"

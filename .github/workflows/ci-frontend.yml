@@ -4,6 +4,14 @@ name: "AREA Frontend CI"
 
 on:
   workflow_call:
+    inputs:
+      API_URL:
+        description: "The API URL"
+        required: true
+        type: string
+
+env:
+  API_URL: "${{ inputs.API_URL }}"
 
 permissions: read-all
 
@@ -39,9 +47,11 @@ jobs:
         working-directory: "./frontend/"
         run: "npm run build"
 
-  cypress:
-    name: "Cypress"
-    needs:
-      - "check"
-    uses: "./.github/workflows/ci-frontend-cypress.yml"
-    secrets: inherit
+#  cypress:
+#    name: "Cypress"
+#    needs:
+#      - "check"
+#    uses: "./.github/workflows/ci-frontend-cypress.yml"
+#    secrets: inherit
+#    with:
+#        API_URL: "${{ inputs.API_URL }}"

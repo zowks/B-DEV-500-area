@@ -3,6 +3,14 @@ import type { BaseTranslation } from "../i18n-types";
 const en = {
     error: {
         goHome: "Go to homepage",
+        api: {
+            unknown: "An unknown error occurred",
+            unauthorized: "You are not authorized to perform this action",
+            incorrectFields: "One or more fields are incorrect",
+            emailAlreadyTaken: "The email is already taken",
+            termsDenied: "You must accept the terms and conditions",
+            invalidCredentials: "Invalid credentials"
+        }
     },
     header: {
         selectLanguage: "Select language",
@@ -19,6 +27,9 @@ const en = {
     auth: {
         email: "Email",
         password: "Password",
+        firstname: "Firstname",
+        lastname: "Lastname",
+        acceptTerms: "Accept terms and conditions",
         signIn: {
             title: "Sign in",
             subtitle: "Enter your credentials below to login to your account",
@@ -50,7 +61,20 @@ const en = {
             missingEmail: "Email is required",
             incorrectEmail: "Email is incorrect",
             missingPassword: "Password is required",
-            incorrectPassword: "Password is incorrect (must be at least 8 characters)"
+            incorrectPassword: "Password is incorrect (must be at least 8 characters)",
+            missingField: "One or more fields are missing"
+        }
+    },
+    area: {
+        createArea: "Create an AREA",
+        createAreaDescription: "Link an Action and a REAction to create an AREA",
+        combobox: {
+            select: "Select an {element}",
+            search: "Search an {element}",
+            no: "No {element} found"
+        },
+        oauth: {
+            action: "Sign in with Google"
         }
     }
 } satisfies BaseTranslation;

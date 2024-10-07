@@ -1,6 +1,9 @@
+import { env } from "$env/dynamic/private";
 import { redirect, type Handle, type RequestEvent } from "@sveltejs/kit";
 import { initAcceptLanguageHeaderDetector } from "typesafe-i18n/detectors";
 import isPublicPath from "$lib/utils/isPublicPath";
+import getClient from "$lib/utils/getClient";
+import getServices from "$lib/utils/getServices";
 import type { Locales } from "$i18n/i18n-types.js";
 import { detectLocale, i18n, isLocale } from "$i18n/i18n-util";
 import { loadAllLocales } from "$i18n/i18n-util.sync";
@@ -38,20 +41,39 @@ function getPreferredLocale({ request, cookies }: RequestEvent): Locales {
  * @param resolve The resolve function to continue the request.
  */
 export const handle: Handle = async ({ event, resolve }) => {
+    if (event.url.pathname.startsWith("/oauth/google/callback")) {
+        console.log(event.cookies.get("connect.sid"));
+        const res = await fetch(env.API_URL + "/oauth/google/callback?" + event.url.search, {
+            headers: {
+                "cookie": `connect.sid=${event.cookies.get("connect.sid")}`
+            }
+        });
+        console.log(res.headers);
+    }
     const currentLocale = i18nUtils.getCurrentLocale(event);
 
     if (!currentLocale)
-        return redirect(307, `/${getPreferredLocale(event)}`);
+        return redirect(307, `/${getPreferredLocale(event)}/dashboard`);
 
     const locale = isLocale(currentLocale) ? (currentLocale as Locales) : getPreferredLocale(event);
     const accessToken = event.cookies.get("accessToken");
 
-    if (!isPublicPath(event.url.pathname, locale) && !accessToken)
-        return redirect(302, `/${locale}/auth/sign-in`);
+    if (!event.locals.client) {
+        const client = await getClient(accessToken);
+
+        if (!isPublicPath(event.url.pathname, locale) && !client)
+            return redirect(302, `/${locale}/auth/sign-in`);
+        event.locals.client = client;
+    }
+
+    if (event.locals.client && !event.locals.services)
+        event.locals.services = await getServices();
 
     event.locals.locale = locale;
     event.locals.LL = L[locale];
-    event.locals.accessToken = accessToken ?? null; // TODO: Make a request to the backend to validate the token
-
     return resolve(event, { transformPageChunk: ({ html }) => html.replace("%lang%", locale) });
+    // response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+    // response.headers.set("Access-Control-Allow-Origin", "*");
+    // response.headers.set("Access-Control-Allow-Headers", "*");
+    // return response;
 };
