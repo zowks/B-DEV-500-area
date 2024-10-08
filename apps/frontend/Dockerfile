@@ -1,8 +1,8 @@
 FROM node:latest AS build
 
 WORKDIR /tmp/app
-COPY frontend frontend
-COPY common common
+COPY apps/frontend apps/frontend
+COPY packages/common packages/common
 
 WORKDIR /tmp/app/frontend
 RUN npm i && npm run build

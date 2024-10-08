@@ -16,7 +16,7 @@ const config = {
         alias: {
             "~/*": "./src/*",
             "$i18n/*": "./src/i18n/*",
-            "@common/*": "../common/src/*"
+            "@common/*": "../../packages/common/src/*"
         }
     }
 };

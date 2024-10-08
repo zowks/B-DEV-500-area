@@ -20,27 +20,27 @@ jobs:
           node-version: "lts/*"
 
       - name: "Install NPM packages"
-        working-directory: "./backend/"
+        working-directory: "./apps/backend/"
         run: "npm ci"
 
       - name: "ESLint checker"
-        working-directory: "./backend/"
+        working-directory: "./apps/backend/"
         run: "npm run lint"
 
       - name: "Prettier checker"
-        working-directory: "./backend/"
+        working-directory: "./apps/backend/"
         run: "npm run format:check"
 
       - name: "Generating Prisma client types"
-        working-directory: "./backend/"
+        working-directory: "./apps/backend/"
         run: "npm run prisma:generate"
 
       - name: "Tests execution"
-        working-directory: "./backend/"
+        working-directory: "./apps/backend/"
         run: "npm run test"
 
       - name: "Building the project"
-        working-directory: "./backend/"
+        working-directory: "./apps/backend/"
         run: "npm run build"
 
   build-docker-image:
@@ -65,6 +65,6 @@ jobs:
         id: "push"
         uses: docker/build-push-action@master
         with:
-          context: ./backend
+          context: ./apps/backend
           push: true
           tags: ghcr.io/zowks/area-backend:latest

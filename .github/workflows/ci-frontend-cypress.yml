@@ -34,19 +34,19 @@ jobs:
       - name: Cypress install
         uses: cypress-io/github-action@v6
         with:
-          working-directory: "./frontend/"
+          working-directory: "./apps/frontend/"
           runTests: false
 
       - name: "Build the project"
         run: npm run build:ci
-        working-directory: "./frontend/"
+        working-directory: "./apps/frontend/"
 
       - name: Save build folder
         uses: actions/upload-artifact@v4
         with:
           name: build
           if-no-files-found: error
-          path: "frontend/build"
+          path: "apps/frontend/build"
 
   ui-chrome-tests:
     name: "UI Tests - Chrome"
@@ -72,12 +72,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build
-          path: "frontend/build"
+          path: "apps/frontend/build"
 
       - name: "UI Tests - Chrome"
         uses: cypress-io/github-action@v6
         with:
-          working-directory: "./frontend/"
+          working-directory: "./apps/frontend/"
           build: npx cypress info
           start: npm run prod
           wait-on: "${{ env.ORIGIN }}"
@@ -117,12 +117,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build
-          path: "frontend/build"
+          path: "apps/frontend/build"
 
       - name: "UI Tests - Chrome - Mobile"
         uses: cypress-io/github-action@v6
         with:
-          working-directory: "./frontend/"
+          working-directory: "./apps/frontend/"
           config: '{"e2e":{"viewportWidth":375,"viewportHeight":667}}'
           start: npm run prod
           wait-on: "${{ env.ORIGIN }}"
@@ -163,12 +163,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build
-          path: "frontend/build"
+          path: "apps/frontend/build"
 
       - name: "UI Tests - Firefox"
         uses: cypress-io/github-action@v6
         with:
-          working-directory: "./frontend/"
+          working-directory: "./apps/frontend/"
           start: npm run prod
           wait-on: "${{ env.ORIGIN }}"
           wait-on-timeout: 120
@@ -207,12 +207,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build
-          path: "frontend/build"
+          path: "apps/frontend/build"
 
       - name: "UI Tests - Firefox - Mobile"
         uses: cypress-io/github-action@v6
         with:
-          working-directory: "./frontend/"
+          working-directory: "./apps/frontend/"
           config: '{"e2e":{"viewportWidth":375,"viewportHeight":667}}'
           start: npm run prod
           wait-on: "${{ env.ORIGIN }}"
@@ -233,4 +233,4 @@ jobs:
         if: failure()
         with:
           name: "cypress-screenshots"
-          path: "frontend/cypress/screenshots"
+          path: "apps/frontend/cypress/screenshots"

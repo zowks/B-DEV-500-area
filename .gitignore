@@ -185,19 +185,19 @@ expo-env.d.ts
 /postgres
 /crypto/jwe_private_key.pem
 /crypto/jwe_public_key.pem
-/backend/ssl/*.pem
-/backend/postgres
-/backend/redis_data
+/apps/backend/ssl/*.pem
+/apps/backend/postgres
+/apps/backend/redis_data
 
 ### Frontend
 
-/frontend/static/apk/client.apk
-/frontend/cypress/downloads/
-/frontend/cypress/screenshots/
+/apps/frontend/static/apk/client.apk
+/apps/frontend/cypress/downloads/
+/apps/frontend/cypress/screenshots/
 
 ### Mobile
 
-/mobile/.gitignore
+/apps/mobile/.gitignore
 
 # Metro
 .metro-health-check*

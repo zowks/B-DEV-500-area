@@ -29,7 +29,7 @@ services:
 
   server:
     build:
-      context: ./backend
+      context: ./apps/backend
       dockerfile: Dockerfile
     depends_on:
       - postgres
@@ -49,7 +49,7 @@ services:
 #  client_mobile: # TODO
 #    build:
 #      context: ./
-#      dockerfile: ./mobile/Dockerfile
+#      dockerfile: ./apps/mobile/Dockerfile
 #    image: area-mobile:latest
 #    volumes:
 #      - area-client:/usr/app/mobile
@@ -57,7 +57,7 @@ services:
   client_web:
     build:
       context: ./
-      dockerfile: ./frontend/Dockerfile
+      dockerfile: ./apps/frontend/Dockerfile
     depends_on:
       - server
 #      - client_mobile
