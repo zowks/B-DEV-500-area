@@ -5,10 +5,12 @@ import {
     ApiNoContentResponse,
     ApiNotFoundResponse,
     ApiOkResponse,
+    ApiParam,
     ApiProperty,
     ApiQuery,
     ApiSeeOtherResponse,
     ApiUnauthorizedResponse,
+    ApiUnprocessableEntityResponse,
     getSchemaPath
 } from "@nestjs/swagger";
 import { User } from "../users/interfaces/user.interface";
@@ -141,6 +143,11 @@ export function OAuthController_revoke(): MethodDecorator & ClassDecorator {
     return applyDecorators(
         UseGuards(JwtGuard),
         Get("/revoke/:oauthCredentialId"),
+        ApiParam({
+            name: "oauthCredentialId",
+            description: "The ID of the credential to revoke.",
+            type: Number
+        }),
         ApiBearerAuth("bearer"),
         ApiNoContentResponse({
             description: "Revokes an oauth credential."
@@ -148,6 +155,12 @@ export function OAuthController_revoke(): MethodDecorator & ClassDecorator {
         ApiNotFoundResponse({
             description:
                 "The given credential ID was either not found or does not belong to the current user."
+        }),
+        ApiUnprocessableEntityResponse({
+            description:
+                "The given credential ID was found and belongs to the correct user, but it's OAuth provider is different from the current route provider.",
+            example:
+                "Unable to revoke the token. It may be from the wrong provider."
         }),
         ApiUnauthorizedResponse({
             description:

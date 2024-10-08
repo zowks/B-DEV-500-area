@@ -4,6 +4,7 @@ import {
     HttpRedirectResponse,
     HttpStatus,
     Param,
+    ParseIntPipe,
     Query,
     Req
 } from "@nestjs/common";
@@ -74,7 +75,8 @@ export class DiscordOAuthController implements OAuthController {
     @OAuthController_revoke()
     async revoke(
         @Req() req: Request,
-        @Param("oauthCredentialId") oauthCredentialId: OAuthCredential["id"]
+        @Param("oauthCredentialId", ParseIntPipe)
+        oauthCredentialId: OAuthCredential["id"]
     ): Promise<void> {
         const { id } = req.user as Pick<User, "id">;
         const oauthCredential = await this.oauthManager.loadCredentialById(
@@ -82,5 +84,6 @@ export class DiscordOAuthController implements OAuthController {
             oauthCredentialId
         );
         await this.oauthManager.revokeCredential(oauthCredential);
+        await this.oauthManager.deleteCredential(oauthCredential);
     }
 }

@@ -4,6 +4,7 @@ import {
     HttpRedirectResponse,
     HttpStatus,
     Param,
+    ParseIntPipe,
     Query,
     Req
 } from "@nestjs/common";
@@ -37,6 +38,8 @@ export class GoogleOAuthController implements OAuthController {
             redirectUri
         );
 
+        console.log(JSON.stringify(req.session));
+
         return {
             redirect_uri: this.oauthManager.getOAuthUrl(state, scope)
         };
@@ -59,12 +62,14 @@ export class GoogleOAuthController implements OAuthController {
             this.oauthManager.OAUTH_REVOKE_URL
         );
 
+        const redirectUri = req.session["redirect_uri"] || "/";
+
         req.session.destroy((err) => {
             if (err) console.error(err);
         });
 
         return {
-            url: req.session["redirect_uri"] || "/",
+            url: redirectUri,
             statusCode: HttpStatus.SEE_OTHER
         };
     }
@@ -82,7 +87,8 @@ export class GoogleOAuthController implements OAuthController {
     @OAuthController_revoke()
     async revoke(
         @Req() req: Request,
-        @Param("oauthCredentialId") oauthCredentialId: OAuthCredential["id"]
+        @Param("oauthCredentialId", ParseIntPipe)
+        oauthCredentialId: OAuthCredential["id"]
     ): Promise<void> {
         const { id } = req.user as Pick<User, "id">;
         const oauthCredential = await this.oauthManager.loadCredentialById(
@@ -90,5 +96,6 @@ export class GoogleOAuthController implements OAuthController {
             oauthCredentialId
         );
         await this.oauthManager.revokeCredential(oauthCredential);
+        await this.oauthManager.deleteCredential(oauthCredential);
     }
 }

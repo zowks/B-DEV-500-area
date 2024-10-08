@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable, UnprocessableEntityException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "src/prisma/prisma.service";
 import { OAuthDBService } from "../oauthDb.service";
@@ -126,16 +126,48 @@ export class DiscordOAuthService
     }
 
     async revokeCredential(oauthCredential: OAuthCredential): Promise<void> {
-        await axios.post(
-            this.OAUTH_REVOKE_URL,
-            {
-                token: oauthCredential.access_token
-            },
-            {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
+        try {
+            await axios.post(
+                this.OAUTH_REVOKE_URL,
+                {
+                    token: oauthCredential.access_token
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
                 }
+            );
+        } catch (e) {
+            const { error } = e.response.data;
+            console.error(error, this.OAUTH_REVOKE_URL, oauthCredential);
+            if ("invalid_client" === error) {
+                throw new UnprocessableEntityException(
+                    "Unable to revoke the token. It may be from the wrong provider."
+                );
             }
-        );
+        }
+
+        try {
+            await axios.post(
+                this.OAUTH_REVOKE_URL,
+                {
+                    token: oauthCredential.refresh_token
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
+                }
+            );
+        } catch (e) {
+            const { error } = e.response.data;
+            console.error(error, this.OAUTH_REVOKE_URL, oauthCredential);
+            if ("invalid_client" === error) {
+                throw new UnprocessableEntityException(
+                    "Unable to revoke the token. It may be from the wrong provider."
+                );
+            }
+        }
     }
 }

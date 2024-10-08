@@ -8,7 +8,6 @@ import {
     OnModuleInit
 } from "@nestjs/common";
 import { Cache } from "cache-manager";
-import { hash } from "crypto";
 import { transformer } from "../area/generic_transformer";
 import { OAuthManager, OAuthCredential } from "../oauth/oauth.interface";
 import { AreaStatus } from "@prisma/client";
@@ -116,25 +115,33 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         try {
             auth = await this.getReactionServiceAuth(task);
         } catch (e) {
-            console.error(e);
             return false;
         }
 
         try {
             await task.reaction.config.produce(auth, transformedData);
         } catch (e) {
-            console.error(e);
             return false;
         }
         return true;
     }
 
+    private logTask(task: AreaTask) {
+        console.log(`--- [AREA ${task.areaId} Log Start] ---`);
+        console.log(`Action : ${task.action.service}.${task.action.method}`);
+        console.log(
+            `Reaction : ${task.reaction.service}.${task.reaction.method}`
+        );
+        console.log(`Next tick: ${task.delay} seconds`);
+        console.log(`--- [AREA ${task.areaId} Log End] ---`);
+    }
+
     private async executeTask(task: AreaTask): Promise<boolean> {
+        this.logTask(task);
         let data: ActionResource;
         try {
             data = await this.getResource(task);
         } catch (e) {
-            console.error(e);
             return false;
         }
 
