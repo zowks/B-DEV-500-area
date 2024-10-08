@@ -172,7 +172,7 @@ The JWT strategy is implemented in ```jwt.strategy.ts```. It ensures that protec
 - **LoginDto** (```login.dto.ts```): Used for user login data validation.
 - **RegisterDto** (```register.dto.ts```): Used for user registration validation.
 
-![Redis cache schema](./img/REDIS%20Cache%20|%20Schema.png)
+![Redis cache schema](./img/REDIS%20Cache%20Schema.png)
 
 ---
 
@@ -208,7 +208,7 @@ OAuth functionality is provided through the ```oauth``` module, with specific su
 
 - ```oauth.interface.ts```: Defines common OAuth-related interfaces used across different services.
 
-![OAuth2.0 schema](./img/OAuth2.0%20%20Schema.png)
+![OAuth2.0 schema](./img/OAuth2.0%20Schema.png)
 
 ---
 
@@ -277,7 +277,7 @@ The backend uses Prisma as an ORM to interact with the database. The Prisma sche
 
 The ```schema.prisma``` file is where all the database tables, fields, and relationships are defined. Prisma then generates the corresponding TypeScript code based on this schema for use throughout the application.
 
-![Postgres schema](./img/Backend%20<->%20Postgres%20DB%20|%20Schema.png)
+![Postgres schema](./img/Backend%20-%20Postgres%20DB%20Schema.png)
 
 ---
 
