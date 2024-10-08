@@ -1,5 +1,13 @@
-import { Request, Response } from "express";
-import { Controller, Query, Req, Res } from "@nestjs/common";
+import { Request } from "express";
+import {
+    Controller,
+    HttpRedirectResponse,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Query,
+    Req
+} from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { DiscordOAuthService } from "./discord.service";
 import { User } from "../../users/interfaces/user.interface";
@@ -8,13 +16,14 @@ import {
     OAuthController_callback,
     OAuthController_credentials,
     OAuthController_getOAuthUrl,
+    OAuthController_revoke,
     OAuthCredential
 } from "../oauth.interface";
 
 @ApiTags("Discord OAuth")
 @Controller("oauth/discord")
 export class DiscordOAuthController implements OAuthController {
-    constructor(private readonly discordOAuthService: DiscordOAuthService) {}
+    constructor(private readonly oauthManager: DiscordOAuthService) {}
 
     @OAuthController_getOAuthUrl()
     getOAuthUrl(
@@ -23,9 +32,13 @@ export class DiscordOAuthController implements OAuthController {
         @Query("scope") scope: string
     ) {
         const { id } = req.user as Pick<User, "id">;
-        const state = OAuthController.prepareOAuthSession(req, id, redirectUri);
+        const state = OAuthController.prepareOAuthSession(
+            req.session,
+            id,
+            redirectUri
+        );
         return {
-            redirect_uri: this.discordOAuthService.getOAuthUrl(state, scope)
+            redirect_uri: this.oauthManager.getOAuthUrl(state, scope)
         };
     }
 
@@ -33,30 +46,44 @@ export class DiscordOAuthController implements OAuthController {
     async callback(
         @Req() req: Request,
         @Query("code") code: string,
-        @Query("state") state: string,
-        @Res() res: Response
-    ) {
-        OAuthController.verifyState(req, state);
+        @Query("state") state: string
+    ): Promise<HttpRedirectResponse> {
+        OAuthController.verifyState(req.session, state);
 
-        const tokens = await this.discordOAuthService.getCredentials(code);
+        const tokens = await this.oauthManager.getCredentials(code);
 
-        await this.discordOAuthService.saveCredential(
+        await this.oauthManager.saveCredential(
             req["user_id"],
             tokens,
-            this.discordOAuthService.OAUTH_TOKEN_URL,
-            this.discordOAuthService.OAUTH_REVOKE_URL
+            this.oauthManager.OAUTH_TOKEN_URL,
+            this.oauthManager.OAUTH_REVOKE_URL
         );
 
-        return res.redirect(req["redirect_uri"] || "/");
+        return { url: req["redirect_uri"], statusCode: HttpStatus.SEE_OTHER };
     }
 
     @OAuthController_credentials()
     async credentials(@Req() req: Request): Promise<OAuthCredential[]> {
         const { id } = req.user as Pick<User, "id">;
-        return await this.discordOAuthService.loadCredentialsByUserId(
+        return await this.oauthManager.loadCredentialsByUserId(
             id,
-            this.discordOAuthService.OAUTH_TOKEN_URL,
-            this.discordOAuthService.OAUTH_REVOKE_URL
+            this.oauthManager.OAUTH_TOKEN_URL,
+            this.oauthManager.OAUTH_REVOKE_URL
         );
+    }
+
+    @OAuthController_revoke()
+    async revoke(
+        @Req() req: Request,
+        @Param("oauthCredentialId", ParseIntPipe)
+        oauthCredentialId: OAuthCredential["id"]
+    ): Promise<void> {
+        const { id } = req.user as Pick<User, "id">;
+        const oauthCredential = await this.oauthManager.loadCredentialById(
+            id,
+            oauthCredentialId
+        );
+        await this.oauthManager.revokeCredential(oauthCredential);
+        await this.oauthManager.deleteCredential(oauthCredential);
     }
 }

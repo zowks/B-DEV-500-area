@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnprocessableEntityException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "../../prisma/prisma.service";
 import { OAuthDBService } from "../oauthDb.service";
@@ -123,16 +123,60 @@ export class GoogleOAuthService extends OAuthDBService implements OAuthManager {
     }
 
     async revokeCredential(oauthCredential: OAuthCredential): Promise<void> {
-        await axios.post(
-            this.OAUTH_REVOKE_URL,
-            {
-                token: oauthCredential.access_token
-            },
-            {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
+        try {
+            await axios.post(
+                this.OAUTH_REVOKE_URL,
+                {},
+                {
+                    params: {
+                        token: oauthCredential.access_token
+                    },
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
                 }
+            );
+        } catch (e) {
+            const { error, error_description } = e.response.data;
+            console.error(
+                error,
+                error_description,
+                this.OAUTH_REVOKE_URL,
+                oauthCredential
+            );
+            if ("invalid_token" !== error) {
+                throw new UnprocessableEntityException(
+                    "Unable to revoke the token. It may be from the wrong provider."
+                );
             }
-        );
+        }
+
+        try {
+            await axios.post(
+                this.OAUTH_REVOKE_URL,
+                {},
+                {
+                    params: {
+                        token: oauthCredential.refresh_token
+                    },
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
+                }
+            );
+        } catch (e) {
+            const { error, error_description } = e.response.data;
+            console.error(
+                error,
+                error_description,
+                this.OAUTH_REVOKE_URL,
+                oauthCredential
+            );
+            if ("invalid_token" !== error) {
+                throw new UnprocessableEntityException(
+                    "Unable to revoke the token. It may be from the wrong provider."
+                );
+            }
+        }
     }
 }

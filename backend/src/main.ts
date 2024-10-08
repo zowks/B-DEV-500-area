@@ -67,8 +67,7 @@ async function bootstrap() {
         })
     );
     app.enableCors({
-        origin: "*",
-        methods: "GET,HEAD,PATCH,POST,DELETE,OPTIONS",
+        origin: "http://localhost:5371 http://localhost:8081",
         credentials: true
     });
 
@@ -89,14 +88,15 @@ async function bootstrap() {
     app.use(
         session({
             secret: configService.getOrThrow("EXPRESS_SESSION_SECRET"),
-            resave: true,
-            saveUninitialized: true,
+            resave: false,
+            saveUninitialized: false,
             store: redisStore,
+            name: "area_backend",
             cookie: {
-                secure: false, // Set true if using HTTPS
+                secure: false,
                 httpOnly: true,
-                sameSite: "none",
-                maxAge: 1000 * 60 * 10 // Session expiration time (e.g., 10 minutes)
+                maxAge: 24 * 60 * 60 * 1000,
+                sameSite: "lax"
             }
         })
     );

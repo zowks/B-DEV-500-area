@@ -7,11 +7,16 @@ export interface AreaServiceAuth {
     readonly webhook?: string;
 }
 
+export interface ActionResource {
+    data: AreaYouTubeVideo;
+    cacheValue: string;
+}
+
 export interface ActionDescription {
     description: string;
     oauthScopes?: string[];
     auth?: keyof AreaServiceAuth;
-    trigger: (auth: AreaServiceAuth) => Promise<AreaYouTubeVideo>;
+    trigger: (auth: AreaServiceAuth) => Promise<ActionResource>;
 }
 
 export interface ReactionDescription {
