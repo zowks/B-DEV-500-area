@@ -9,7 +9,8 @@
     import AreaForm from "$lib/components/dashboard/area/AreaForm/AreaForm.svelte";
     import LL from "$i18n/i18n-svelte";
     import { ScrollArea } from "$lib/components/ui/scroll-area";
-    import { applyAction, enhance } from "$app/forms";
+    import { error } from "@sveltejs/kit";
+    import api from "@common/api/api";
 
     export let data: PageServerData;
 
@@ -38,6 +39,20 @@
 
     let action: string = "";
     let reaction: string = "";
+
+    const handleSubmit = async () => {
+        if (!data.client)
+            return error(401, "Unauthorized");
+
+        const response = await api.oauth.google(data.apiUrl, {
+            redirect_uri: window.location.href,
+            scope: actions[action]?.oauthScopes?.join(" ") || ""
+        }, data.client.accessToken);
+
+        if (!response.success)
+            return error(401, "Unauthorized");
+        window.location.href = response.body.redirect_uri;
+    };
 </script>
 
 <div class="p-4">
@@ -52,20 +67,10 @@
                 <div class="grid gap-4 py-4">
                     <Combobox title="Action" choices={actionsList} value={action} setValue={(value) => action = value} />
                     <Combobox title="REAction" choices={reactionsList} value={reaction} setValue={(value) => reaction = value} />
-                    <form
-                        method="POST"
-                        use:enhance={async ({ formData }) => {
-                            if (actions[action] && actions[action].oauthScopes)
-                                formData.set("scope", actions[action]?.oauthScopes?.join(" ") || "");
-                            return async ({ result }) => await applyAction(result);
-                        }}
-                        action="?/oauth"
-                    >
-                        <Button type="submit">
-                            <img src="/icons/services/google.png" alt="google service" class="mr-2 h-4 w-4" />
-                            {$LL.area.oauth.action()}
-                        </Button>
-                    </form>
+                    <Button on:click={handleSubmit}>
+                        <img src="/icons/services/google.png" alt="google service" class="mr-2 h-4 w-4" />
+                        {$LL.area.oauth.action()}
+                    </Button>
                     {#if action && reaction}
                         {#if actions[action].auth === "oauth"}
                             <p></p>

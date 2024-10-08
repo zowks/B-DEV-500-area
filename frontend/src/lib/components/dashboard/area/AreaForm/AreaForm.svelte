@@ -11,10 +11,10 @@
         description: string;
     };
 
-    // TODO: replace with backend data
+    // TODO: replace with backend data or at least move it to common
     const FIELDS: Record<string, Field[]> = {
         "youtube.on_liked_video": [
-            { name: "id", displayName: "ID", type: "text", description: "The identifiant of the video" },
+            { name: "id", displayName: "ID", type: "text", description: "The identifier of the video" },
             { name: "url", displayName: "URL", type: "text", description: "The URL of the video" },
             { name: "title", displayName: "Title", type: "text", description: "The title of the video" },
             {
@@ -33,7 +33,7 @@
                 name: "channelId",
                 displayName: "Channel ID",
                 type: "text",
-                description: "The channel identifiant from which the video comes from"
+                description: "The channel identifier from which the video comes from"
             },
             { name: "likes", displayName: "Likes", type: "text", description: "The number of likes on the video" },
             { name: "views", displayName: "Views", type: "text", description: "The number of view on the video" },

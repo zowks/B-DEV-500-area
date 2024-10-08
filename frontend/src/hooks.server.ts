@@ -1,4 +1,3 @@
-import { env } from "$env/dynamic/private";
 import { redirect, type Handle, type RequestEvent } from "@sveltejs/kit";
 import { initAcceptLanguageHeaderDetector } from "typesafe-i18n/detectors";
 import isPublicPath from "$lib/utils/isPublicPath";
@@ -41,15 +40,6 @@ function getPreferredLocale({ request, cookies }: RequestEvent): Locales {
  * @param resolve The resolve function to continue the request.
  */
 export const handle: Handle = async ({ event, resolve }) => {
-    if (event.url.pathname.startsWith("/oauth/google/callback")) {
-        console.log(event.cookies.get("connect.sid"));
-        const res = await fetch(env.API_URL + "/oauth/google/callback?" + event.url.search, {
-            headers: {
-                "cookie": `connect.sid=${event.cookies.get("connect.sid")}`
-            }
-        });
-        console.log(res.headers);
-    }
     const currentLocale = i18nUtils.getCurrentLocale(event);
 
     if (!currentLocale)
@@ -72,8 +62,4 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.locale = locale;
     event.locals.LL = L[locale];
     return resolve(event, { transformPageChunk: ({ html }) => html.replace("%lang%", locale) });
-    // response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
-    // response.headers.set("Access-Control-Allow-Origin", "*");
-    // response.headers.set("Access-Control-Allow-Headers", "*");
-    // return response;
 };

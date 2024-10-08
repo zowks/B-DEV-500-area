@@ -25,10 +25,6 @@ jobs:
         with:
           node-version: "lts/*"
 
-      - name: "Install common NPM packages" # TODO: find a way to use real common/
-        working-directory: "./mobile/common/"
-        run: "npm ci"
-
       - name: "Install NPM packages"
         working-directory: "./mobile/"
         run: "npm ci"
@@ -62,10 +58,6 @@ jobs:
           eas-cache: true
           packager: "npm"
           token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: "Install common NPM packages" # TODO: find a way to use real common/
-        working-directory: "./mobile/common/"
-        run: "npm ci"
 
       - name: "Install NPM packages"
         working-directory: "./mobile/"
