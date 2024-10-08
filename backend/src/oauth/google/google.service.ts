@@ -138,7 +138,12 @@ export class GoogleOAuthService extends OAuthDBService implements OAuthManager {
             );
         } catch (e) {
             const { error, error_description } = e.response.data;
-            console.error(error, error_description, this.OAUTH_REVOKE_URL, oauthCredential);
+            console.error(
+                error,
+                error_description,
+                this.OAUTH_REVOKE_URL,
+                oauthCredential
+            );
             if ("invalid_token" !== error) {
                 throw new UnprocessableEntityException(
                     "Unable to revoke the token. It may be from the wrong provider."
@@ -161,7 +166,12 @@ export class GoogleOAuthService extends OAuthDBService implements OAuthManager {
             );
         } catch (e) {
             const { error, error_description } = e.response.data;
-            console.error(error, error_description, this.OAUTH_REVOKE_URL, oauthCredential);
+            console.error(
+                error,
+                error_description,
+                this.OAUTH_REVOKE_URL,
+                oauthCredential
+            );
             if ("invalid_token" !== error) {
                 throw new UnprocessableEntityException(
                     "Unable to revoke the token. It may be from the wrong provider."

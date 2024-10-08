@@ -8,7 +8,7 @@ export interface AreaServiceAuth {
 }
 
 export interface ActionResource {
-    data: | AreaYouTubeVideo
+    data: AreaYouTubeVideo;
     cacheValue: string;
 }
 
@@ -16,9 +16,7 @@ export interface ActionDescription {
     description: string;
     oauthScopes?: string[];
     auth?: keyof AreaServiceAuth;
-    trigger: (
-        auth: AreaServiceAuth
-    ) => Promise<ActionResource>;
+    trigger: (auth: AreaServiceAuth) => Promise<ActionResource>;
 }
 
 export interface ReactionDescription {

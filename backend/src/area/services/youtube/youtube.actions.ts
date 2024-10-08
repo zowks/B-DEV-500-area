@@ -1,8 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import {
-    AreaYouTubeVideo,
-    YouTubeVideoListResponse
-} from "./interfaces/youtubeVideo.interface";
+import { YouTubeVideoListResponse } from "./interfaces/youtubeVideo.interface";
 import { ForbiddenException } from "@nestjs/common";
 import {
     ActionDescription,
@@ -11,9 +8,7 @@ import {
 } from "../interfaces/service.interface";
 import { transformYouTubeVideoToArea } from "./youtube.transformers";
 
-function onLikedVideo(
-    auth: AreaServiceAuth
-): Promise<ActionResource> {
+function onLikedVideo(auth: AreaServiceAuth): Promise<ActionResource> {
     const url = "https://www.googleapis.com/youtube/v3/videos";
     const config: AxiosRequestConfig = {
         params: {

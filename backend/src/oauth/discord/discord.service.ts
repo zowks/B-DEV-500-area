@@ -1,5 +1,9 @@
 import axios from "axios";
-import { ForbiddenException, Injectable, UnprocessableEntityException } from "@nestjs/common";
+import {
+    ForbiddenException,
+    Injectable,
+    UnprocessableEntityException
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "src/prisma/prisma.service";
 import { OAuthDBService } from "../oauthDb.service";

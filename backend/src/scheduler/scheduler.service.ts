@@ -114,13 +114,13 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         let auth: AreaServiceAuth;
         try {
             auth = await this.getReactionServiceAuth(task);
-        } catch (e) {
+        } catch {
             return false;
         }
 
         try {
             await task.reaction.config.produce(auth, transformedData);
-        } catch (e) {
+        } catch {
             return false;
         }
         return true;
@@ -141,7 +141,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         let data: ActionResource;
         try {
             data = await this.getResource(task);
-        } catch (e) {
+        } catch {
             return false;
         }
 
