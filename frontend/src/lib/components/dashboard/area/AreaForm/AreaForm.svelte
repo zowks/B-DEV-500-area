@@ -11,7 +11,7 @@
         description: string;
     };
 
-    // TODO: replace with backend data
+    // TODO: replace with backend data or at least move it to common
     const FIELDS: Record<string, Field[]> = {
         "youtube.on_liked_video": [
             { name: "id", displayName: "ID", type: "text", description: "The identifiant of the video" },
