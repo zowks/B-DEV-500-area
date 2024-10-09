@@ -117,4 +117,6 @@ export class AreaController {
     ): Promise<Area> {
         return await this.areaService.update(areaId, UpdateAreaDto);
     }
+
+    // TODO: ajouter une route pour supprimer entrièrement une AREA.
 }

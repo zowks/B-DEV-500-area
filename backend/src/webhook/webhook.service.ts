@@ -59,7 +59,8 @@ export class WebhookService {
             }
         });
 
-        if (null === area) throw new NotFoundException();
+        if (null === area || AreaStatus.STOPPED === area.status)
+            throw new NotFoundException();
 
         const task = await this.areaService.getAreaTask(area);
 
@@ -67,6 +68,7 @@ export class WebhookService {
             ...task.reactionBody
         });
 
+        // TODO: si false, metre le webhook en erreur.
         return await this.schedulerService.postData(task, transformedData);
     }
 }

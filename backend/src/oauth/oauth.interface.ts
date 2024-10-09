@@ -215,6 +215,8 @@ export abstract class OAuthController {
         state: string
     ): Promise<HttpRedirectResponse>;
 
+    abstract credentials(req: Request): Promise<OAuthCredential[]>;
+
     abstract revoke(
         req: Request,
         oauthCredentialId: OAuthCredential["id"]

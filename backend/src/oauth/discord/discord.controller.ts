@@ -59,7 +59,16 @@ export class DiscordOAuthController implements OAuthController {
             this.oauthManager.OAUTH_REVOKE_URL
         );
 
-        return { url: req["redirect_uri"], statusCode: HttpStatus.SEE_OTHER };
+        const redirectUri = req.session["redirect_uri"] || "/";
+
+        req.session.destroy((err) => {
+            if (err) console.error(err);
+        });
+
+        return {
+            url: redirectUri,
+            statusCode: HttpStatus.SEE_OTHER
+        };
     }
 
     @OAuthController_credentials()
@@ -84,6 +93,6 @@ export class DiscordOAuthController implements OAuthController {
             oauthCredentialId
         );
         await this.oauthManager.revokeCredential(oauthCredential);
-        await this.oauthManager.deleteCredential(oauthCredential);
+        await this.oauthManager.deleteCredential(id, oauthCredential);
     }
 }

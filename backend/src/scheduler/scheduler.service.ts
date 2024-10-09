@@ -40,6 +40,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         await this.cacheManager.reset();
     }
 
+    // TODO: récupérer l'identifiant de l'utilisateur propriétaire de la tâche.
     private async getOAuthCredential(
         scopes: string[],
         credentialsManager: OAuthManager
@@ -57,6 +58,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         return await credentialsManager.refreshCredential(credential);
     }
 
+    // TODO: refacto
     private async getActionServiceAuth(
         task: AreaTask
     ): Promise<AreaServiceAuth> {
