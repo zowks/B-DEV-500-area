@@ -55,7 +55,8 @@ export class WebhookService {
                 reactionBody: true,
                 reactionAuthId: true,
                 delay: true,
-                status: true
+                status: true,
+                userId: true
             }
         });
 
@@ -68,7 +69,13 @@ export class WebhookService {
             ...task.reactionBody
         });
 
-        // TODO: si false, metre le webhook en erreur.
-        return await this.schedulerService.postData(task, transformedData);
+        const success = await this.schedulerService.postData(
+            task,
+            transformedData
+        );
+        if (!success)
+            await this.areaService.update(area.userId, area.id, {
+                status: AreaStatus.ERROR
+            });
     }
 }

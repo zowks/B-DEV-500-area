@@ -18,6 +18,7 @@ import {
     ActionResource,
     AreaServiceAuth
 } from "../area/services/interfaces/service.interface";
+import { User } from "src/users/interfaces/user.interface";
 
 @Injectable()
 export class SchedulerService implements OnModuleInit, OnModuleDestroy {
@@ -40,13 +41,14 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         await this.cacheManager.reset();
     }
 
-    // TODO: récupérer l'identifiant de l'utilisateur propriétaire de la tâche.
     private async getOAuthCredential(
+        userId: User["id"],
         scopes: string[],
         credentialsManager: OAuthManager
     ): Promise<OAuthCredential | null> {
         const credentials: OAuthCredential[] =
             await credentialsManager.loadCredentialsByScopes(
+                userId,
                 scopes,
                 credentialsManager.OAUTH_TOKEN_URL,
                 credentialsManager.OAUTH_REVOKE_URL
@@ -58,7 +60,8 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         return await credentialsManager.refreshCredential(credential);
     }
 
-    // TODO: refacto
+    // TODO: refacto getActionServiceAuth <=> getReactionServiceAuth
+
     private async getActionServiceAuth(
         task: AreaTask
     ): Promise<AreaServiceAuth> {
@@ -68,6 +71,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
                     task.action.service
                 );
             const credential = await this.getOAuthCredential(
+                task.userId,
                 task.action.config.oauthScopes,
                 credentialsManager
             );
@@ -91,6 +95,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
                     task.reaction.service
                 );
             const credential = await this.getOAuthCredential(
+                task.userId,
                 task.reaction.config.oauthScopes,
                 credentialsManager
             );
@@ -173,7 +178,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
 
             if (!keepPolling) {
                 delete this.clockIds[task.name];
-                await this.areaService.update(task.areaId, {
+                await this.areaService.update(task.userId, task.areaId, {
                     status: AreaStatus.ERROR
                 });
             }
@@ -184,7 +189,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
     async startPolling(task: AreaTask) {
         const keepPolling = await this.executeTask(task);
         if (!keepPolling) {
-            await this.areaService.update(task.areaId, {
+            await this.areaService.update(task.userId, task.areaId, {
                 status: AreaStatus.ERROR
             });
             return;

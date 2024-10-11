@@ -17,7 +17,7 @@ import {
     ReactionDescription
 } from "./services/interfaces/service.interface";
 import { PrismaService } from "../prisma/prisma.service";
-import { Area, AreaAction, AreaReaction } from "./interfaces/area.interface";
+import { Area, AreaAction, AreaReaction, AreaTask } from "./interfaces/area.interface";
 import { AreaStatus, Area as PrismaArea } from "@prisma/client";
 import { UpdateAreaDto } from "./dto/updateArea.dto";
 import { AreaServiceAuthDto } from "./dto/areaServiceAuth.dto";
@@ -162,7 +162,7 @@ export class AreaService {
         return this.prismaAreaToArea(await this._findUnique(areaId, userId));
     }
 
-    async getAreaTask(area: Omit<PrismaArea, "userId">) {
+    async getAreaTask(area: PrismaArea): Promise<AreaTask> {
         const action = this.getAction(area.actionId);
         const reaction = this.getReaction(area.reactionId);
         const taskName = `${area.id}|${action.service}.${action.method}|${reaction.service}.${reaction.method}`;
@@ -206,7 +206,8 @@ export class AreaService {
             reaction,
             reactionBody: area.reactionBody as object,
             reactionAuth,
-            delay: area.delay
+            delay: area.delay,
+            userId: area.userId
         };
     }
 
@@ -216,7 +217,7 @@ export class AreaService {
 
         if (null !== task) {
             if (area.status === AreaStatus.RUNNING)
-                this.schedulerService.stopPolling(area.id);
+                this.schedulerService.stopPolling(task.name);
             this.schedulerService.startPolling(task);
         }
     }
@@ -293,12 +294,14 @@ export class AreaService {
     }
 
     async update(
+        userId: User["id"],
         areaId: Area["id"],
         updateAreaDto: UpdateAreaDto
     ): Promise<Area> {
         const area = await this.prismaService.area.findUnique({
             where: {
-                id: areaId
+                id: areaId,
+                userId
             },
             select: {
                 actionId: true,
@@ -357,5 +360,18 @@ export class AreaService {
         await this.schedule(areaId, updated);
 
         return this.prismaAreaToArea(updated);
+    }
+
+    async delete(userId: User["id"], areaId: Area["id"]) {
+        const area = await this._findUnique(areaId, userId);
+        const task = await this.getAreaTask(area);
+
+        this.schedulerService.stopPolling(task.name);
+        return this.prismaService.area.delete({
+            where: {
+                id: areaId,
+                userId
+            }
+        });
     }
 }

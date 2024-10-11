@@ -4,6 +4,7 @@ import {
     ReactionDescription
 } from "../services/interfaces/service.interface";
 import { ApiProperty } from "@nestjs/swagger";
+import { User } from "src/users/interfaces/user.interface";
 
 export interface AreaAction {
     service: string;
@@ -26,6 +27,7 @@ export interface AreaTask {
     reactionBody: object;
     reactionAuth: Omit<AreaServiceAuthentication, "id">;
     delay: number;
+    userId: User["id"];
 }
 
 export abstract class Area {
