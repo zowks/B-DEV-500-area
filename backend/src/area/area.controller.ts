@@ -15,6 +15,7 @@ import {
     ApiBearerAuth,
     ApiCreatedResponse,
     ApiExtraModels,
+    ApiNoContentResponse,
     ApiParam,
     ApiTags,
     ApiUnauthorizedResponse,
@@ -125,14 +126,18 @@ export class AreaController {
     @Delete("/:areaId")
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiBearerAuth("bearer")
-    @ApiCreatedResponse({
+    @ApiNoContentResponse({
         description: "Deletes the AREA"
     })
     @ApiUnauthorizedResponse({
         description:
             "This route is protected. The client must supply a Bearer token."
     })
-    async delete(@Req() req: Request, @Param(":areaId") areaId: string) {
+    @ApiParam({
+        name: "areaId",
+        description: "The ID of the AREA to delete."
+    })
+    async delete(@Req() req: Request, @Param("areaId") areaId: string) {
         const { id } = req.user as Pick<User, "id">;
         await this.areaService.delete(id, areaId);
     }

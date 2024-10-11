@@ -17,7 +17,12 @@ import {
     ReactionDescription
 } from "./services/interfaces/service.interface";
 import { PrismaService } from "../prisma/prisma.service";
-import { Area, AreaAction, AreaReaction, AreaTask } from "./interfaces/area.interface";
+import {
+    Area,
+    AreaAction,
+    AreaReaction,
+    AreaTask
+} from "./interfaces/area.interface";
 import { AreaStatus, Area as PrismaArea } from "@prisma/client";
 import { UpdateAreaDto } from "./dto/updateArea.dto";
 import { AreaServiceAuthDto } from "./dto/areaServiceAuth.dto";
@@ -167,14 +172,6 @@ export class AreaService {
         const reaction = this.getReaction(area.reactionId);
         const taskName = `${area.id}|${action.service}.${action.method}|${reaction.service}.${reaction.method}`;
 
-        if (
-            AreaStatus.ERROR === area.status ||
-            AreaStatus.STOPPED === area.status
-        ) {
-            this.schedulerService.stopPolling(taskName);
-            return null;
-        }
-
         const actionAuth =
             await this.prismaService.areaServiceAuthentication.findUnique({
                 where: {
@@ -215,11 +212,9 @@ export class AreaService {
         const area = null !== _area ? _area : await this._findUnique(areaId);
         const task = await this.getAreaTask(area);
 
-        if (null !== task) {
-            if (area.status === AreaStatus.RUNNING)
-                this.schedulerService.stopPolling(task.name);
+        this.schedulerService.stopPolling(task.name);
+        if (area.status === AreaStatus.RUNNING)
             this.schedulerService.startPolling(task);
-        }
     }
 
     private checkServiceAuthRequirements(
@@ -364,13 +359,18 @@ export class AreaService {
 
     async delete(userId: User["id"], areaId: Area["id"]) {
         const area = await this._findUnique(areaId, userId);
+        console.log(area);
         const task = await this.getAreaTask(area);
-
+        console.log(task);
         this.schedulerService.stopPolling(task.name);
         return this.prismaService.area.delete({
             where: {
                 id: areaId,
                 userId
+            },
+            include: {
+                actionAuth: true,
+                reactionAuth: true
             }
         });
     }

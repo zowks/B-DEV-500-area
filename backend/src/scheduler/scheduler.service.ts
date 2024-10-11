@@ -203,6 +203,8 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
     }
 
     stopPolling(taskName: string) {
+        if (!this.isRunning(taskName))
+            return
         clearTimeout(this.clockIds[taskName]);
         delete this.clockIds[taskName];
     }
