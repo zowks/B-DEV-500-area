@@ -28,8 +28,8 @@ export class DiscordOAuthController implements OAuthController {
     @OAuthController_getOAuthUrl()
     getOAuthUrl(
         @Req() req: Request,
-        @Query("redirect_uri") redirectUri: string,
-        @Query("scope") scope: string
+        @Query("scope") scope: string,
+        @Query("redirect_uri") redirectUri: string
     ) {
         const { id } = req.user as Pick<User, "id">;
         const state = OAuthController.prepareOAuthSession(

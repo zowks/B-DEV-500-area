@@ -87,17 +87,18 @@ export function OAuthController_getOAuthUrl(): MethodDecorator &
                 "This route is protected. The client must supply a Bearer token."
         }),
         ApiQuery({
-            name: "redirect_uri",
-            description:
-                "The URI to which the user will be redirected once the authentication flow is successful.",
-            example: "http://localhost:5173/dashboard"
-        }),
-        ApiQuery({
             name: "scope",
             description:
                 "The scopes required for the OAuth2.0 credential. It's a whitespace-joined string list.",
             example:
                 "https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtubepartner https://www.googleapis.com/auth/youtube.force-ssl"
+        }),
+        ApiQuery({
+            name: "redirect_uri",
+            description:
+                "The URI to which the user will be redirected once the authentication flow is successful.",
+            example: "http://localhost:5173/dashboard",
+            required: false
         })
     );
 }
@@ -205,8 +206,8 @@ export abstract class OAuthController {
 
     abstract getOAuthUrl(
         req: Request,
+        scope: string,
         redirectUri: string,
-        scope: string
     ): { redirect_uri: string };
 
     abstract callback(
