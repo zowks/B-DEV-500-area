@@ -29,7 +29,7 @@ export class GoogleOAuthController implements OAuthController {
     getOAuthUrl(
         @Req() req: Request,
         @Query("scope") scope: string,
-        @Query("redirect_uri") redirectUri: string,
+        @Query("redirect_uri") redirectUri: string
     ) {
         const { id } = req.user as Pick<User, "id">;
         const state = OAuthController.prepareOAuthSession(

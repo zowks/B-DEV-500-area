@@ -207,7 +207,7 @@ export abstract class OAuthController {
     abstract getOAuthUrl(
         req: Request,
         scope: string,
-        redirectUri: string,
+        redirectUri: string
     ): { redirect_uri: string };
 
     abstract callback(
