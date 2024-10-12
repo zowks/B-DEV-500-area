@@ -1,6 +1,6 @@
 FROM alpine:3.20.3 AS base
 
-LABEL org.opencontainers.image.source https://github.com/zowks/B-DEV-500-area
+LABEL org.opencontainers.image.source=https://github.com/zowks/B-DEV-500-area
 
 RUN apk update                 \
     && apk upgrade             \
@@ -13,30 +13,22 @@ WORKDIR /usr/app/
 
 COPY package.json package.json
 
-COPY package-lock.json package-lock.json
+COPY tsconfig.build.json tsconfig.build.json
 
-COPY apps/backend/src/ apps/backend/src/
+COPY tsconfig.json tsconfig.json
 
-COPY apps/backend/prisma/ apps/backend/prisma/
+COPY src/ src/
 
-COPY apps/backend/package.json apps/backend/package.json
-
-COPY apps/backend/tsconfig.build.json apps/backend/tsconfig.build.json
-
-COPY apps/backend/tsconfig.json apps/backend/tsconfig.json
+COPY prisma/ prisma/
 
 RUN npm install --save
 
 FROM setup AS build
-
-WORKDIR /usr/app/apps/backend
 
 RUN npm run prisma:generate
 
 RUN npm run build
 
 FROM build AS serve
-
-WORKDIR /usr/app/apps/backend
 
 ENTRYPOINT [ "npm", "run", "container" ]
