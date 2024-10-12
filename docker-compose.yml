@@ -9,7 +9,7 @@ services:
     volumes:
       - area-postgres-volume:/var/lib/postgresql/data:rw
     ports:
-      - 5432:5432
+      - "5432:5432"
     networks:
       - area_network
 
@@ -29,8 +29,8 @@ services:
 
   server:
     build:
-      context: ./apps/backend
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: ./apps/backend/Dockerfile
     depends_on:
       - postgres
       - redis
@@ -68,7 +68,7 @@ services:
     env_file:
       - .env
     ports:
-      - 8081:8081
+      - "8081:8081"
 #    volumes:
 #      - area-client:/usr/app/frontend
     networks:
