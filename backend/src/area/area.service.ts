@@ -359,9 +359,7 @@ export class AreaService {
 
     async delete(userId: User["id"], areaId: Area["id"]) {
         const area = await this._findUnique(areaId, userId);
-        console.log(area);
         const task = await this.getAreaTask(area);
-        console.log(task);
         this.schedulerService.stopPolling(task.name);
         return this.prismaService.area.delete({
             where: {
