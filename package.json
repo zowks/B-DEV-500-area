@@ -1,0 +1,55 @@
+{
+  "name": "area",
+  "version": "1.0.0",
+  "description": "Automation software suite that enables users to create custom workflows, similar to IFTTT or Zapier, featuring an application server and web and mobile clients.",
+  "workspaces": [
+    "packages/common",
+    "apps/backend",
+    "apps/frontend",
+    "apps/mobile"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zowks/B-DEV-500-area.git"
+  },
+  "keywords": [
+    "area",
+    "action",
+    "reaction",
+    "automation",
+    "workflow"
+  ],
+  "contributors": [
+    {
+      "name": "Clément Liénard",
+      "email": "clement.lienard@epitech.eu",
+      "url": "https://github.com/Clement-Z4RM"
+    },
+    {
+      "name": "Elouan Rigomont",
+      "email": "elouan.rigomont@epitech.eu",
+      "url": "https://github.com/ElouanR"
+    },
+    {
+      "name": "Malo Durand",
+      "email": "malo.durand@epitech.eu",
+      "url": "https://github.com/Ximaz"
+    },
+    {
+      "name": "Merlin Cyffers",
+      "email": "merlin.cyffers@epitech.eu",
+      "url": "https://github.com/zowks"
+    },
+    {
+      "name": "Gianni Henriques",
+      "email": "gianni.henriques@epitech.eu",
+      "url": "https://github.com/capuchegianni"
+    }
+  ],
+  "license": "UNLICENSED",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/zowks/B-DEV-500-area/issues"
+  },
+  "homepage": "https://github.com/zowks/B-DEV-500-area#readme"
+}

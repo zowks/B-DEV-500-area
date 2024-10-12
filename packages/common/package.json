@@ -15,5 +15,13 @@
     "@typescript-eslint/parser": "^8.7.0",
     "eslint": "^8.57.1",
     "typescript": "^5.6.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zowks/B-DEV-500-area.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zowks/B-DEV-500-area/issues"
+  },
+  "homepage": "https://github.com/zowks/B-DEV-500-area#readme"
 }

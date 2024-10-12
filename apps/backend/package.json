@@ -58,6 +58,9 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   },
+  "directories": {
+    "test": "test"
+  },
   "dependencies": {
     "@nestjs/cache-manager": "^2.2.2",
     "@nestjs/common": "^10.4.4",
@@ -113,6 +116,14 @@
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.6.2"
-  }
+    "typescript": "^5.6.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zowks/B-DEV-500-area.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zowks/B-DEV-500-area/issues"
+  },
+  "homepage": "https://github.com/zowks/B-DEV-500-area#readme"
 }
