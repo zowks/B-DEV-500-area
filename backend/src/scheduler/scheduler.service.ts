@@ -10,14 +10,19 @@ import {
 import { Cache } from "cache-manager";
 import { transformer } from "../area/generic_transformer";
 import { OAuthManager, OAuthCredential } from "../oauth/oauth.interface";
-import { AreaStatus } from "@prisma/client";
-import { AreaTask } from "../area/interfaces/area.interface";
+import { AreaServiceAuthentication, AreaStatus } from "@prisma/client";
+import {
+    AreaAction,
+    AreaReaction,
+    AreaTask
+} from "../area/interfaces/area.interface";
 import { AreaService } from "../area/area.service";
 import { OAuthService } from "../oauth/oauth.service";
 import {
     ActionResource,
     AreaServiceAuth
 } from "../area/services/interfaces/service.interface";
+import { User } from "src/users/interfaces/user.interface";
 
 @Injectable()
 export class SchedulerService implements OnModuleInit, OnModuleDestroy {
@@ -41,11 +46,13 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
     }
 
     private async getOAuthCredential(
+        userId: User["id"],
         scopes: string[],
         credentialsManager: OAuthManager
     ): Promise<OAuthCredential | null> {
         const credentials: OAuthCredential[] =
             await credentialsManager.loadCredentialsByScopes(
+                userId,
                 scopes,
                 credentialsManager.OAUTH_TOKEN_URL,
                 credentialsManager.OAUTH_REVOKE_URL
@@ -57,16 +64,17 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
         return await credentialsManager.refreshCredential(credential);
     }
 
-    private async getActionServiceAuth(
-        task: AreaTask
+    private async getServiceAuth(
+        userId: User["id"],
+        kind: AreaAction | AreaReaction,
+        auth: Omit<AreaServiceAuthentication, "id">
     ): Promise<AreaServiceAuth> {
-        if (0 < task.action.config.oauthScopes.length) {
+        if (0 < kind.config.oauthScopes?.length) {
             const credentialsManager =
-                this.oauthService.getOAuthCredentialsManager(
-                    task.action.service
-                );
+                this.oauthService.getOAuthCredentialsManager(kind.service);
             const credential = await this.getOAuthCredential(
-                task.action.config.oauthScopes,
+                userId,
+                kind.config.oauthScopes,
                 credentialsManager
             );
             if (null === credential)
@@ -74,38 +82,17 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
             return { oauth: credential.access_token };
         }
 
-        if (task.actionAuth.apiKey) return { apiKey: task.actionAuth.apiKey };
+        if (auth.apiKey) return { apiKey: auth.apiKey };
 
-        if (task.actionAuth.webhook)
-            return { webhook: task.actionAuth.webhook };
-    }
-
-    private async getReactionServiceAuth(
-        task: AreaTask
-    ): Promise<AreaServiceAuth> {
-        if (0 < task.reaction.config.oauthScopes?.length) {
-            const credentialsManager =
-                this.oauthService.getOAuthCredentialsManager(
-                    task.reaction.service
-                );
-            const credential = await this.getOAuthCredential(
-                task.reaction.config.oauthScopes,
-                credentialsManager
-            );
-            if (null === credential)
-                throw new ForbiddenException("Token was revoked.");
-            return { oauth: credential.access_token };
-        }
-
-        if (task.reactionAuth.apiKey)
-            return { apiKey: task.reactionAuth.apiKey };
-
-        if (task.reactionAuth.webhook)
-            return { webhook: task.reactionAuth.webhook };
+        if (auth.webhook) return { webhook: auth.webhook };
     }
 
     private async getResource(task: AreaTask): Promise<ActionResource> {
-        const auth = await this.getActionServiceAuth(task);
+        const auth = await this.getServiceAuth(
+            task.userId,
+            task.action,
+            task.actionAuth
+        );
 
         return await task.action.config.trigger(auth);
     }
@@ -113,7 +100,11 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
     async postData(task: AreaTask, transformedData: object): Promise<boolean> {
         let auth: AreaServiceAuth;
         try {
-            auth = await this.getReactionServiceAuth(task);
+            auth = await this.getServiceAuth(
+                task.userId,
+                task.reaction,
+                task.reactionAuth
+            );
         } catch {
             return false;
         }
@@ -171,7 +162,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
 
             if (!keepPolling) {
                 delete this.clockIds[task.name];
-                await this.areaService.update(task.areaId, {
+                await this.areaService.update(task.userId, task.areaId, {
                     status: AreaStatus.ERROR
                 });
             }
@@ -182,7 +173,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
     async startPolling(task: AreaTask) {
         const keepPolling = await this.executeTask(task);
         if (!keepPolling) {
-            await this.areaService.update(task.areaId, {
+            await this.areaService.update(task.userId, task.areaId, {
                 status: AreaStatus.ERROR
             });
             return;
@@ -196,6 +187,7 @@ export class SchedulerService implements OnModuleInit, OnModuleDestroy {
     }
 
     stopPolling(taskName: string) {
+        if (!this.isRunning(taskName)) return;
         clearTimeout(this.clockIds[taskName]);
         delete this.clockIds[taskName];
     }

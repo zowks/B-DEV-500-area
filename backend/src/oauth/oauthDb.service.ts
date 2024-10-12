@@ -71,6 +71,7 @@ export class OAuthDBService {
     }
 
     async loadCredentialsByScopes(
+        userId: User["id"],
         scopes: string[],
         oauthTokenUrl: string,
         oauthRevokeUrl: string
@@ -80,7 +81,8 @@ export class OAuthDBService {
                 where: {
                     scopes: { hasEvery: scopes },
                     tokenUrl: oauthTokenUrl,
-                    revokeUrl: oauthRevokeUrl
+                    revokeUrl: oauthRevokeUrl,
+                    userId
                 },
                 select: {
                     id: true,
@@ -129,10 +131,14 @@ export class OAuthDBService {
         });
     }
 
-    async deleteCredential(oauthCredential: OAuthCredential) {
+    async deleteCredential(
+        userId: User["id"],
+        oauthCredential: OAuthCredential
+    ) {
         await this.prismaService.oAuthCredential.delete({
             where: {
-                id: oauthCredential.id
+                id: oauthCredential.id,
+                userId
             }
         });
     }

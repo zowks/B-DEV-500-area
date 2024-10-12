@@ -28,8 +28,8 @@ export class GoogleOAuthController implements OAuthController {
     @OAuthController_getOAuthUrl()
     getOAuthUrl(
         @Req() req: Request,
-        @Query("redirect_uri") redirectUri: string,
-        @Query("scope") scope: string
+        @Query("scope") scope: string,
+        @Query("redirect_uri") redirectUri: string
     ) {
         const { id } = req.user as Pick<User, "id">;
         const state = OAuthController.prepareOAuthSession(
@@ -37,8 +37,6 @@ export class GoogleOAuthController implements OAuthController {
             id,
             redirectUri
         );
-
-        console.log(JSON.stringify(req.session));
 
         return {
             redirect_uri: this.oauthManager.getOAuthUrl(state, scope)
@@ -96,6 +94,6 @@ export class GoogleOAuthController implements OAuthController {
             oauthCredentialId
         );
         await this.oauthManager.revokeCredential(oauthCredential);
-        await this.oauthManager.deleteCredential(oauthCredential);
+        await this.oauthManager.deleteCredential(id, oauthCredential);
     }
 }

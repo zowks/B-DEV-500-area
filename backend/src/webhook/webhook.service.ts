@@ -55,11 +55,13 @@ export class WebhookService {
                 reactionBody: true,
                 reactionAuthId: true,
                 delay: true,
-                status: true
+                status: true,
+                userId: true
             }
         });
 
-        if (null === area) throw new NotFoundException();
+        if (null === area || AreaStatus.STOPPED === area.status)
+            throw new NotFoundException();
 
         const task = await this.areaService.getAreaTask(area);
 
@@ -67,6 +69,13 @@ export class WebhookService {
             ...task.reactionBody
         });
 
-        return await this.schedulerService.postData(task, transformedData);
+        const success = await this.schedulerService.postData(
+            task,
+            transformedData
+        );
+        if (!success)
+            await this.areaService.update(area.userId, area.id, {
+                status: AreaStatus.ERROR
+            });
     }
 }

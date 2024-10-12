@@ -1,5 +1,6 @@
 import { AreaServiceAuthentication, AreaStatus } from "@prisma/client";
 import { ActionDescription, ReactionDescription } from "../services/interfaces/service.interface";
+import { User } from "src/users/interfaces/user.interface";
 export interface AreaAction {
     service: string;
     method: string;
@@ -19,6 +20,7 @@ export interface AreaTask {
     reactionBody: object;
     reactionAuth: Omit<AreaServiceAuthentication, "id">;
     delay: number;
+    userId: User["id"];
 }
 export declare abstract class Area {
     readonly id: string;
