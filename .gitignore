@@ -25,6 +25,7 @@ gen
 .DS_Store
 Thumbs.db
 *.pem
+!/apps/backend/test/test_jwe_*_key.pem
 
 ### Node
 
