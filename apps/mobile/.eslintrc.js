@@ -3,7 +3,16 @@ module.exports = {
     env: {
         node: true
     },
-    extends: "expo",
+    extends: [
+        // "expo",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    ignorePatterns: [
+        "babel.config.js",
+        "metro.config.js",
+        "tailwind.config.js"
+
+    ],
     rules: {
         "indent": ["error", 4],
         "linebreak-style": "off",
