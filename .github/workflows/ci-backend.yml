@@ -20,7 +20,6 @@ jobs:
           node-version: "lts/*"
 
       - name: "Install NPM packages"
-        working-directory: "./apps/backend/"
         run: "npm ci"
 
       - name: "ESLint checker"

@@ -18,7 +18,6 @@ jobs:
                   node-version: "lts/*"
 
             - name: "Install NPM packages"
-              working-directory: "./packages/common/"
               run: "npm ci"
 
             - name: "ESLint checker"

@@ -28,7 +28,6 @@ jobs:
           node-version: "lts/*"
 
       - name: "Install NPM packages"
-        working-directory: "./apps/frontend/"
         run: "npm ci"
 
       - name: "Generate typesafe-i18n files"

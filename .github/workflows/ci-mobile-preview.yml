@@ -33,7 +33,6 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: "Install NPM packages"
-        working-directory: "./apps/mobile/"
         run: "npm ci"
 
       - name: "Create preview"
