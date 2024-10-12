@@ -1,35 +1,33 @@
-import { useTranslation } from "react-i18next";
+import React, { useState } from "react";
+import useMount from "react-use/lib/useMount";
+import { useRouter } from "expo-router";
 import { View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import api from "@common/api/api";
-import React, { useState } from "react";
-import { useRouter } from "expo-router";
-import useMount from "react-use/lib/useMount";
+import type { AboutJson } from "@common/types/about/interfaces/about.interface";
+
+type Services = AboutJson["server"]["services"];
 
 export default function HomePage() {
     const { t } = useTranslation();
     const router = useRouter();
 
-    const [services, setServices] = useState<any>([{}]);
+    const [services, setServices] = useState<Services>([]);
 
-    useMount(() => {
-        const aboutJson = async () => {
-            const res = await api.about(process.env.EXPO_PUBLIC_API_URL);
+    useMount(async () => {
+        const res = await api.about(process.env.EXPO_PUBLIC_API_URL);
 
-            if (!res.success) {
-                switch (res.status) {
-                case 500:
-                    break;
-                }
-                return;
+        if (!res.success) {
+            switch (res.status) {
+            case 500:
+                break;
             }
-            setServices(res.body.server.services);
-        };
-
-        aboutJson();
+            return;
+        }
+        setServices(res.body.server.services);
     });
 
     const logout = () => {
@@ -50,7 +48,7 @@ export default function HomePage() {
                     </Button>
                 </View>
                 <View>
-                    {services.map((service: any, index: number) => (
+                    {services.map((service: Services[number], index: number) => (
                         <View key={index} className="p-4 m-2 bg-gray-200 rounded flex-row justify-between">
                             <Text className="text-lg font-bold">{service.name.charAt(0).toUpperCase() + service.name.slice(1)}</Text>
                             <View className="flex-row items-center">
