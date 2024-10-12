@@ -1,6 +1,6 @@
 {
   "name": "area",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Automation software suite that enables users to create custom workflows, similar to IFTTT or Zapier, featuring an application server and web and mobile clients.",
   "workspaces": [
     "packages/common",
