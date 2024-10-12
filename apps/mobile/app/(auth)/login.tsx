@@ -27,7 +27,7 @@ export default function LoginPage() {
             email: email,
             password: hashPassword(password)
         };
-        const res = await api.auth.signIn(process.env.EXPO_PUBLIC_API_URL as string, form);
+        const res = await api.auth.signIn(process.env.EXPO_PUBLIC_API_URL, form);
 
         if (!res.success) {
             setDisplayLoginError(true);

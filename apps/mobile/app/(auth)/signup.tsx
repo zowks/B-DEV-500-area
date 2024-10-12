@@ -38,7 +38,7 @@ export default function SignupPage() {
             ...formData,
             ["password"]: hashPassword(formData.password)
         };
-        const res = await api.auth.signUp(process.env.EXPO_PUBLIC_API_URL as string, formDataCopy);
+        const res = await api.auth.signUp(process.env.EXPO_PUBLIC_API_URL, formDataCopy);
 
         console.log(res);
         if (!res.success) {

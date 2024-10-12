@@ -17,7 +17,7 @@ export default function HomePage() {
 
     useMount(() => {
         const aboutJson = async () => {
-            const res = await api.about(process.env.EXPO_PUBLIC_API_URL as string);
+            const res = await api.about(process.env.EXPO_PUBLIC_API_URL);
 
             if (!res.success) {
                 switch (res.status) {
