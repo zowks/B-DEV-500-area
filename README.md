@@ -37,16 +37,10 @@ For example, to install the `typescript` package in the `backend` workspace (whi
 npm install -D typescript -w apps/backend
 ```
 
-⚠ Never install a package directly in a workspace folder, always use the root of the project to install packages.
-
-If you need to install a package using a CLI, you can anyway do it in the workspace folder. After the installation is done, delete the `node_modules` folder and the `package-lock.json` file in the workspace folder and re-run `npm install` at the root of the project.\
-For example, to install a shadcn component in the frontend, you would run:
+You can also install a package from a workspace folder by running the following command:
 ```bash
-cd apps/frontend
-npx shadcn-svelte@latest add <component>
-rm -rf node_modules package-lock.json
-cd ../..
-npm install
+cd <workspace-folder>
+npm install <package-name>
 ```
 
 > To know more about NPM workspaces, you can check the [official documentation](https://docs.npmjs.com/cli/using-npm/workspaces).
