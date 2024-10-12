@@ -28,23 +28,22 @@ jobs:
           node-version: "lts/*"
 
       - name: "Install NPM packages"
-        working-directory: "./frontend/"
         run: "npm ci"
 
       - name: "Generate typesafe-i18n files"
-        working-directory: "./frontend/"
+        working-directory: "./apps/frontend/"
         run: "npm run i18n:ci"
 
       - name: "ESLint checker"
-        working-directory: "./frontend/"
+        working-directory: "./apps/frontend/"
         run: "npm run lint"
 
       - name: "Check code"
-        working-directory: "./frontend/"
+        working-directory: "./apps/frontend/"
         run: "npm run check"
 
       - name: "Build the project"
-        working-directory: "./frontend/"
+        working-directory: "./apps/frontend/"
         run: "npm run build"
 
 #  cypress: TODO: fix Cypress in CI

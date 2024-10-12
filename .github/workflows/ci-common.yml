@@ -18,17 +18,16 @@ jobs:
                   node-version: "lts/*"
 
             - name: "Install NPM packages"
-              working-directory: "./common/"
               run: "npm ci"
 
             - name: "ESLint checker"
-              working-directory: "./common/"
+              working-directory: "./packages/common/"
               run: "npm run lint"
 
             - name: "Type check"
-              working-directory: "./common/"
+              working-directory: "./packages/common/"
               run: "npm run tsc"
 
             # - name: "Tests execution" TODO: add tests
-            #   working-directory: "./common/"
+            #   working-directory: "./packages/common/"
             #   run: "npm run test"

@@ -26,15 +26,14 @@ jobs:
           node-version: "lts/*"
 
       - name: "Install NPM packages"
-        working-directory: "./mobile/"
         run: "npm ci"
 
       - name: "ESLint checker"
-        working-directory: "./mobile/"
+        working-directory: "./apps/mobile/"
         run: "npm run lint"
 
       - name: "Tests execution"
-        working-directory: "./mobile/"
+        working-directory: "./apps/mobile/"
         run: "npm run test"
 
   build:
@@ -60,9 +59,8 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: "Install NPM packages"
-        working-directory: "./mobile/"
         run: "npm ci"
 
       - name: "Build APK"
-        working-directory: "./mobile/"
+        working-directory: "./apps/mobile/"
         run: eas build --non-interactive --platform=android
