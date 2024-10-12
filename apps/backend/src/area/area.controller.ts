@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     HttpCode,
     HttpStatus,
@@ -14,6 +15,7 @@ import {
     ApiBearerAuth,
     ApiCreatedResponse,
     ApiExtraModels,
+    ApiNoContentResponse,
     ApiParam,
     ApiTags,
     ApiUnauthorizedResponse,
@@ -112,9 +114,31 @@ export class AreaController {
             "This route is protected. The client must supply a Bearer token."
     })
     async udpate(
+        @Req() req: Request,
         @Param("areaId") areaId: string,
         @Body() UpdateAreaDto: UpdateAreaDto
     ): Promise<Area> {
-        return await this.areaService.update(areaId, UpdateAreaDto);
+        const { id } = req.user as Pick<User, "id">;
+        return await this.areaService.update(id, areaId, UpdateAreaDto);
+    }
+
+    @UseGuards(JwtGuard)
+    @Delete("/:areaId")
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @ApiBearerAuth("bearer")
+    @ApiNoContentResponse({
+        description: "Deletes the AREA"
+    })
+    @ApiUnauthorizedResponse({
+        description:
+            "This route is protected. The client must supply a Bearer token."
+    })
+    @ApiParam({
+        name: "areaId",
+        description: "The ID of the AREA to delete."
+    })
+    async delete(@Req() req: Request, @Param("areaId") areaId: string) {
+        const { id } = req.user as Pick<User, "id">;
+        await this.areaService.delete(id, areaId);
     }
 }

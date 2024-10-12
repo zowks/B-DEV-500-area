@@ -15,7 +15,7 @@ export function transformYouTubeVideoToArea(
     } = raw.snippet.thumbnails;
     return {
         id: raw.id,
-        url: `https://youtube.com/watch?q=${raw.id}`,
+        url: `https://youtube.com/watch?v=${raw.id}`,
         title: raw.snippet.title,
         description: raw.snippet.description,
         channelName: raw.snippet.channelTitle,

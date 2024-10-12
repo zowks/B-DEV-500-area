@@ -3,6 +3,7 @@ import { AreaStatus } from "@prisma/client";
 import { AreaService } from "src/area/area.service";
 import { transformer } from "src/area/generic_transformer";
 import { Area } from "src/area/interfaces/area.interface";
+import { ActionResource } from "src/area/services/interfaces/service.interface";
 import { PrismaService } from "src/prisma/prisma.service";
 import { SchedulerService } from "src/scheduler/scheduler.service";
 
@@ -38,7 +39,7 @@ export class WebhookService {
         return area;
     }
 
-    async execute(areaId: string, data: object) {
+    async execute(areaId: string, data: ActionResource["data"]) {
         const area = await this.prismaService.area.findUnique({
             where: {
                 id: areaId,
@@ -54,11 +55,13 @@ export class WebhookService {
                 reactionBody: true,
                 reactionAuthId: true,
                 delay: true,
-                status: true
+                status: true,
+                userId: true
             }
         });
 
-        if (null === area) throw new NotFoundException();
+        if (null === area || AreaStatus.STOPPED === area.status)
+            throw new NotFoundException();
 
         const task = await this.areaService.getAreaTask(area);
 
@@ -66,6 +69,13 @@ export class WebhookService {
             ...task.reactionBody
         });
 
-        return await this.schedulerService.postData(task, transformedData);
+        const success = await this.schedulerService.postData(
+            task,
+            transformedData
+        );
+        if (!success)
+            await this.areaService.update(area.userId, area.id, {
+                status: AreaStatus.ERROR
+            });
     }
 }

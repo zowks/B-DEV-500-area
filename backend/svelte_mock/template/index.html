@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+</head>
+
+<body>
+    <script>
+        const API_URL = "http://localhost:8080";
+        const ACCESS_TOKEN = "<ACCESS_TOKEN>";
+        async function getGoogleOAuth() {
+            const scope = "https://www.googleapis.com/auth/youtube.readonly";
+            const redirect_uri = "https://google.com"
+            const response = await fetch(`${API_URL}/oauth/google?redirect_uri=${redirect_uri}&scope=${scope}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${ACCESS_TOKEN}`
+                },
+                credentials: "include"
+            })
+            const data = await response.json();
+
+            return { headers: response.headers, data };
+        }
+
+        window.onload = async () => {
+            const { headers, data } = await getGoogleOAuth();
+            console.log(headers);
+            window.open(data.redirect_uri, "_BLANK");
+        }
+    </script>
+</body>
+
+</html>
