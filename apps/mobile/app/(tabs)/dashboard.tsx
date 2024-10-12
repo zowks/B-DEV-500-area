@@ -4,7 +4,7 @@ import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import api from "../../common/src/api/api";
+import api from "@common/api/api";
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import useMount from "react-use/lib/useMount";

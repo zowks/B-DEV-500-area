@@ -16,7 +16,7 @@ const config = {
         alias: {
             "~/*": "./src/*",
             "$i18n/*": "./src/i18n/*",
-            "@common/*": "../../packages/common/src/*"
+            "@common/*": "../../node_modules/area-common/src/*"
         }
     }
 };

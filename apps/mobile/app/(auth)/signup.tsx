@@ -7,8 +7,8 @@ import { useRouter } from "expo-router";
 import { Input } from "~/components/ui/input";
 import { Checkbox } from "~/components/ui/checkbox";
 import React, { useState } from "react";
-import api from "../../common/src/api/api";
-import { RegisterDto } from "../../common/src/types/auth/dto/register.dto";
+import api from "@common/api/api";
+import type { RegisterDto } from "@common/types/auth/dto/register.dto";
 import hashPassword from "~/lib/auth/hashPassword";
 
 export default function SignupPage() {

@@ -8,7 +8,7 @@ export default defineConfig({
         alias: {
             "~": path.resolve(__dirname, "./src"),
             "$i18n": path.resolve(__dirname, "./src/i18n"),
-            "@common": path.resolve(__dirname, "../../packages/common/src")
+            "@common": path.resolve(__dirname, "../../node_modules/area-common/src")
         }
     }
 });
