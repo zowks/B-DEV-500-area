@@ -48,7 +48,7 @@ jobs:
     permissions: write-all
     needs:
       - "run-tests"
-    if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || github.ref_name == 'backend/dev' }}"
+    if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || github.ref_name == 'backend/dev' || github.ref_name == 'refactor/monorepo' }}"
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v4"
