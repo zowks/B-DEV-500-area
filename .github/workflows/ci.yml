@@ -16,7 +16,7 @@ jobs:
     name: "Backend"
     needs:
       - "common"
-    if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || startsWith(github.ref_name, 'backend/') || github.ref_name == 'refactor/monorepo' }}"
+    if: "${{ github.ref_name == 'main' || github.ref_name == 'common/dev' || startsWith(github.ref_name, 'backend/') }}"
     uses: "./.github/workflows/ci-backend.yml"
     permissions: write-all
     secrets: inherit
