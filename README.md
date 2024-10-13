@@ -1,5 +1,6 @@
-# Area
-Action-Reaction | Create an automation platform
+# AREA
+
+Action-REAction | Create an automation platform
 
 ## How to start 🚀
 
@@ -12,11 +13,12 @@ When everything is ready, run the following command
 docker compose up --build
 ```
 
-This will start 4 services:
-- `postgres`: The database that stores all informations needed for the app to work
-- `redis`: Used to cache request to the REST API
-- `backend`: Brain of the REST API (Nest.js)
-- `frontend`: Serves the website of the Area prject (SvelteKit)
+This will start 5 services:
+- `postgres`: The database that stores all the data needed for the app to work
+- `redis`: Used to cache requests to the REST API and JWT tokens
+- `server`: Brain of the REST API (Nest.js)
+- `client_mobile`: Build the mobile Android APK (Expo / React Native) and place it in a volume shared with the `client_web` service (not yet implemented)
+- `client_web`: Serves the website of the AREA project (SvelteKit)
 
 ## How to install packages 📦
 
