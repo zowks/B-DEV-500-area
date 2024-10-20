@@ -7,7 +7,12 @@ import getById from "./area/getById";
 import getAll from "./area/getAll";
 import patchById from "./area/patchById";
 
-import google from "./oauth/google";
+import {
+    google,
+    googleCallback,
+    googleCredentials,
+    googleRevoke
+} from "./oauth/google";
 
 import about from "./about/about";
 
@@ -50,7 +55,10 @@ const api = {
         patchById
     },
     oauth: {
-        google
+        google,
+        googleCallback,
+        googleCredentials,
+        googleRevoke
     },
     about
 };
