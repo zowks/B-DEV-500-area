@@ -53,6 +53,8 @@ async function bootstrap() {
 
     app.useGlobalPipes(new ValidationPipe());
 
+    const configService = app.get(ConfigService);
+
     app.use(
         helmet({
             contentSecurityPolicy: {
@@ -67,11 +69,9 @@ async function bootstrap() {
         })
     );
     app.enableCors({
-        origin: "http://localhost:5371 http://localhost:8081",
+        origin: configService.getOrThrow("ORIGIN"),
         credentials: true
     });
-
-    const configService = app.get(ConfigService);
 
     const redisClient = createClient({
         socket: {

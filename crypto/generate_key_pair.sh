@@ -9,8 +9,10 @@
 generate_jwt_key_pair() {
     openssl genrsa -out jwe_private_key.pem 4096
     openssl rsa -in jwe_private_key.pem \
-        -outform PEM -pubout            \
-        -out jwe_public_key.pem
+        -pubout -out jwe_public_key.pem
+    openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in jwe_private_key.pem -out pkcs8.pem
+    rm -f jwe_private_key.pem
+    mv pkcs8.pem jwe_private_key.pem
 }
 
 # This function generates a random 32 bytes secret key used to sign a JWT. It

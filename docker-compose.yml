@@ -64,7 +64,8 @@ services:
     image: area-frontend:latest
     environment:
       - PORT=8081
-      - API_URL=http://server:${REST_API_PORT}
+      - SERVER_API_URL=http://server:${REST_API_PORT}
+      - CLIENT_API_URL=${REST_API_URL}
     env_file:
       - .env
     ports:

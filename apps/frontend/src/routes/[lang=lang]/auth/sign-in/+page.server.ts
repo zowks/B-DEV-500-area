@@ -29,7 +29,7 @@ export const actions: Actions = {
         if (payload.error)
             return fail(400, payload);
 
-        const response = await api.auth.signIn(env.API_URL, payload);
+        const response = await api.auth.signIn(env.SERVER_API_URL, payload);
 
         if (!response.success)
             return signInFail(response.status, locals.LL);

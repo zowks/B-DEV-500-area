@@ -24,7 +24,7 @@ export declare function OAuthController_revoke(): MethodDecorator & ClassDecorat
 export declare abstract class OAuthController {
     static prepareOAuthSession(session: Request["session"], userId: User["id"], redirectUri: string): string;
     static verifyState(session: Request["session"], state: string): void;
-    abstract getOAuthUrl(req: Request, redirectUri: string, scope: string): {
+    abstract getOAuthUrl(req: Request, scope: string, redirectUri: string): {
         redirect_uri: string;
     };
     abstract callback(req: Request, code: string, state: string): Promise<HttpRedirectResponse>;
