@@ -13,7 +13,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
     constructor(
         @Inject(CACHE_MANAGER)
         private readonly cacheManager: Cache,
-        private readonly jwtService: JwtService) {
+        private readonly jwtService: JwtService
+    ) {
         super();
     }
 
@@ -38,7 +39,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
                 "id"
             >;
 
-            if (await this.cacheManager.get(jwe) === payload["id"])
+            if ((await this.cacheManager.get(jwe)) === payload["id"])
                 return this.fail(HttpStatus.UNAUTHORIZED);
 
             return this.success(payload);

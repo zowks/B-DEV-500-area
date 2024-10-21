@@ -96,9 +96,11 @@ export class AuthController {
     async logout(@Req() req: Request) {
         const { id } = req.user as Pick<User, "id">;
         const jwe = req.headers.authorization.slice(7);
-        const { exp } = await this.authService.jwtService.verifyJwe(jwe) as { exp: number };
+        const { exp } = (await this.authService.jwtService.verifyJwe(jwe)) as {
+            exp: number;
+        };
         const now = Date.now();
-        const delta = (exp * 1000) - now;
+        const delta = exp * 1000 - now;
         console.log(delta);
         if (0 < delta) {
             await this.cacheManager.set(jwe, id, delta);
