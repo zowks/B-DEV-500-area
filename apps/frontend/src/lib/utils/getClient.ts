@@ -6,7 +6,7 @@ export default async function getClient(accessToken?: string): Promise<Client | 
     if (!accessToken)
         return null;
 
-    const response = await api.users.me(env.SERVER_API_URL, undefined, accessToken);
+    const response = await api.users.me(env.SERVER_API_URL, accessToken);
 
     if (response.success)
         return { ...response.body, accessToken };

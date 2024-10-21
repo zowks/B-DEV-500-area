@@ -1,5 +1,6 @@
 import signUp from "./auth/signUp";
 import signIn from "./auth/signIn";
+import signOut from "./auth/signOut";
 
 import me from "./users/me";
 
@@ -10,7 +11,6 @@ import patchById from "./area/patchById";
 import google from "./oauth/google";
 
 import about from "./about/about";
-
 
 type RequestResponseStatus<T> = {
     status: T;
@@ -39,7 +39,8 @@ export type Empty = Record<PropertyKey, never>;
 const api = {
     auth: {
         signUp,
-        signIn
+        signIn,
+        signOut
     },
     users: {
         me
