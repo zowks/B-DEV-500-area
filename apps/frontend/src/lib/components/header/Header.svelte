@@ -1,6 +1,7 @@
 <script lang="ts">
     import { resetMode, setMode, toggleMode } from "mode-watcher";
     import ArrowDown from "lucide-svelte/icons/arrow-down";
+    import LogOut from "lucide-svelte/icons/log-out";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
     import { Button, buttonVariants } from "$lib/components/ui/button";
     import { Separator } from "$lib/components/ui/separator";
@@ -15,6 +16,8 @@
     import * as i18nUtils from "$i18n/utils";
     import { default as i18nDisplayNames } from "$i18n/displayNames";
     import ThemeIcon from "./ThemeIcon.svelte";
+
+    export let signedIn: boolean = false;
 
     const switchLocale = async (newLocale: Locales) => {
         if (!newLocale || $locale === newLocale) return;
@@ -81,6 +84,12 @@
                     </DropdownMenu.Content>
                 </DropdownMenu.Root>
             </div>
+            {#if signedIn}
+                <a href="/{$locale}/auth/sign-out" class={buttonVariants({ variant: "secondary", size: "icon" })}>
+                    <LogOut class="h-4 w-4" />
+                    <span class="sr-only">{$LL.auth.signOut.title()}</span>
+                </a>
+            {/if}
         </div>
     </div>
     <Separator />
