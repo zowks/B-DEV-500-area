@@ -10,10 +10,7 @@ import { OAuthDBService } from "../oauthDb.service";
 import { OAuthCredential, OAuthManager } from "../oauth.interface";
 
 @Injectable()
-export class TwitchOAuthService
-    extends OAuthDBService
-    implements OAuthManager
-{
+export class TwitchOAuthService extends OAuthDBService implements OAuthManager {
     readonly OAUTH_TOKEN_URL: string = `https://id.twitch.tv/oauth2/token`;
 
     readonly OAUTH_REVOKE_URL: string = `https://id.twitch.tv/oauth2/revoke`;

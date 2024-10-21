@@ -1,14 +1,20 @@
-import { HttpStatus, Injectable } from "@nestjs/common";
+import { HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Request } from "express";
 import { Strategy } from "passport-strategy";
 import { JwtService } from "../../jwt/jwt.service";
 import { User } from "../../users/interfaces/user.interface";
 import * as jose from "jose";
+import { Cache } from "cache-manager";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
-    constructor(private readonly jwtService: JwtService) {
+    constructor(
+        @Inject(CACHE_MANAGER)
+        private readonly cacheManager: Cache,
+        private readonly jwtService: JwtService
+    ) {
         super();
     }
 
@@ -32,6 +38,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
                 User,
                 "id"
             >;
+
+            if ((await this.cacheManager.get(jwe)) === payload["id"])
+                return this.fail(HttpStatus.UNAUTHORIZED);
+
             return this.success(payload);
         } catch (e) {
             if (

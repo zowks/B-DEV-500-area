@@ -8,7 +8,12 @@ import { OAuthDBService } from "./oauthDb.service";
 import { PrismaModule } from "src/prisma/prisma.module";
 
 @Module({
-    imports: [PrismaModule, GoogleOAuthModule, DiscordOAuthModule, TwitchOAuthModule],
+    imports: [
+        PrismaModule,
+        GoogleOAuthModule,
+        DiscordOAuthModule,
+        TwitchOAuthModule
+    ],
     controllers: [GoogleOAuthController],
     providers: [OAuthService, OAuthDBService],
     exports: [OAuthService]
