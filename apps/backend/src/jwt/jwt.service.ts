@@ -11,6 +11,7 @@ import {
     jwtVerify
 } from "jose";
 import { readFileSync } from "node:fs";
+import { User } from "src/users/interfaces/user.interface";
 
 @Injectable()
 export class JwtService {
@@ -78,7 +79,7 @@ export class JwtService {
         return jwe;
     }
 
-    async verifyJwe(jwe: string): Promise<object> {
+    async decryptJwe(jwe: string): Promise<string> {
         if (!this.areKeysLoaded()) await this.getKeyPair();
         const { plaintext: encodedJws } = await compactDecrypt(
             jwe,
@@ -90,6 +91,13 @@ export class JwtService {
         );
 
         const jws = new TextDecoder().decode(encodedJws);
+        return jws;
+    }
+
+    async verifyJwe(
+        jwe: string
+    ): Promise<object> {
+        const jws = await this.decryptJwe(jwe);
         const { payload } = await jwtVerify(jws, this.secret, {
             issuer: this.issuer,
             algorithms: [JwtService.JWS_ALG],
