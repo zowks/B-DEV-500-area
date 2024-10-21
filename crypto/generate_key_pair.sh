@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script aims to provide functions to generate a public and private key
 # pair, mostly used for either SSL context or JWT encryption and decryption.
