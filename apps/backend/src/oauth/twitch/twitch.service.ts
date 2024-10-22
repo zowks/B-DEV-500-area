@@ -26,18 +26,14 @@ export class TwitchOAuthService extends OAuthDBService implements OAuthManager {
         protected readonly prismaService: PrismaService
     ) {
         super(prismaService);
-        const restAPIPort = this.configService.get<number>(
-            "REST_API_PORT",
-            8080
-        );
-        const baseURL = `https://localhost:${restAPIPort}`;
+        const restAPIUrl = this.configService.getOrThrow("REST_API_URL");
 
         this.clientId = this.configService.get<string>("TWITCH_CLIENT_ID");
         this.clientSecret = this.configService.get<string>(
             "TWITCH_CLIENT_SECRET"
         );
         this.redirectUri = encodeURIComponent(
-            `${baseURL}/oauth/twitch/callback`
+            `${restAPIUrl}/oauth/twitch/callback`
         );
     }
 
