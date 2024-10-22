@@ -9,7 +9,7 @@ export default async function getAll(apiUrl: string, accessToken: string): Promi
         });
 
         switch (response.status) {
-        case 201: // TODO: Fix this response status / description with @Ximaz
+        case 200:
             return { status: 200, success: true, body: await response.json() };
         case 401:
             return { status: 401, success: false }; // Either the JWT is expired or invalid or the user has been deleted.

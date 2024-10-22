@@ -16,6 +16,7 @@ import {
     ApiCreatedResponse,
     ApiExtraModels,
     ApiNoContentResponse,
+    ApiOkResponse,
     ApiParam,
     ApiTags,
     ApiUnauthorizedResponse,
@@ -36,10 +37,10 @@ export class AreaController {
 
     @UseGuards(JwtGuard)
     @Get("/")
-    @HttpCode(HttpStatus.CREATED)
+    @HttpCode(HttpStatus.OK)
     @ApiBearerAuth("bearer")
     @ApiExtraModels(Area)
-    @ApiCreatedResponse({
+    @ApiOkResponse({
         description: "Returns the list of all AREAs for the current user",
         type: Area,
         isArray: true
@@ -55,11 +56,11 @@ export class AreaController {
 
     @UseGuards(JwtGuard)
     @Get("/:areaId")
-    @HttpCode(HttpStatus.CREATED)
+    @HttpCode(HttpStatus.OK)
     @ApiBearerAuth("bearer")
     @ApiExtraModels(Area)
     @ApiParam({ name: "areaId", description: "The AREA ID." })
-    @ApiCreatedResponse({
+    @ApiOkResponse({
         description: "Returns the action based on it's ID.",
         type: Area
     })
@@ -103,7 +104,7 @@ export class AreaController {
     @HttpCode(HttpStatus.OK)
     @ApiBearerAuth("bearer")
     @ApiExtraModels(UpdateAreaDto, Area)
-    @ApiCreatedResponse({
+    @ApiOkResponse({
         description: "Updates the AREA",
         schema: {
             $ref: getSchemaPath(UpdateAreaDto)

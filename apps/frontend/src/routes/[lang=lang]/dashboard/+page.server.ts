@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ parent }) => {
     if (!client)
         return error(401, "Unauthorized");
 
-    const areas = await api.area.getAll(env.API_URL, client.accessToken);
+    const areas = await api.area.getAll(env.SERVER_API_URL, client.accessToken);
     if (areas.status === 401)
         return redirect(302, `/${locale}/auth/sign-in`);
     if (!areas.success)

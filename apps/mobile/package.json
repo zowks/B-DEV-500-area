@@ -3,11 +3,25 @@
     "main": "expo-router/entry",
     "version": "0.0.1",
     "description": "Mobile app for the AREA project.",
+    "contributors": [
+        {
+            "name": "Gianni Henriques",
+            "email": "gianni.henriques@epitech.eu",
+            "url": "https://github.com/capuchegianni"
+          },
+        {
+            "name": "Clément Liénard",
+            "email": "clement.lienard@epitech.eu",
+            "url": "https://github.com/Clement-Z4RM"
+          }
+    ],
     "private": true,
     "license": "UNLICENSED",
     "scripts": {
-        "build": "npm run build:android",
-        "build:android": "eas build -p android --profile preview",
+        "build": "npm run build:prod",
+        "build:dev": "eas build -p android --profile development",
+        "build:preview": "eas build -p android --profile preview",
+        "build:prod": "eas build -p android --profile production",
         "dev": "npm run start",
         "dev:android": "npm run start:android",
         "dev:ios": "npm run start:ios",
@@ -86,7 +100,9 @@
         "tailwind-merge": "^2.2.1",
         "tailwindcss": "3.3.5",
         "tailwindcss-animate": "^1.0.7",
-        "zustand": "^4.4.7"
+        "zustand": "^4.4.7",
+        "expo-web-browser": "~13.0.3",
+        "expo-auth-session": "~5.5.2"
     },
     "devDependencies": {
         "@babel/core": "^7.20.0",

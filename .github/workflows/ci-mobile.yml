@@ -9,9 +9,14 @@ on:
         description: "The API URL"
         required: true
         type: string
+      NODE_ENV:
+        description: "The NODE_ENV"
+        required: true
+        type: string
 
 env:
   EXPO_PUBLIC_API_URL: "${{ inputs.API_URL }}"
+  EXPO_PUBLIC_NODE_ENV: "${{ inputs.NODE_ENV }}"
 
 jobs:
   run-tests:

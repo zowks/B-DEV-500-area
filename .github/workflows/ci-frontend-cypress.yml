@@ -13,7 +13,8 @@ on:
 permissions: read-all
 
 env:
-  API_URL: "${{ inputs.API_URL }}"
+  SERVER_API_URL: "${{ inputs.API_URL }}"
+  CLIENT_API_URL: "${{ inputs.API_URL }}"
   ORIGIN: "http://localhost:8081"
 
 # Some parameters of `cypress-io/github-action` ae commented because they need

@@ -1,14 +1,14 @@
 import type { RequestResponse } from "../api";
 
-type OAuthGooglePayload = {
+type OAuthPayload = {
     redirect_uri: string;
     scope: string;
 };
 
 // TODO: common response type
-export default async function google(apiUrl: string, payload: OAuthGooglePayload, accessToken: string): Promise<RequestResponse<{ redirect_uri: string; }, 200 | 401>> {
+export default async function oauth(apiUrl: string, service: string, payload: OAuthPayload, accessToken: string): Promise<RequestResponse<{ redirect_uri: string; }, 200 | 401>> {
     try {
-        const response = await fetch(`${apiUrl}/oauth/google?redirect_uri=${payload.redirect_uri}&scope=${payload.scope}`, {
+        const response = await fetch(`${apiUrl}/oauth/${service}?redirect_uri=${payload.redirect_uri}&scope=${payload.scope}`, {
             method: "GET",
             headers: { Authorization: `Bearer ${accessToken}` },
             credentials: "include"
