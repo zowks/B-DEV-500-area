@@ -21,9 +21,11 @@ export default async function signUp(apiUrl: string, payload: RegisterDto): Prom
         case 422:
             return { status: 422, success: false }; // All fields match their criteria, but the user did not accept the terms and conditions.
         default:
+            console.error(response);
             return { status: 500, success: false };
         }
-    } catch {
+    } catch (error) {
+        console.error(error);
         return { status: 500, success: false };
     }
 }

@@ -20,9 +20,11 @@ export default async function google(apiUrl: string, payload: OAuthGooglePayload
         case 401:
             return { status: 401, success: false }; // This route is protected. The client must supply a Bearer token.
         default:
+            console.error(response);
             return { status: 500, success: false };
         }
-    } catch {
+    } catch (error) {
+        console.error(error);
         return { status: 500, success: false };
     }
 }

@@ -19,9 +19,11 @@ export default async function signIn(apiUrl: string, payload: LoginDto): Promise
         case 403:
             return { status: 403, success: false }; // Either the email or password or both are invalid.
         default:
+            console.error(response);
             return { status: 500, success: false };
         }
-    } catch {
+    } catch (error) {
+        console.error(error);
         return { status: 500, success: false };
     }
 }

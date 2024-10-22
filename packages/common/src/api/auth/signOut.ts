@@ -19,9 +19,11 @@ export default async function signIn(apiUrl: string, accessToken: string): Promi
         case 401:
             return { status: 401, success: false }; // The user was not logged in.
         default:
+            console.error(response);
             return { status: 500, success: false };
         }
-    } catch {
+    } catch (error) {
+        console.error(error);
         return { status: 500, success: false };
     }
 }
