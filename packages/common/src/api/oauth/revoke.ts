@@ -1,8 +1,8 @@
-import { RequestResponse } from "../../api";
+import { RequestResponse } from "../api";
 
-export default async function googleRevoke(apiUrl: string, payload: { oauthCredentialId: number }, accessToken: string): Promise<RequestResponse<string, 204 | 401 | 404 | 422>> {
+export default async function revoke(apiUrl: string, service: string, payload: { oauthCredentialId: number }, accessToken: string): Promise<RequestResponse<string, 204 | 401 | 404 | 422>> {
     try {
-        const response = await fetch(`${apiUrl}/oauth/google/revoke/${payload.oauthCredentialId}`, {
+        const response = await fetch(`${apiUrl}/oauth/${service}/revoke/${payload.oauthCredentialId}`, {
             method: "GET",
             headers: { Authorization: `Bearer ${accessToken}` },
             credentials: "include"

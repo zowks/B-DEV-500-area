@@ -1,16 +1,14 @@
-import { RequestResponse } from "../../api";
+import type { RequestResponse } from "../api";
 
-type OAuthGoogleCredentialsResponse = {
-    id: number
-    access_token: string
-    refresh_token: string
-    expires_at: Date
-    scope: string
-}
+type OAuthPayload = {
+    redirect_uri: string;
+    scope: string;
+};
 
-export default async function googleCredentials(apiUrl: string, accessToken: string): Promise<RequestResponse<OAuthGoogleCredentialsResponse, 200 | 401>> {
+// TODO: common response type
+export default async function oauth(apiUrl: string, service: string, payload: OAuthPayload, accessToken: string): Promise<RequestResponse<{ redirect_uri: string; }, 200 | 401>> {
     try {
-        const response = await fetch(`${apiUrl}/oauth/google/credentials`, {
+        const response = await fetch(`${apiUrl}/oauth/${service}?redirect_uri=${payload.redirect_uri}&scope=${payload.scope}`, {
             method: "GET",
             headers: { Authorization: `Bearer ${accessToken}` },
             credentials: "include"

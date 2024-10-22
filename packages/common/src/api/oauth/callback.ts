@@ -1,13 +1,13 @@
-import { Empty, RequestResponse } from "../../api";
+import { Empty, RequestResponse } from "../api";
 
-type OAuthGoogleCallbackPayload = {
+type OAuthCallbackPayload = {
     code: string;
     state: string;
 };
 
-export default async function googleCallback(apiUrl: string, payload: OAuthGoogleCallbackPayload, accessToken: string): Promise<RequestResponse<Empty, 303 | 403>> {
+export default async function callback(apiUrl: string, service: string, payload: OAuthCallbackPayload, accessToken: string): Promise<RequestResponse<Empty, 303 | 403>> {
     try {
-        const response = await fetch(`${apiUrl}/oauth/google/callback?code=${payload.code}&state=${payload.state}`, {
+        const response = await fetch(`${apiUrl}/oauth/${service}/callback?code=${payload.code}&state=${payload.state}`, {
             method: "GET",
             headers: { Authorization: `Bearer ${accessToken}` },
             credentials: "include",
