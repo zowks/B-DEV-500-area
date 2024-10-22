@@ -23,21 +23,24 @@ const ERROR_KEYS: Record<number, ApiError> = {
 function validatePayload(data: FormData, LL: TranslationFunctions): Payload {
     const email = data.get("email");
     const password = data.get("password");
-    const firstname = data.get("firstname");
-    const lastname = data.get("lastname");
+    let firstname = data.get("firstname");
+    let lastname = data.get("lastname");
     const credentials = validateCredentials({ email, password }, LL);
 
     if (credentials.error)
         return credentials;
-    if (!firstname || typeof firstname !== "string" || !firstname.trim().length ||
-        !lastname || typeof lastname !== "string" || !lastname.trim().length)
+    if (!firstname || typeof firstname !== "string" || !lastname || typeof lastname !== "string")
+        return { error: true, errorMessage: LL.auth.errors.missingField() };
+    firstname = firstname.trim();
+    lastname = lastname.trim();
+    if (!firstname.length || !lastname.length)
         return { error: true, errorMessage: LL.auth.errors.missingField() };
 
     return {
         ...credentials,
         error: false,
-        firstname,
-        lastname,
+        firstname: firstname,
+        lastname: lastname,
         has_accepted_terms_and_conditions: data.get("terms") === "true"
     };
 }
