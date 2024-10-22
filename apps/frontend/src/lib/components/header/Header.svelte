@@ -1,8 +1,7 @@
 <script lang="ts">
     import { resetMode, setMode, toggleMode } from "mode-watcher";
-    import Sun from "lucide-svelte/icons/sun";
-    import Moon from "lucide-svelte/icons/moon";
     import ArrowDown from "lucide-svelte/icons/arrow-down";
+    import LogOut from "lucide-svelte/icons/log-out";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
     import { Button, buttonVariants } from "$lib/components/ui/button";
     import { Separator } from "$lib/components/ui/separator";
@@ -16,6 +15,9 @@
     import { loadLocaleAsync } from "$i18n/i18n-util.async";
     import * as i18nUtils from "$i18n/utils";
     import { default as i18nDisplayNames } from "$i18n/displayNames";
+    import ThemeIcon from "./ThemeIcon.svelte";
+
+    export let signedIn: boolean = false;
 
     const switchLocale = async (newLocale: Locales) => {
         if (!newLocale || $locale === newLocale) return;
@@ -43,6 +45,7 @@
         <div class="flex justify-end items-center space-x-2">
             <a href="/{$locale}/apk" class={cn(buttonVariants(), "max-mobile:hidden")}>
                 {$LL.apk.title()}
+                <span class="sr-only">{$LL.apk.title()}</span>
             </a>
             <DropdownMenu.Root>
                 <DropdownMenu.Trigger asChild let:builder>
@@ -62,17 +65,15 @@
                 </DropdownMenu.Content>
             </DropdownMenu.Root>
             <div class="flex items-center">
-                <Button on:click={toggleMode} variant="outline" size="icon" class="rounded-r-none">
-                    <Sun
-                        class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                    <Moon
-                        class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <Button on:click={toggleMode} variant="outline" size="icon" class="rounded-r-none max-mobile:hidden">
+                    <ThemeIcon />
                     <span class="sr-only">{$LL.header.toggleTheme()}</span>
                 </Button>
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger asChild let:builder>
-                        <Button builders={[builder]} variant="outline" class="px-0.5 rounded-l-none border-l-0">
-                            <ArrowDown class="h-[1.2rem] w-[1.2rem]" />
+                        <Button builders={[builder]} variant="outline" size="icon" class="mobile:w-7 mobile:rounded-l-none mobile:border-l-0">
+                            <ArrowDown class="h-[1.2rem] w-[1.2rem] max-mobile:hidden" />
+                            <ThemeIcon class="mobile:hidden" />
                             <span class="sr-only">{$LL.header.selectTheme()}</span>
                         </Button>
                     </DropdownMenu.Trigger>
@@ -83,6 +84,12 @@
                     </DropdownMenu.Content>
                 </DropdownMenu.Root>
             </div>
+            {#if signedIn}
+                <a href="/{$locale}/auth/sign-out" class={buttonVariants({ variant: "secondary", size: "icon" })}>
+                    <LogOut class="h-4 w-4" />
+                    <span class="sr-only">{$LL.auth.signOut.title()}</span>
+                </a>
+            {/if}
         </div>
     </div>
     <Separator />

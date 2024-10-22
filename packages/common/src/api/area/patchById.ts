@@ -19,9 +19,11 @@ export default async function patchById(apiUrl: string, accessToken: string, are
         case 401:
             return { status: 401, success: false }; // Either the JWT is expired or invalid or the user has been deleted.
         default:
+            console.error(response);
             return { status: 500, success: false };
         }
-    } catch {
+    } catch (error) {
+        console.error(error);
         return { status: 500, success: false };
     }
 }

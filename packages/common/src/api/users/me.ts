@@ -14,9 +14,11 @@ export default async function me(apiUrl: string, accessToken: string): Promise<R
         case 401:
             return { status: 401, success: false }; // Either the JWT is expired or invalid or the user has been deleted.
         default:
+            console.error(response);
             return { status: 500, success: false };
         }
-    } catch {
+    } catch (error) {
+        console.error(error);
         return { status: 500, success: false };
     }
 }
