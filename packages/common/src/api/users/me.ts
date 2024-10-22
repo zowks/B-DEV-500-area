@@ -1,7 +1,7 @@
 import type { RequestResponse } from "../api";
 import type { UserInfo } from "../../types/users/interfaces/user.interface";
 
-export default async function me(apiUrl: string, _: unknown, accessToken: string): Promise<RequestResponse<UserInfo, 200 | 401>> {
+export default async function me(apiUrl: string, accessToken: string): Promise<RequestResponse<UserInfo, 200 | 401>> {
     try {
         const response = await fetch(`${apiUrl}/users/me`, {
             method: "GET",

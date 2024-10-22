@@ -45,13 +45,15 @@ export const handle: Handle = async ({ event, resolve }) => {
     if (!currentLocale)
         return redirect(307, `/${getPreferredLocale(event)}/dashboard`);
 
-    const locale = isLocale(currentLocale) ? (currentLocale as Locales) : getPreferredLocale(event);
+    const locale = isLocale(currentLocale) ? currentLocale : getPreferredLocale(event);
     const accessToken = event.cookies.get("accessToken");
+
+    // TODO: avoid fetching client and services at each page change
 
     if (!event.locals.client) {
         const client = await getClient(accessToken);
 
-        if (!isPublicPath(event.url.pathname, locale) && !client)
+        if (!client && !isPublicPath(event.url.pathname, locale))
             return redirect(302, `/${locale}/auth/sign-in`);
         event.locals.client = client;
     }
