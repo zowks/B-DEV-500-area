@@ -18,9 +18,11 @@ export default async function revoke(apiUrl: string, service: string, payload: {
         case 422:
             return { status: 401, success: false }; // The given credential ID was found and belongs to the correct user, but it's OAuth provider is different from the current route provider.
         default:
+            console.error(response);
             return { status: 500, success: false };
         }
-    } catch {
+    } catch (error) {
+        console.error(error);
         return { status: 500, success: false };
     }
 }

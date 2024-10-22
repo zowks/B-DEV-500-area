@@ -19,9 +19,11 @@ export default async function callback(apiUrl: string, service: string, payload:
         case 403:
             return { status: 403, success: false }; // The 'state' attribute stored in the user' session is either invalid or does not match the one sent by Google.
         default:
+            console.error(response);
             return { status: 500, success: false };
         }
-    } catch {
+    } catch (error) {
+        console.error(error);
         return { status: 500, success: false };
     }
 }
