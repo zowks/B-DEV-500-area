@@ -8,12 +8,10 @@ import getById from "./area/getById";
 import getAll from "./area/getAll";
 import patchById from "./area/patchById";
 
-import {
-    google,
-    googleCallback,
-    googleCredentials,
-    googleRevoke
-} from "./oauth/google";
+import google from "./oauth/google/google";
+import googleCallback from "./oauth/google/googleCallback";
+import googleCredentials from "./oauth/google/googleCredentials";
+import googleRevoke from "./oauth/google/googleRevoke";
 
 import about from "./about/about";
 
