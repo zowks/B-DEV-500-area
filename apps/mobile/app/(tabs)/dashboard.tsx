@@ -10,16 +10,30 @@ import api from "@common/api/api";
 import type { AboutJson } from "@common/types/about/interfaces/about.interface";
 import ServiceOauth from "~/components/serviceOauth";
 
-type Services = AboutJson["server"]["services"];
+type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number];
 
-const servicesComponents: { [key: string]: () => React.JSX.Element } = {
-    "youtube": () => <ServiceOauth
+type Services = AboutJson["server"]["services"];
+type Service = ArrayElement<AboutJson["server"]["services"]>
+
+const servicesComponents: { [key: string]: (service: Service) => React.JSX.Element } = {
+    "youtube": (service: Service) => <ServiceOauth
         name="google"
-        callback="googleCallback"
-        credentials="googleCredentials"
         scope="https://www.googleapis.com/auth/youtube.readonly"
+        color="#FF0000"
+        service={service}
     />,
-    "discord": () => <></>
+    "discord": (service: Service) => <ServiceOauth
+        name="discord"
+        scope="email"
+        color="#7289da"
+        service={service}
+    />,
+    "twitch": (service: Service) => <ServiceOauth
+        name="twitch"
+        scope=""
+        color="#6441a5"
+        service={service}
+    />
 };
 
 export default function HomePage() {
@@ -59,11 +73,8 @@ export default function HomePage() {
                 </View>
                 <View>
                     {services.map((service: Services[number], index: number) => (
-                        <View key={index} className="p-4 m-2 bg-gray-200 rounded flex-row justify-between">
-                            <Text className="text-lg font-bold">{service.name}</Text>
-                            <View className="flex-row items-center">
-                                {servicesComponents[service.name]()}
-                            </View>
+                        <View key={index}>
+                            {servicesComponents[service.name](service)}
                         </View>
                     ))}
                 </View>

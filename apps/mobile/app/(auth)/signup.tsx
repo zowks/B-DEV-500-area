@@ -40,7 +40,6 @@ export default function SignupPage() {
         };
         const res = await api.auth.signUp(process.env.EXPO_PUBLIC_API_URL, formDataCopy);
 
-        console.log(res);
         if (!res.success) {
             setDisplayRegisterError(true);
             switch (res.status) {
