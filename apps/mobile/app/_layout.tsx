@@ -4,7 +4,7 @@ import "~/src/i18n/i18n";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { type Theme, ThemeProvider } from "@react-navigation/native";
-import { SplashScreen, Stack, useRouter, usePathname, Slot } from "expo-router";
+import { SplashScreen, Stack, useRouter, usePathname } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useCallback, useEffect } from "react";
 import useMount from "react-use/lib/useMount";
@@ -129,7 +129,6 @@ export default function RootLayout() {
                         title: t("home")
                     }}
                 />
-                <Slot />
             </Stack>
             <PortalHost />
         </ThemeProvider>

@@ -41,6 +41,7 @@ jobs:
     secrets: inherit
     with:
         API_URL: "https://api-area.zowks.fr"
+        NODE_ENV: "production"
 
   mirror:
     name: "Mirror the refs to the Epitech repository"
