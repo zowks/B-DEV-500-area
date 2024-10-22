@@ -20,7 +20,8 @@ describe("Raw YouTube video to AREA YouTube Video", () => {
                     description: "YOUTUBE_VIDEO_LOCALIZED_DESCRIPTION",
                     title: "YOUTUBE_VIDEO_LOCALIZED_TITLE"
                 },
-                publishedAt: "Tue Oct 22 2024 18:39:47 GMT+0200 (Central European Summer Time)",
+                publishedAt:
+                    "Tue Oct 22 2024 18:39:47 GMT+0200 (Central European Summer Time)",
                 title: "YOUTUBE_VIDEO_TITLE",
                 tags: ["YOUTUBE_VIDEO_TAGS_1", "YOUTUBE_VIDEO_TAGS_2"],
                 thumbnails: {
