@@ -30,7 +30,7 @@ export class TwitchOAuthService extends OAuthDBService implements OAuthManager {
             "REST_API_PORT",
             8080
         );
-        const baseURL = `http://localhost:${restAPIPort}`;
+        const baseURL = `https://localhost:${restAPIPort}`;
 
         this.clientId = this.configService.get<string>("TWITCH_CLIENT_ID");
         this.clientSecret = this.configService.get<string>(
@@ -58,12 +58,13 @@ export class TwitchOAuthService extends OAuthDBService implements OAuthManager {
     async getCredentials(code: string): Promise<OAuthCredential> {
         if (undefined === code)
             throw new ForbiddenException("The scope were invalid.");
+
         const response = (
             await axios.post<{
                 access_token: string;
                 expires_in: number;
                 refresh_token: string;
-                scope: string;
+                scope: string[];
                 token_type: "Bearer";
             }>(
                 this.OAUTH_TOKEN_URL,
@@ -85,7 +86,7 @@ export class TwitchOAuthService extends OAuthDBService implements OAuthManager {
         return {
             access_token: response.access_token,
             refresh_token: response.refresh_token,
-            scope: response.scope,
+            scope: response.scope.join(" "),
             expires_at: new Date(Date.now() + response.expires_in * 1000)
         };
     }

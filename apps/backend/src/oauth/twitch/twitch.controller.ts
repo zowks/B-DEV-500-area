@@ -53,7 +53,7 @@ export class TwitchOAuthController implements OAuthController {
         const tokens = await this.oauthManager.getCredentials(code);
 
         await this.oauthManager.saveCredential(
-            req["user_id"],
+            req.session["user_id"],
             tokens,
             this.oauthManager.OAUTH_TOKEN_URL,
             this.oauthManager.OAUTH_REVOKE_URL

@@ -6,7 +6,8 @@
 
 types_output="../../packages/common/src/types"
 types_files=$(find ./dist -type f -name '*.dto.d.ts' -o  -name '*.interface.d.ts')
-mkdir -p "${types_output}"
+rm -rf "${types_output}"
+mkdir -p $_
 for p in $types_files; do
     mkdir -p "${types_output}/$(dirname ${p:7})";
     cp ${p} $_/$(basename ${p});
