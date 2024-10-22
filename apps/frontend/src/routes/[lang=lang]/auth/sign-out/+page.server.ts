@@ -4,7 +4,7 @@ import api from "@common/api/api";
 import type { Actions } from "./$types";
 
 export const actions: Actions = {
-    default: async ({ locals: { locale, client } }) => {
+    default: async ({ locals: { locale, client }, cookies }) => {
         if (!client)
             return error(401, "Unauthorized");
 
@@ -13,6 +13,7 @@ export const actions: Actions = {
         if (response.status !== 204 && response.status !== 401)
             return error(response.status);
 
+        cookies.delete("accessToken", { path: "/" });
         return redirect(303, `/${locale}/auth/sign-in`);
     }
 };
