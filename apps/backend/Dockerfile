@@ -1,11 +1,9 @@
-FROM alpine:3.20.3 AS base
+FROM node:lts AS base
 
 LABEL org.opencontainers.image.source=https://github.com/zowks/B-DEV-500-area
 
-RUN apk update                 \
-    && apk upgrade             \
-    && apk add npm=10.8.0-r0   \
-    && rm -rf /var/cache/apk/*
+# npm@10.9.0 may freeze when installing dependencies
+RUN npm install -g npm@10.8.3
 
 FROM base AS setup
 
@@ -49,7 +47,7 @@ COPY --from=build /tmp/app/apps/backend/ /app/apps/backend/
 
 WORKDIR /app
 
-RUN npm install --production
+RUN npm install --omit=dev
 
 WORKDIR /app/apps/backend
 

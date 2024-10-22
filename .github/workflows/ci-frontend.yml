@@ -11,7 +11,8 @@ on:
         type: string
 
 env:
-  API_URL: "${{ inputs.API_URL }}"
+  SERVER_API_URL: "${{ inputs.API_URL }}"
+  CLIENT_API_URL: "${{ inputs.API_URL }}"
 
 permissions: read-all
 

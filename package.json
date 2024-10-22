@@ -8,6 +8,9 @@
     "apps/frontend",
     "apps/mobile"
   ],
+  "scripts": {
+    "postinstall": "npm run postinstall --workspaces --if-present"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zowks/B-DEV-500-area.git"
