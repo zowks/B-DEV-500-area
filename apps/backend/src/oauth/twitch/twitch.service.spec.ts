@@ -17,7 +17,8 @@ describe("TwitchService", () => {
                 {
                     provide: ConfigService,
                     useValue: {
-                        get: jest.fn()
+                        get: jest.fn(),
+                        getOrThrow: jest.fn()
                     }
                 },
                 { provide: PrismaService, useValue: prismaService }
