@@ -17,6 +17,9 @@ import revoke from "./oauth/revoke";
 
 import about from "./about/about";
 
+import getWebhook from "./webhooks/getWebhook";
+import executeWebhook from "./webhooks/executeWebhook";
+
 type RequestResponseStatus<T> = {
     status: T;
 };
@@ -62,6 +65,10 @@ const api = {
         callback,
         credentials,
         revoke
+    },
+    webhooks: {
+        getWebhook,
+        executeWebhook
     },
     about
 };
