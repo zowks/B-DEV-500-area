@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { AreaStatus } from "@prisma/client";
 import { AreaService } from "src/area/area.service";
-import { transformer } from "src/area/generic_transformer";
+import { transformer } from "src/area/generic.transformers";
 import { Area } from "src/area/interfaces/area.interface";
 import { ActionResource } from "src/area/services/interfaces/service.interface";
 import { PrismaService } from "src/prisma/prisma.service";

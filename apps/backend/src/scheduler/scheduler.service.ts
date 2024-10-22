@@ -8,7 +8,7 @@ import {
     OnModuleInit
 } from "@nestjs/common";
 import { Cache } from "cache-manager";
-import { transformer } from "../area/generic_transformer";
+import { transformer } from "../area/generic.transformers";
 import { OAuthManager, OAuthCredential } from "../oauth/oauth.interface";
 import { AreaServiceAuthentication, AreaStatus } from "@prisma/client";
 import {
