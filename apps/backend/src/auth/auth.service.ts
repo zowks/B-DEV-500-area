@@ -16,7 +16,7 @@ export class AuthService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly argon2Service: Argon2Service,
-        private readonly jwtService: JwtService
+        readonly jwtService: JwtService
     ) {}
 
     async register(registerDto: RegisterDto): Promise<void> {
