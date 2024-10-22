@@ -7,6 +7,8 @@ import me from "./users/me";
 import getById from "./area/getById";
 import getAll from "./area/getAll";
 import patchById from "./area/patchById";
+import createArea from "./area/createArea";
+import deleteArea from "./area/deleteArea";
 
 import oauth from "./oauth/oauth";
 import callback from "./oauth/callback";
@@ -51,7 +53,9 @@ const api = {
     area: {
         getById,
         getAll,
-        patchById
+        patchById,
+        createArea,
+        deleteArea
     },
     oauth: {
         oauth,
