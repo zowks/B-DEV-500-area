@@ -21,7 +21,6 @@ import {
     Get,
     HttpCode,
     HttpStatus,
-    Redirect,
     UseGuards
 } from "@nestjs/common";
 import { Request } from "express";

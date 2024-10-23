@@ -72,7 +72,7 @@ export class GoogleOAuthController implements OAuthController {
         );
 
         return {
-            redirect_uri: redirectUri,
+            redirect_uri: redirectUri
         };
     }
 

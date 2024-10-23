@@ -40,7 +40,7 @@ function getSwaggerDocumentConfig(): Omit<OpenAPIObject, "paths"> {
         )
         .addTag(
             "Twitch OAuth",
-            "Describes all the endpoints to deal with Google OAuth2.0 credentials."
+            "Describes all the endpoints to deal with Twitch OAuth2.0 credentials."
         )
         .addTag("Users", "Describes all the routes to deal with users CRUD.")
         .addBearerAuth({
