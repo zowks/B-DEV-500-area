@@ -48,12 +48,12 @@
       "^src/(.*)$": "<rootDir>/src/$1"
     },
     "rootDir": ".",
-    "testRegex": ".(service|transformers)\\.spec\\.ts$",
+    "testRegex": ".(service|transformers|action|reaction)\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.ts"
+      "**/*.(service|transformers|action|reaction).ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
