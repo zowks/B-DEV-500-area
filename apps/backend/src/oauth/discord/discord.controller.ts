@@ -1,8 +1,7 @@
 import { Request } from "express";
 import {
     Controller,
-    HttpRedirectResponse,
-    HttpStatus,
+    Inject,
     Param,
     ParseIntPipe,
     Query,
@@ -19,21 +18,28 @@ import {
     OAuthController_revoke,
     OAuthCredential
 } from "../oauth.interface";
+import { Cache } from "cache-manager";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import { OAuthCallbackResponseDto } from "../dto/OAuthCallbackResponse.dto";
 
 @ApiTags("Discord OAuth")
 @Controller("oauth/discord")
 export class DiscordOAuthController implements OAuthController {
-    constructor(private readonly oauthManager: DiscordOAuthService) {}
+    constructor(
+        @Inject(CACHE_MANAGER)
+        private readonly cacheManager: Cache,
+        private readonly oauthManager: DiscordOAuthService
+    ) {}
 
     @OAuthController_getOAuthUrl()
-    getOAuthUrl(
+    async getOAuthUrl(
         @Req() req: Request,
         @Query("scope") scope: string,
         @Query("redirect_uri") redirectUri: string
     ) {
         const { id } = req.user as Pick<User, "id">;
-        const state = OAuthController.prepareOAuthSession(
-            req.session,
+        const state = await OAuthController.prepareOAuthSession(
+            this.cacheManager,
             id,
             redirectUri
         );
@@ -47,27 +53,26 @@ export class DiscordOAuthController implements OAuthController {
         @Req() req: Request,
         @Query("code") code: string,
         @Query("state") state: string
-    ): Promise<HttpRedirectResponse> {
-        OAuthController.verifyState(req.session, state);
+    ): Promise<OAuthCallbackResponseDto> {
+        const { id } = req.user as Pick<User, "id">;
+
+        const redirectUri = await OAuthController.verifyState(
+            this.cacheManager,
+            id,
+            state
+        );
 
         const tokens = await this.oauthManager.getCredentials(code);
 
         await this.oauthManager.saveCredential(
-            req.session["user_id"],
+            id,
             tokens,
             this.oauthManager.OAUTH_TOKEN_URL,
             this.oauthManager.OAUTH_REVOKE_URL
         );
 
-        const redirectUri = req.session["redirect_uri"] || "/";
-
-        req.session.destroy((err) => {
-            if (err) console.error(err);
-        });
-
         return {
-            url: redirectUri,
-            statusCode: HttpStatus.SEE_OTHER
+            redirect_uri: redirectUri,
         };
     }
 

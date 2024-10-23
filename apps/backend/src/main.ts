@@ -25,6 +25,11 @@ function getSwaggerDocumentConfig(): Omit<OpenAPIObject, "paths"> {
             "Authentication",
             "Describes all the routes for authentication purposes."
         )
+        .addTag("AREA", "Describes all the routes to deal with AREA's CRUD.")
+        .addTag(
+            "Webhooks",
+            "Describes all the endpoints to deal with the AREA webhooks."
+        )
         .addTag(
             "Google OAuth",
             "Describes all the endpoints to deal with Google OAuth2.0 credentials."
@@ -33,10 +38,9 @@ function getSwaggerDocumentConfig(): Omit<OpenAPIObject, "paths"> {
             "Discord OAuth",
             "Describes all the endpoints to deal with Discord OAuth2.0 credentials."
         )
-        .addTag("AREA", "Describes all the routes to deal with AREA's CRUD.")
         .addTag(
-            "Webhooks",
-            "Describes all the endpoints to deal with the AREA webhooks."
+            "Twitch OAuth",
+            "Describes all the endpoints to deal with Google OAuth2.0 credentials."
         )
         .addTag("Users", "Describes all the routes to deal with users CRUD.")
         .addBearerAuth({
