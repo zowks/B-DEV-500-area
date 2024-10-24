@@ -14,11 +14,11 @@ import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { PortalHost } from "@rn-primitives/portal";
 import { ThemeToggle } from "~/components/ThemeToggle";
-import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import api from "area-common/src/api/api";
-import { LogOut } from "lucide-react-native";
+import { LogOut } from "~/lib/icons/Logout";
+import FooterMenu from "~/components/footer";
 
 const LIGHT_THEME: Theme = {
     dark: false,
@@ -69,11 +69,9 @@ export default function RootLayout() {
 
             if (colorTheme !== colorScheme) {
                 setColorScheme(colorTheme);
-                setAndroidNavigationBar(colorTheme);
                 setIsColorSchemeLoaded(true);
                 return;
             }
-            setAndroidNavigationBar(colorTheme);
             setIsColorSchemeLoaded(true);
         })().finally(() => {
             SplashScreen.hideAsync();
@@ -157,9 +155,7 @@ export default function RootLayout() {
                                 size="icon"
                                 onPress={() => logout()}
                             >
-                                <LogOut
-                                    className="text-primary"
-                                />
+                                <LogOut className="text-primary"/>
                             </Button>
                         )}
                     </View>
@@ -185,6 +181,9 @@ export default function RootLayout() {
                 />
             </Stack>
             <PortalHost />
+            {isColorSchemeLoaded && pathName !== "/login" && pathName !== "/signup" &&
+                <FooterMenu />
+            }
         </ThemeProvider>
     );
 }
