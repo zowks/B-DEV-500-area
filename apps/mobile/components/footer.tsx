@@ -5,9 +5,11 @@ import { Text } from "./ui/text";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 export default function FooterMenu() {
     const router = useRouter();
+    const { t } = useTranslation();
     const [value, setValue] = useState<string>();
 
     const onValChange = (val: string | undefined) => setValue(val);
@@ -28,7 +30,7 @@ export default function FooterMenu() {
                     </MenubarTrigger>
                     <MenubarContent>
                         <MenubarItem onPress={() => router.navigate("/(tabs)/dashboard")}>
-                            <Text>Dashboard</Text>
+                            <Text>{t("home")}</Text>
                         </MenubarItem>
                     </MenubarContent>
                 </MenubarMenu>
