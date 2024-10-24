@@ -8,7 +8,7 @@ import { SplashScreen, Stack, useRouter, usePathname } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useCallback, useEffect } from "react";
 import useMount from "react-use/lib/useMount";
-import { Platform } from "react-native";
+import { Platform, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
@@ -17,6 +17,8 @@ import { ThemeToggle } from "~/components/ThemeToggle";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
+import api from "area-common/src/api/api";
+import { LogOut } from "lucide-react-native";
 
 const LIGHT_THEME: Theme = {
     dark: false,
@@ -78,13 +80,45 @@ export default function RootLayout() {
         });
     });
 
+    const getToken = (): Promise<string | null> => {
+        return AsyncStorage.getItem("@access_token");
+    };
+
+    const logout = async () => {
+        const token = await getToken();
+        if (!token)
+            return;
+
+        const res = await api.auth.signOut(process.env.EXPO_PUBLIC_API_URL, token);
+
+        if (!res.success) {
+            switch (res.status) {
+            case 401:
+                AsyncStorage.removeItem("@access_token");
+                router.navigate("/(auth)/login");
+                break;
+            case 500:
+                console.log("An internal error happened.");
+                break;
+            }
+            return;
+        }
+        AsyncStorage.removeItem("@access_token");
+        router.navigate("/(auth)/login");
+    };
+
     useEffect(() => {
         const updateAuth = async () => {
-            const token = await AsyncStorage.getItem("@access_token");
+            const token = await getToken();
 
             if (isColorSchemeLoaded) {
                 if (token && (pathName === "/login" || pathName === "/signup")) {
-                    router.replace("/dashboard");
+                    const res = await api.users.me(process.env.EXPO_PUBLIC_API_URL, token);
+
+                    if (res.status === 401)
+                        router.replace("/(auth)/login");
+                    else
+                        router.replace("/dashboard");
                 } else if (!token && pathName !== "/login" && pathName !== "/signup") {
                     router.replace("/(auth)/login");
                 }
@@ -101,32 +135,52 @@ export default function RootLayout() {
             <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
             <Stack screenOptions={{
                 headerLeft: () => (
-                    <Button
-                        className="m-2"
-                        variant="ghost"
-                        onPress={changeLanguage}
-                    >
-                        <Text>{t("language")}</Text>
-                    </Button>
+                    <Text className="font-bold text-4xl ml-2">
+                        AREA
+                    </Text>
                 ),
-                headerRight: () => <ThemeToggle />,
+                headerRight: () => (
+                    <View className="flex flex-row">
+                        <Button
+                            className="mt-2 mr-1"
+                            variant="outline"
+                            size="icon"
+                            onPress={changeLanguage}
+                        >
+                            <Text>{t("language")}</Text>
+                        </Button>
+                        <ThemeToggle />
+                        {isColorSchemeLoaded && pathName !== "/login" && pathName !== "/signup" && (
+                            <Button
+                                className="mt-2 mr-2"
+                                variant="secondary"
+                                size="icon"
+                                onPress={() => logout()}
+                            >
+                                <LogOut
+                                    className="text-primary"
+                                />
+                            </Button>
+                        )}
+                    </View>
+                ),
             }}>
                 <Stack.Screen
                     name="(auth)/login"
                     options={{
-                        title: t("login")
+                        title: ""
                     }}
                 />
                 <Stack.Screen
                     name="(auth)/signup"
                     options={{
-                        title: t("signup")
+                        title: ""
                     }}
                 />
                 <Stack.Screen
                     name="(tabs)/dashboard"
                     options={{
-                        title: t("home")
+                        title: ""
                     }}
                 />
             </Stack>

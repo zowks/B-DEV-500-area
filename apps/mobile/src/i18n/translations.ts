@@ -6,7 +6,7 @@ const englishTranslations = {
     "language": "En",
     "newUser": "Don't have an account ?",
     "hasAnAccount": "Already have an account ?",
-    "name": "Name",
+    "name": "First name",
     "lastName": "Last name",
     "tos": "Accept the ToS ?",
     "registerError": {
